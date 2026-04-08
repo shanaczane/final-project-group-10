@@ -15,40 +15,67 @@ export interface Colors {
   labelText: string;
   tabBar: string;
   tabBarBorder: string;
+  danger: string;
   dangerBackground: string;
   dangerText: string;
+  success: string;
+  successBackground: string;
+  warning: string;
+  warningBackground: string;
+  info: string;
+  cardBackground: string;
+  ownerBadgeBackground: string;
+  ownerBadgeText: string;
 }
 
 export const lightColors: Colors = {
-  background: '#F9FAFB',
-  surface: '#FFFFFF',
-  primary: '#4F46E5',
-  textPrimary: '#111827',
-  textSecondary: '#6B7280',
-  textMuted: '#9CA3AF',
-  border: '#E5E7EB',
-  inputBackground: '#F9FAFB',
-  labelText: '#374151',
-  tabBar: '#FFFFFF',
-  tabBarBorder: '#E5E7EB',
-  dangerBackground: '#FEE2E2',
-  dangerText: '#DC2626',
+  background: '#fafaf9',
+  surface: '#ffffff',
+  primary: '#185FA5',
+  textPrimary: '#111110',
+  textSecondary: '#555553',
+  textMuted: '#888886',
+  border: '#e0e0de',
+  inputBackground: '#f2f2f0',
+  labelText: '#333331',
+  tabBar: '#ffffff',
+  tabBarBorder: '#e0e0de',
+  danger: '#c73030',
+  dangerBackground: '#fde8e8',
+  dangerText: '#c73030',
+  success: '#4a8f1e',
+  successBackground: '#e8f5df',
+  warning: '#c47d1a',
+  warningBackground: '#fef3e0',
+  info: '#185FA5',
+  cardBackground: '#f2f2f0',
+  ownerBadgeBackground: '#dbeafe',
+  ownerBadgeText: '#185FA5',
 };
 
 export const darkColors: Colors = {
-  background: '#111827',
-  surface: '#1F2937',
-  primary: '#818CF8',
-  textPrimary: '#F9FAFB',
-  textSecondary: '#9CA3AF',
-  textMuted: '#6B7280',
-  border: '#374151',
-  inputBackground: '#374151',
-  labelText: '#D1D5DB',
-  tabBar: '#1F2937',
-  tabBarBorder: '#374151',
-  dangerBackground: '#450a0a',
-  dangerText: '#FCA5A5',
+  background: '#1c1c1a',
+  surface: '#2a2a28',
+  primary: '#4a8fd4',
+  textPrimary: '#f2f2f0',
+  textSecondary: '#a0a09e',
+  textMuted: '#666664',
+  border: '#3a3a38',
+  inputBackground: '#333331',
+  labelText: '#c8c8c6',
+  tabBar: '#1c1c1a',
+  tabBarBorder: '#3a3a38',
+  danger: '#e05050',
+  dangerBackground: '#3a1010',
+  dangerText: '#f08080',
+  success: '#6abf3a',
+  successBackground: '#1a2e10',
+  warning: '#d49030',
+  warningBackground: '#2e2010',
+  info: '#4a8fd4',
+  cardBackground: '#2a2a28',
+  ownerBadgeBackground: '#1e3a5f',
+  ownerBadgeText: '#4a8fd4',
 };
 
 const THEME_STORAGE_KEY = 'app_theme';

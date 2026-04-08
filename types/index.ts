@@ -5,12 +5,14 @@ export interface AppUser {
   email: string;
   role: Role;
   store_name: string | null;
+  owner_id: string | null; // null for owners; owner's user id for helpers
   created_at: string;
 }
 
 export interface Category {
   id: string;
   name: string;
+  owner_id: string;
   created_at: string;
 }
 
@@ -22,6 +24,7 @@ export interface Product {
   buy_price: number;
   sell_price: number;
   min_threshold: number;
+  owner_id: string;
   created_at: string;
   updated_at: string;
   category?: Category;
@@ -36,5 +39,5 @@ export interface StockMovement {
   movement_type: MovementType;
   recorded_by: string;
   created_at: string;
-  product?: Product;
+  product?: { name: string; sell_price: number };
 }
