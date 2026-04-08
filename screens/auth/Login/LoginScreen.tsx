@@ -33,11 +33,9 @@ export function LoginScreen({ onNavigateToSignup }: Props) {
       Alert.alert('Error', 'Please enter your email and password.');
       return;
     }
-
     setLoading(true);
     const { error } = await signIn(email.trim(), password);
     setLoading(false);
-
     if (error) {
       Alert.alert('Login Failed', error);
     }
@@ -49,10 +47,17 @@ export function LoginScreen({ onNavigateToSignup }: Props) {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.inner}>
-        <Text style={styles.appTitle}>Imbentaryo</Text>
-        <Text style={styles.subtitle}>Sign in to your account</Text>
+        <View style={styles.logoArea}>
+          <View style={styles.logoMark}>
+            <Ionicons name="cube" size={36} color={colors.primary} />
+          </View>
+          <Text style={styles.appTitle}>Imbentaryo</Text>
+          <Text style={styles.tagline}>Store Inventory Manager</Text>
+        </View>
 
         <View style={styles.form}>
+          <Text style={styles.formHeading}>Sign in</Text>
+
           <Text style={styles.label}>Email</Text>
           <TextInput
             style={styles.input}
@@ -68,7 +73,7 @@ export function LoginScreen({ onNavigateToSignup }: Props) {
           <Text style={styles.label}>Password</Text>
           <View style={styles.inputWrapper}>
             <TextInput
-              style={styles.input}
+              style={styles.inputInner}
               placeholder="••••••••"
               placeholderTextColor={colors.textMuted}
               value={password}
@@ -101,10 +106,17 @@ export function LoginScreen({ onNavigateToSignup }: Props) {
           </Pressable>
         </View>
 
-        <Pressable onPress={onNavigateToSignup} style={styles.linkRow}>
-          <Text style={styles.linkText}>
-            Don't have an account?{' '}
-            <Text style={styles.link}>Create one</Text>
+        <View style={styles.helperHint}>
+          <Ionicons name="information-circle-outline" size={15} color={colors.textMuted} />
+          <Text style={styles.helperHintText}>
+            Use the credentials your owner gave you
+          </Text>
+        </View>
+
+        <Pressable onPress={onNavigateToSignup} style={styles.ownerLink}>
+          <Text style={styles.ownerLinkText}>
+            Owner?{' '}
+            <Text style={styles.ownerLinkAction}>Create an account</Text>
           </Text>
         </Pressable>
       </View>

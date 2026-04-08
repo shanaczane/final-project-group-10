@@ -10,37 +10,61 @@ export function createStyles(colors: Colors) {
     inner: {
       flex: 1,
       justifyContent: 'center',
-      paddingHorizontal: 24,
+      paddingHorizontal: 28,
+    },
+    logoArea: {
+      alignItems: 'center',
+      marginBottom: 36,
+    },
+    logoMark: {
+      width: 64,
+      height: 64,
+      borderRadius: 16,
+      backgroundColor: colors.cardBackground,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 12,
     },
     appTitle: {
-      fontSize: 32,
-      fontWeight: '700',
-      color: colors.primary,
-      textAlign: 'center',
-      marginBottom: 8,
+      fontSize: 30,
+      fontWeight: '500',
+      color: colors.textPrimary,
+      letterSpacing: -0.5,
     },
-    subtitle: {
-      fontSize: 16,
-      color: colors.textSecondary,
-      textAlign: 'center',
-      marginBottom: 40,
+    tagline: {
+      fontSize: 13,
+      color: colors.textMuted,
+      marginTop: 4,
     },
     form: {
       backgroundColor: colors.surface,
       borderRadius: 16,
       padding: 24,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.06,
-      shadowRadius: 8,
-      elevation: 3,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    formHeading: {
+      fontSize: 18,
+      fontWeight: '500',
+      color: colors.textPrimary,
+      marginBottom: 20,
     },
     label: {
-      fontSize: 14,
-      fontWeight: '600',
+      fontSize: 13,
+      fontWeight: '500',
       color: colors.labelText,
       marginBottom: 6,
-      marginTop: 12,
+      marginTop: 14,
+    },
+    input: {
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 10,
+      paddingHorizontal: 14,
+      paddingVertical: 12,
+      fontSize: 15,
+      color: colors.textPrimary,
+      backgroundColor: colors.inputBackground,
     },
     inputWrapper: {
       flexDirection: 'row',
@@ -50,7 +74,7 @@ export function createStyles(colors: Colors) {
       borderRadius: 10,
       backgroundColor: colors.inputBackground,
     },
-    input: {
+    inputInner: {
       flex: 1,
       paddingHorizontal: 14,
       paddingVertical: 12,
@@ -72,21 +96,32 @@ export function createStyles(colors: Colors) {
       opacity: 0.6,
     },
     buttonText: {
-      color: '#FFFFFF',
-      fontSize: 16,
-      fontWeight: '600',
+      color: '#ffffff',
+      fontSize: 15,
+      fontWeight: '500',
     },
-    linkRow: {
-      marginTop: 24,
+    helperHint: {
+      flexDirection: 'row',
       alignItems: 'center',
+      justifyContent: 'center',
+      gap: 5,
+      marginTop: 24,
     },
-    linkText: {
-      fontSize: 14,
+    helperHintText: {
+      fontSize: 13,
+      color: colors.textMuted,
+    },
+    ownerLink: {
+      alignItems: 'center',
+      marginTop: 12,
+    },
+    ownerLinkText: {
+      fontSize: 13,
       color: colors.textSecondary,
     },
-    link: {
+    ownerLinkAction: {
       color: colors.primary,
-      fontWeight: '600',
+      fontWeight: '500',
     },
   });
 }
