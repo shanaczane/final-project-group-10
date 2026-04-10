@@ -106,6 +106,11 @@ export function createStyles(colors: Colors) {
     qtyTextWarning: {
       color: colors.warning,
     },
+    productRight: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+    },
     emptyContainer: {
       alignItems: 'center',
       justifyContent: 'center',

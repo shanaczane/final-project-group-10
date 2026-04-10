@@ -84,7 +84,8 @@ export function createStyles(colors: Colors) {
       marginTop: 2,
     },
     productRight: {
-      alignItems: 'flex-end',
+      flexDirection: 'row',
+      alignItems: 'center',
       gap: 6,
     },
     qtyBadge: {

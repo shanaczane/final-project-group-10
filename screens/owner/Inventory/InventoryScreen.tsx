@@ -24,6 +24,7 @@ import {
   deleteProduct,
 } from '../../../store';
 import type { Product } from '../../../types';
+import { ProductDetailModal } from '../../shared/ProductDetailModal';
 import { createStyles } from './inventoryscreen.style';
 
 function stockStatus(product: Product): 'red' | 'amber' | 'green' {
@@ -225,6 +226,8 @@ export const InventoryScreen = observer(function InventoryScreen() {
   const [filterCat, setFilterCat] = useState('all');
   const [modalVisible, setModalVisible] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [detailProduct, setDetailProduct] = useState<Product | null>(null);
+  const [detailVisible, setDetailVisible] = useState(false);
 
   useEffect(() => {
     if (products.length === 0) loadAllData();
@@ -239,6 +242,11 @@ export const InventoryScreen = observer(function InventoryScreen() {
   function openAdd(): void {
     setEditingProduct(null);
     setModalVisible(true);
+  }
+
+  function openDetail(product: Product): void {
+    setDetailProduct(product);
+    setDetailVisible(true);
   }
 
   function openEdit(product: Product): void {
@@ -335,7 +343,7 @@ export const InventoryScreen = observer(function InventoryScreen() {
           </View>
         }
         renderItem={({ item }) => (
-          <View style={styles.productRow}>
+          <Pressable style={styles.productRow} onPress={() => openDetail(item)}>
             <View style={[styles.statusDot, { backgroundColor: dotColor(item) }]} />
             <View style={styles.productInfo}>
               <Text style={styles.productName}>{item.name}</Text>
@@ -357,16 +365,9 @@ export const InventoryScreen = observer(function InventoryScreen() {
                   {item.quantity}
                 </Text>
               </View>
-              <View style={styles.rowActions}>
-                <Pressable onPress={() => openEdit(item)} style={styles.actionBtn}>
-                  <Ionicons name="pencil-outline" size={16} color={colors.textSecondary} />
-                </Pressable>
-                <Pressable onPress={() => confirmDelete(item)} style={styles.actionBtn}>
-                  <Ionicons name="trash-outline" size={16} color={colors.danger} />
-                </Pressable>
-              </View>
+              <Ionicons name="chevron-forward" size={16} color={colors.textMuted} />
             </View>
-          </View>
+          </Pressable>
         )}
       />
 
@@ -381,6 +382,15 @@ export const InventoryScreen = observer(function InventoryScreen() {
         onClose={() => setModalVisible(false)}
         colors={colors}
         styles={styles}
+      />
+
+      <ProductDetailModal
+        product={detailProduct}
+        visible={detailVisible}
+        isOwner={true}
+        onClose={() => setDetailVisible(false)}
+        onEdit={(p) => { setDetailVisible(false); openEdit(p); }}
+        onDelete={(p) => { setDetailVisible(false); confirmDelete(p); }}
       />
     </View>
   );

@@ -13,6 +13,7 @@ import { observer } from '@legendapp/state/react';
 import { useTheme } from '../../../context/ThemeContext';
 import { store$, loadAllData } from '../../../store';
 import type { Product } from '../../../types';
+import { ProductDetailModal } from '../../shared/ProductDetailModal';
 import { createStyles } from './inventoryscreen.style';
 
 function stockStatus(product: Product): 'red' | 'amber' | 'green' {
@@ -31,6 +32,8 @@ export const HelperInventoryScreen = observer(function HelperInventoryScreen() {
 
   const [search, setSearch] = useState('');
   const [filterCat, setFilterCat] = useState('all');
+  const [detailProduct, setDetailProduct] = useState<Product | null>(null);
+  const [detailVisible, setDetailVisible] = useState(false);
 
   useEffect(() => {
     if (products.length === 0) loadAllData();
@@ -97,7 +100,7 @@ export const HelperInventoryScreen = observer(function HelperInventoryScreen() {
         ))}
       </ScrollView>
 
-      {/* Product list — read-only, no edit/delete/FAB */}
+      {/* Product list — read-only */}
       <FlatList
         data={filtered}
         keyExtractor={(item) => item.id}
@@ -113,7 +116,10 @@ export const HelperInventoryScreen = observer(function HelperInventoryScreen() {
           </View>
         }
         renderItem={({ item }) => (
-          <View style={styles.productRow}>
+          <Pressable
+            style={styles.productRow}
+            onPress={() => { setDetailProduct(item); setDetailVisible(true); }}
+          >
             <View style={[styles.statusDot, { backgroundColor: dotColor(item) }]} />
             <View style={styles.productInfo}>
               <Text style={styles.productName}>{item.name}</Text>
@@ -121,21 +127,33 @@ export const HelperInventoryScreen = observer(function HelperInventoryScreen() {
                 {item.category?.name ?? 'Uncategorized'} · ₱{item.sell_price.toFixed(2)}
               </Text>
             </View>
-            <View style={[
-              styles.qtyBadge,
-              stockStatus(item) === 'red' && styles.qtyBadgeDanger,
-              stockStatus(item) === 'amber' && styles.qtyBadgeWarning,
-            ]}>
-              <Text style={[
-                styles.qtyText,
-                stockStatus(item) === 'red' && styles.qtyTextDanger,
-                stockStatus(item) === 'amber' && styles.qtyTextWarning,
+            <View style={styles.productRight}>
+              <View style={[
+                styles.qtyBadge,
+                stockStatus(item) === 'red' && styles.qtyBadgeDanger,
+                stockStatus(item) === 'amber' && styles.qtyBadgeWarning,
               ]}>
-                {item.quantity}
-              </Text>
+                <Text style={[
+                  styles.qtyText,
+                  stockStatus(item) === 'red' && styles.qtyTextDanger,
+                  stockStatus(item) === 'amber' && styles.qtyTextWarning,
+                ]}>
+                  {item.quantity}
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward" size={16} color={colors.textMuted} />
             </View>
-          </View>
+          </Pressable>
         )}
+      />
+
+      <ProductDetailModal
+        product={detailProduct}
+        visible={detailVisible}
+        isOwner={false}
+        onClose={() => setDetailVisible(false)}
+        onEdit={() => {}}
+        onDelete={() => {}}
       />
     </View>
   );
