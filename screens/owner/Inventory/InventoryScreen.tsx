@@ -78,20 +78,28 @@ function ProductFormModal({ visible, editing, onClose, colors, styles }: Product
       return;
     }
     setSaving(true);
-    const payload = {
-      name: name.trim(),
-      category_id: categoryId || null,
-      quantity: qty,
-      buy_price: buy,
-      sell_price: sell,
-      min_threshold: min,
-    };
-    const { error } = editing
-      ? await updateProduct(editing.id, payload)
-      : await addProduct(payload);
-    setSaving(false);
-    if (error) { Alert.alert('Error', error); return; }
-    onClose();
+    try {
+      const payload = {
+        name: name.trim(),
+        category_id: categoryId || null,
+        quantity: qty,
+        buy_price: buy,
+        sell_price: sell,
+        min_threshold: min,
+      };
+      const { error } = editing
+        ? await updateProduct(editing.id, payload)
+        : await addProduct(payload);
+      if (error) {
+        Alert.alert('Error', error);
+        return;
+      }
+      onClose();
+    } catch (err) {
+      Alert.alert('Error', err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (

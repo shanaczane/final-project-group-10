@@ -10,6 +10,17 @@ export const store$ = observable({
   loading: false,
 });
 
+// ─── Timeout helper ──────────────────────────────────────────────────────────
+
+function withTimeout<T>(promise: Promise<T>, ms = 10000): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error(`Request timed out after ${ms / 1000}s. Check your internet connection and try again.`)), ms),
+    ),
+  ]);
+}
+
 // ─── Load ────────────────────────────────────────────────────────────────────
 
 export async function loadAllData(): Promise<void> {
@@ -39,13 +50,16 @@ export async function addProduct(
 ): Promise<{ error: string | null }> {
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) return { error: 'Not authenticated' };
-  const { data, error } = await supabase
-    .from('products')
-    .insert({ ...product, owner_id: session.user.id })
-    .select('*, category:categories(*)')
-    .single();
-  if (error) return { error: error.message };
-  store$.products.set([...store$.products.get(), data as Product]);
+  console.log('[addProduct] inserting with owner_id:', session.user.id);
+  const { error } = await withTimeout(
+    supabase.from('products').insert({ ...product, owner_id: session.user.id }),
+  );
+  if (error) {
+    console.error('[addProduct] insert error:', error);
+    return { error: error.message };
+  }
+  console.log('[addProduct] insert success, reloading data');
+  await loadAllData();
   return { error: null };
 }
 
@@ -53,16 +67,12 @@ export async function updateProduct(
   id: string,
   changes: Partial<Omit<Product, 'id' | 'created_at' | 'updated_at' | 'category'>>,
 ): Promise<{ error: string | null }> {
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('products')
     .update({ ...changes, updated_at: new Date().toISOString() })
-    .eq('id', id)
-    .select('*, category:categories(*)')
-    .single();
+    .eq('id', id);
   if (error) return { error: error.message };
-  store$.products.set(
-    store$.products.get().map((p) => (p.id === id ? (data as Product) : p)),
-  );
+  await loadAllData();
   return { error: null };
 }
 
