@@ -43,6 +43,23 @@ interface ProductFormProps {
   styles: ReturnType<typeof createStyles>;
 }
 
+// Strip everything except digits (for whole-number fields)
+function filterInteger(val: string): string {
+  return val.replace(/[^0-9]/g, '');
+}
+
+// Strip everything except digits and one decimal point (for price fields)
+function filterDecimal(val: string): string {
+  const cleaned = val.replace(/[^0-9.]/g, '');
+  const parts = cleaned.split('.');
+  if (parts.length > 2) return parts[0] + '.' + parts[1];
+  // Limit to 2 decimal places
+  if (parts[1] !== undefined && parts[1].length > 2) {
+    return parts[0] + '.' + parts[1].slice(0, 2);
+  }
+  return cleaned;
+}
+
 function ProductFormModal({ visible, editing, onClose, colors, styles }: ProductFormProps) {
   const categories = store$.categories.get();
   const [name, setName] = useState('');
@@ -68,13 +85,32 @@ function ProductFormModal({ visible, editing, onClose, colors, styles }: Product
   }, [editing, visible]);
 
   async function handleSave(): Promise<void> {
-    if (!name.trim()) { Alert.alert('Error', 'Product name is required.'); return; }
+    if (!name.trim()) {
+      Alert.alert('Error', 'Product name is required.');
+      return;
+    }
     const qty = parseInt(quantity, 10);
-    const buy = parseFloat(buyPrice);
-    const sell = parseFloat(sellPrice);
+    if (!quantity || isNaN(qty) || qty < 0) {
+      Alert.alert('Error', 'Quantity must be 0 or more.');
+      return;
+    }
     const min = parseInt(minThreshold, 10);
-    if (isNaN(qty) || isNaN(buy) || isNaN(sell) || isNaN(min)) {
-      Alert.alert('Error', 'Please enter valid numbers for all price/quantity fields.');
+    if (!minThreshold || isNaN(min) || min < 1) {
+      Alert.alert('Error', 'Min stock must be at least 1.');
+      return;
+    }
+    const buy = parseFloat(buyPrice);
+    if (!buyPrice || isNaN(buy) || buy < 0) {
+      Alert.alert('Error', 'Buy price must be 0 or more.');
+      return;
+    }
+    const sell = parseFloat(sellPrice);
+    if (!sellPrice || isNaN(sell) || sell <= 0) {
+      Alert.alert('Error', 'Sell price must be greater than 0.');
+      return;
+    }
+    if (sell < buy) {
+      Alert.alert('Error', 'Sell price cannot be lower than buy price.');
       return;
     }
     setSaving(true);
@@ -155,10 +191,10 @@ function ProductFormModal({ visible, editing, onClose, colors, styles }: Product
               <TextInput
                 style={styles.fieldInput}
                 value={quantity}
-                onChangeText={setQuantity}
+                onChangeText={(v) => setQuantity(filterInteger(v))}
                 placeholder="0"
                 placeholderTextColor={colors.textMuted}
-                keyboardType="numeric"
+                keyboardType="number-pad"
               />
             </View>
             <View style={styles.halfField}>
@@ -166,10 +202,10 @@ function ProductFormModal({ visible, editing, onClose, colors, styles }: Product
               <TextInput
                 style={styles.fieldInput}
                 value={minThreshold}
-                onChangeText={setMinThreshold}
+                onChangeText={(v) => setMinThreshold(filterInteger(v))}
                 placeholder="5"
                 placeholderTextColor={colors.textMuted}
-                keyboardType="numeric"
+                keyboardType="number-pad"
               />
             </View>
           </View>
@@ -180,7 +216,7 @@ function ProductFormModal({ visible, editing, onClose, colors, styles }: Product
               <TextInput
                 style={styles.fieldInput}
                 value={buyPrice}
-                onChangeText={setBuyPrice}
+                onChangeText={(v) => setBuyPrice(filterDecimal(v))}
                 placeholder="0.00"
                 placeholderTextColor={colors.textMuted}
                 keyboardType="decimal-pad"
@@ -191,7 +227,7 @@ function ProductFormModal({ visible, editing, onClose, colors, styles }: Product
               <TextInput
                 style={styles.fieldInput}
                 value={sellPrice}
-                onChangeText={setSellPrice}
+                onChangeText={(v) => setSellPrice(filterDecimal(v))}
                 placeholder="0.00"
                 placeholderTextColor={colors.textMuted}
                 keyboardType="decimal-pad"
