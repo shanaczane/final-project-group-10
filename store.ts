@@ -25,15 +25,28 @@ function withTimeout<T>(promise: Promise<T>, ms = 10000): Promise<T> {
 
 export async function loadAllData(): Promise<void> {
   store$.loading.set(true);
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) {
+    store$.loading.set(false);
+    return;
+  }
+  const ownerId = session.user.id;
+
   const [productsRes, categoriesRes, movementsRes] = await Promise.all([
     supabase
       .from('products')
       .select('*, category:categories(*)')
+      .eq('owner_id', ownerId)
       .order('name'),
-    supabase.from('categories').select('*').order('name'),
+    supabase
+      .from('categories')
+      .select('*')
+      .eq('owner_id', ownerId)
+      .order('name'),
     supabase
       .from('stock_movements')
-      .select('*, product:products(name, sell_price)')
+      .select('*, product:products!inner(name, sell_price, owner_id)')
+      .eq('product.owner_id', ownerId)
       .order('created_at', { ascending: false })
       .limit(50),
   ]);
