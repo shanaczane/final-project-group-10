@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import { observer } from '@legendapp/state/react';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useAuth } from '../../../context/AuthContext';
 import { useTheme } from '../../../context/ThemeContext';
 import {
@@ -23,6 +24,7 @@ export const HelperDashboardScreen = observer(function HelperDashboardScreen() {
   const { user } = useAuth();
   const { colors } = useTheme();
   const styles = createStyles(colors);
+  const tabBarHeight = useBottomTabBarHeight();
 
   const loading = store$.loading.get();
   const products = store$.products.get();
@@ -51,7 +53,7 @@ export const HelperDashboardScreen = observer(function HelperDashboardScreen() {
   return (
     <ScrollView
       style={styles.container}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[styles.content, { paddingBottom: tabBarHeight + 16 }]}
       showsVerticalScrollIndicator={false}
       refreshControl={
         <RefreshControl refreshing={loading} onRefresh={loadAllData} tintColor={colors.primary} />
