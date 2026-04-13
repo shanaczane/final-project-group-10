@@ -150,5 +150,106 @@ export function createStyles(colors: Colors) {
       color: '#ffffff',
       fontWeight: '500',
     },
+    // Products panel (bottom sheet)
+    panelOverlay: {
+      flex: 1,
+      backgroundColor: 'rgba(0,0,0,0.4)',
+    },
+    panelSheet: {
+      backgroundColor: colors.surface,
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
+      maxHeight: '75%',
+      paddingBottom: 32,
+    },
+    panelHandle: {
+      width: 40,
+      height: 4,
+      borderRadius: 2,
+      backgroundColor: colors.border,
+      alignSelf: 'center',
+      marginTop: 12,
+      marginBottom: 4,
+    },
+    panelHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: 20,
+      paddingVertical: 14,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    panelTitleRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+    },
+    panelTitle: {
+      fontSize: 16,
+      fontWeight: '500',
+      color: colors.textPrimary,
+    },
+    panelCount: {
+      fontSize: 12,
+      color: colors.textMuted,
+      backgroundColor: colors.cardBackground,
+      paddingHorizontal: 8,
+      paddingVertical: 2,
+      borderRadius: 10,
+    },
+    panelClose: {
+      padding: 4,
+    },
+    panelList: {
+      paddingHorizontal: 20,
+      paddingTop: 8,
+      paddingBottom: 16,
+    },
+    panelRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: 12,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+      gap: 12,
+    },
+    panelDot: {
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+    },
+    panelProductInfo: {
+      flex: 1,
+    },
+    panelProductName: {
+      fontSize: 14,
+      fontWeight: '500',
+      color: colors.textPrimary,
+    },
+    panelProductPrice: {
+      fontSize: 12,
+      color: colors.textMuted,
+      marginTop: 2,
+    },
+    panelQtyBadge: {
+      paddingHorizontal: 10,
+      paddingVertical: 3,
+      borderRadius: 8,
+    },
+    panelQtyText: {
+      fontSize: 12,
+      fontWeight: '500',
+    },
+    panelEmpty: {
+      alignItems: 'center',
+      paddingTop: 48,
+      paddingBottom: 32,
+      gap: 12,
+    },
+    panelEmptyText: {
+      fontSize: 14,
+      color: colors.textMuted,
+    },
   });
 }

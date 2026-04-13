@@ -6,6 +6,7 @@ import {
   Modal,
   Platform,
   Pressable,
+  ScrollView,
   Text,
   TextInput,
   View,
@@ -21,7 +22,7 @@ import {
   updateCategory,
   deleteCategory,
 } from '../../../store';
-import type { Category } from '../../../types';
+import type { Category, Product } from '../../../types';
 import { createStyles } from './categoriesscreen.style';
 
 export const CategoriesScreen = observer(function CategoriesScreen() {
@@ -30,12 +31,14 @@ export const CategoriesScreen = observer(function CategoriesScreen() {
 
   const categories = store$.categories.get();
   const products = store$.products.get();
-  const loading = store$.loading.get();
 
   const [modalVisible, setModalVisible] = useState(false);
   const [editing, setEditing] = useState<Category | null>(null);
   const [inputName, setInputName] = useState('');
   const [saving, setSaving] = useState(false);
+
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [productsVisible, setProductsVisible] = useState(false);
 
   useEffect(() => {
     if (categories.length === 0) loadAllData();
@@ -83,9 +86,22 @@ export const CategoriesScreen = observer(function CategoriesScreen() {
     ]);
   }
 
-  function productCount(catId: string): number {
-    return products.filter((p) => p.category_id === catId).length;
+  function getCategoryProducts(catId: string): Product[] {
+    return products.filter((p) => p.category_id === catId);
   }
+
+  function openProducts(cat: Category): void {
+    setSelectedCategory(cat);
+    setProductsVisible(true);
+  }
+
+  function stockStatus(p: Product): 'danger' | 'warning' | 'ok' {
+    if (p.quantity <= p.min_threshold) return 'danger';
+    if (p.quantity <= p.min_threshold * 1.5) return 'warning';
+    return 'ok';
+  }
+
+  const catProducts = selectedCategory ? getCategoryProducts(selectedCategory.id) : [];
 
   return (
     <View style={styles.container}>
@@ -107,28 +123,94 @@ export const CategoriesScreen = observer(function CategoriesScreen() {
             <Text style={styles.emptyText}>No categories yet. Tap Add to create one.</Text>
           </View>
         }
-        renderItem={({ item }) => (
-          <View style={styles.categoryRow}>
-            <View style={styles.categoryIcon}>
+        renderItem={({ item }) => {
+          const count = getCategoryProducts(item.id).length;
+          return (
+            <Pressable style={styles.categoryRow} onPress={() => openProducts(item)}>
+              <View style={styles.categoryIcon}>
+                <Ionicons name="pricetag-outline" size={18} color={colors.primary} />
+              </View>
+              <View style={styles.categoryInfo}>
+                <Text style={styles.categoryName}>{item.name}</Text>
+                <Text style={styles.categoryCount}>
+                  {count} product{count !== 1 ? 's' : ''}
+                </Text>
+              </View>
+              <View style={styles.rowActions}>
+                <Pressable onPress={() => openEdit(item)} style={styles.actionBtn}>
+                  <Ionicons name="pencil-outline" size={18} color={colors.textSecondary} />
+                </Pressable>
+                <Pressable onPress={() => confirmDelete(item)} style={styles.actionBtn}>
+                  <Ionicons name="trash-outline" size={18} color={colors.danger} />
+                </Pressable>
+              </View>
+            </Pressable>
+          );
+        }}
+      />
+
+      {/* Products Panel */}
+      <Modal
+        visible={productsVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setProductsVisible(false)}
+      >
+        <Pressable
+          style={styles.panelOverlay}
+          onPress={() => setProductsVisible(false)}
+        />
+        <View style={styles.panelSheet}>
+          <View style={styles.panelHandle} />
+          <View style={styles.panelHeader}>
+            <View style={styles.panelTitleRow}>
               <Ionicons name="pricetag-outline" size={18} color={colors.primary} />
-            </View>
-            <View style={styles.categoryInfo}>
-              <Text style={styles.categoryName}>{item.name}</Text>
-              <Text style={styles.categoryCount}>
-                {productCount(item.id)} product{productCount(item.id) !== 1 ? 's' : ''}
+              <Text style={styles.panelTitle}>{selectedCategory?.name}</Text>
+              <Text style={styles.panelCount}>
+                {catProducts.length} item{catProducts.length !== 1 ? 's' : ''}
               </Text>
             </View>
-            <View style={styles.rowActions}>
-              <Pressable onPress={() => openEdit(item)} style={styles.actionBtn}>
-                <Ionicons name="pencil-outline" size={18} color={colors.textSecondary} />
-              </Pressable>
-              <Pressable onPress={() => confirmDelete(item)} style={styles.actionBtn}>
-                <Ionicons name="trash-outline" size={18} color={colors.danger} />
-              </Pressable>
-            </View>
+            <Pressable onPress={() => setProductsVisible(false)} style={styles.panelClose}>
+              <Ionicons name="close" size={22} color={colors.textSecondary} />
+            </Pressable>
           </View>
-        )}
-      />
+
+          {catProducts.length === 0 ? (
+            <View style={styles.panelEmpty}>
+              <Ionicons name="cube-outline" size={40} color={colors.textMuted} />
+              <Text style={styles.panelEmptyText}>No products in this category.</Text>
+            </View>
+          ) : (
+            <ScrollView contentContainerStyle={styles.panelList}>
+              {catProducts.map((p) => {
+                const status = stockStatus(p);
+                const dotColor =
+                  status === 'danger' ? colors.danger
+                  : status === 'warning' ? colors.warning
+                  : colors.success;
+                const badgeBg =
+                  status === 'danger' ? colors.dangerBackground
+                  : status === 'warning' ? colors.warningBackground
+                  : colors.successBackground;
+                return (
+                  <View key={p.id} style={styles.panelRow}>
+                    <View style={[styles.panelDot, { backgroundColor: dotColor }]} />
+                    <View style={styles.panelProductInfo}>
+                      <Text style={styles.panelProductName}>{p.name}</Text>
+                      <Text style={styles.panelProductPrice}>₱{p.sell_price.toFixed(2)}</Text>
+                    </View>
+                    <View style={[styles.panelQtyBadge, { backgroundColor: badgeBg }]}>
+                      <Text style={[styles.panelQtyText, { color: dotColor }]}>
+                        {p.quantity} left
+                      </Text>
+                    </View>
+                  </View>
+                );
+              })}
+            </ScrollView>
+          )}
+        </View>
+      </Modal>
 
       {/* Add / Edit Modal */}
       <Modal visible={modalVisible} transparent animationType="fade">
