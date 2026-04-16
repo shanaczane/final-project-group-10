@@ -19,7 +19,7 @@ import type { Product } from '../../../types';
 import { createStyles } from './salesscreen.style';
 
 export const HelperSalesScreen = observer(function HelperSalesScreen() {
-  const { user } = useAuth();
+  const { user, session } = useAuth();
   const { colors } = useTheme();
   const styles = createStyles(colors);
 
@@ -56,7 +56,9 @@ export const HelperSalesScreen = observer(function HelperSalesScreen() {
   }
 
   async function handleConfirm(): Promise<void> {
-    if (!selected || !user) return;
+    if (!selected) return;
+    const recordedById = user?.id ?? session?.user?.id;
+    if (!recordedById) { Alert.alert('Error', 'Not logged in.'); return; }
     Alert.alert(
       'Confirm Sale',
       `Sell ${quantity} × ${selected.name} for ₱${(quantity * selected.sell_price).toFixed(2)}?`,
@@ -66,7 +68,7 @@ export const HelperSalesScreen = observer(function HelperSalesScreen() {
           text: 'Confirm',
           onPress: async () => {
             setSaving(true);
-            const { error } = await recordSale(selected.id, quantity, user.id);
+            const { error } = await recordSale(selected.id, quantity, recordedById);
             setSaving(false);
             if (error) { Alert.alert('Error', error); return; }
             Alert.alert('Sale Recorded', `${quantity} × ${selected.name} sold.`);

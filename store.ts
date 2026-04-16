@@ -149,16 +149,14 @@ export async function recordSale(
   const newQty = product.quantity - quantity;
 
   // Insert movement
-  const { data: movement, error: moveErr } = await supabase
+  const { error: moveErr } = await supabase
     .from('stock_movements')
     .insert({
       product_id: productId,
       quantity_change: -quantity,
       movement_type: 'sale',
       recorded_by: recordedBy,
-    })
-    .select('*, product:products(name, sell_price)')
-    .single();
+    });
   if (moveErr) return { error: moveErr.message };
 
   // Update product quantity
@@ -168,16 +166,8 @@ export async function recordSale(
     .eq('id', productId);
   if (prodErr) return { error: prodErr.message };
 
-  // Update local state
-  store$.products.set(
-    store$.products.get().map((p) =>
-      p.id === productId ? { ...p, quantity: newQty } : p,
-    ),
-  );
-  store$.stockMovements.set([
-    movement as StockMovement,
-    ...store$.stockMovements.get(),
-  ]);
+  // Reload to get fresh state
+  await loadAllData();
 
   return { error: null };
 }

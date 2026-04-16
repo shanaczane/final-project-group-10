@@ -19,7 +19,7 @@ import type { Product } from '../../../types';
 import { createStyles } from './salesscreen.style';
 
 export const SalesScreen = observer(function SalesScreen() {
-  const { user } = useAuth();
+  const { user, session } = useAuth();
   const { colors } = useTheme();
   const styles = createStyles(colors);
 
@@ -57,7 +57,8 @@ export const SalesScreen = observer(function SalesScreen() {
 
   async function handleConfirm(): Promise<void> {
     if (!selected) return;
-    if (!user) return;
+    const recordedById = user?.id ?? session?.user?.id;
+    if (!recordedById) { Alert.alert('Error', 'Not logged in.'); return; }
     if (quantity < 1) { Alert.alert('Error', 'Quantity must be at least 1.'); return; }
     if (quantity > selected.quantity) {
       Alert.alert('Error', `Only ${selected.quantity} units in stock.`);
@@ -73,7 +74,7 @@ export const SalesScreen = observer(function SalesScreen() {
           text: 'Confirm',
           onPress: async () => {
             setSaving(true);
-            const { error } = await recordSale(selected.id, quantity, user.id);
+            const { error } = await recordSale(selected.id, quantity, recordedById);
             setSaving(false);
             if (error) { Alert.alert('Error', error); return; }
             Alert.alert('Sale Recorded', `${quantity} × ${selected.name} sold.`);
