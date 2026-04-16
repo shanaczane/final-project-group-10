@@ -41,6 +41,9 @@ yarn-error.*
 /ios
 /android
 
+# Supabase CLI temp files
+supabase/.temp/
+
 /.claude
 
 CLAUDE.md
