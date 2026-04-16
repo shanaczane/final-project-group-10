@@ -1,15 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
+  Pressable,
   RefreshControl,
   ScrollView,
   Text,
+  TextInput,
   View,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { observer } from '@legendapp/state/react';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useAuth } from '../../../context/AuthContext';
 import { useTheme } from '../../../context/ThemeContext';
+import { supabase } from '../../../lib/supabase';
 import {
   store$,
   loadAllData,
@@ -56,9 +60,58 @@ export const DashboardScreen = observer(function DashboardScreen() {
   const products = store$.products.get();
   const movements = store$.stockMovements.get();
 
+  // AI Summary state
+  const [aiSummary, setAiSummary] = useState<string | null>(null);
+  const [aiSummaryLoading, setAiSummaryLoading] = useState(false);
+  const [aiSummaryError, setAiSummaryError] = useState<string | null>(null);
+
+  // NL Query state
+  const [query, setQuery] = useState('');
+  const [queryAnswer, setQueryAnswer] = useState<string | null>(null);
+  const [queryLoading, setQueryLoading] = useState(false);
+  const [queryError, setQueryError] = useState(false);
+
   useEffect(() => {
     loadAllData();
   }, []);
+
+  async function fetchAiSummary(): Promise<void> {
+    setAiSummaryLoading(true);
+    setAiSummaryError(null);
+    try {
+      const { data, error } = await supabase.functions.invoke('ai-summary');
+      if (error || !data?.summary) {
+        setAiSummaryError(data?.error ?? error?.message ?? 'Unknown error');
+      } else {
+        setAiSummary(data.summary);
+      }
+    } catch (e) {
+      setAiSummaryError(e instanceof Error ? e.message : 'Unknown error');
+    } finally {
+      setAiSummaryLoading(false);
+    }
+  }
+
+  async function handleAskQuery(): Promise<void> {
+    if (!query.trim()) return;
+    setQueryLoading(true);
+    setQueryError(false);
+    setQueryAnswer(null);
+    try {
+      const { data, error } = await supabase.functions.invoke('ai-query', {
+        body: { question: query.trim() },
+      });
+      if (error || !data?.answer) {
+        setQueryError(true);
+      } else {
+        setQueryAnswer(data.answer);
+      }
+    } catch {
+      setQueryError(true);
+    } finally {
+      setQueryLoading(false);
+    }
+  }
 
   const lowStockItems = getLowStockItems(products);
   const totalValue = getTotalInventoryValue(products);
@@ -100,14 +153,9 @@ export const DashboardScreen = observer(function DashboardScreen() {
         </View>
       </View>
 
-      {/* Metric cards — 2×2 grid */}
+      {/* Metric cards */}
       <View style={styles.metricsGrid}>
-        <MetricCard
-          label="Total Products"
-          value={String(products.length)}
-          styles={styles}
-          colors={colors}
-        />
+        <MetricCard label="Total Products" value={String(products.length)} styles={styles} colors={colors} />
         <MetricCard
           label="Low Stock"
           value={String(lowStockItems.length)}
@@ -121,13 +169,43 @@ export const DashboardScreen = observer(function DashboardScreen() {
           styles={styles}
           colors={colors}
         />
-        <MetricCard
-          label="Sales Today"
-          value={String(salesToday)}
-          sub="units sold"
-          styles={styles}
-          colors={colors}
-        />
+        <MetricCard label="Sales Today" value={String(salesToday)} sub="units sold" styles={styles} colors={colors} />
+      </View>
+
+      {/* AI Weekly Summary */}
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <View style={styles.sectionTitleRow}>
+            <Ionicons name="sparkles" size={15} color={colors.primary} />
+            <Text style={styles.sectionTitle}>AI Weekly Summary</Text>
+          </View>
+          <Pressable onPress={fetchAiSummary} disabled={aiSummaryLoading} style={styles.refreshBtn}>
+            {aiSummaryLoading
+              ? <ActivityIndicator size="small" color={colors.primary} />
+              : <Ionicons name="refresh-outline" size={16} color={colors.primary} />}
+          </Pressable>
+        </View>
+        <View style={styles.aiCard}>
+          {aiSummaryLoading && !aiSummary ? (
+            <View style={styles.aiLoadingRow}>
+              <ActivityIndicator size="small" color={colors.primary} />
+              <Text style={styles.aiLoadingText}>Generating summary…</Text>
+            </View>
+          ) : aiSummaryError ? (
+            <View style={styles.aiErrorRow}>
+              <Ionicons name="alert-circle-outline" size={16} color={colors.danger} />
+              <Text style={[styles.aiErrorText, { flex: 1 }]}>{aiSummaryError}</Text>
+              <Pressable onPress={fetchAiSummary} style={styles.retryBtn}>
+                <Text style={styles.retryBtnText}>Retry</Text>
+              </Pressable>
+            </View>
+          ) : aiSummary ? (
+            <>
+              <Text style={styles.aiSummaryText}>{aiSummary}</Text>
+              <Text style={styles.aiTimestamp}>Generated just now</Text>
+            </>
+          ) : null}
+        </View>
       </View>
 
       {/* Low-stock alerts */}
@@ -140,9 +218,7 @@ export const DashboardScreen = observer(function DashboardScreen() {
                 <View style={styles.alertDot} />
                 <Text style={styles.alertName}>{p.name}</Text>
               </View>
-              <Text style={styles.alertQty}>
-                {p.quantity} left
-              </Text>
+              <Text style={styles.alertQty}>{p.quantity} left</Text>
             </View>
           ))}
         </View>
@@ -158,14 +234,9 @@ export const DashboardScreen = observer(function DashboardScreen() {
             <Text style={[styles.weeklyCell, styles.weeklyHeadText, styles.weeklyRight]}>Amount</Text>
           </View>
           {weeklySales.map((row, i) => (
-            <View
-              key={i}
-              style={[styles.weeklyRow, i % 2 === 0 && styles.weeklyRowAlt]}
-            >
+            <View key={i} style={[styles.weeklyRow, i % 2 === 0 && styles.weeklyRowAlt]}>
               <Text style={styles.weeklyCell}>{row.day}</Text>
-              <Text style={[styles.weeklyCell, styles.weeklyRight]}>
-                {row.qty > 0 ? row.qty : '—'}
-              </Text>
+              <Text style={[styles.weeklyCell, styles.weeklyRight]}>{row.qty > 0 ? row.qty : '—'}</Text>
               <Text style={[styles.weeklyCell, styles.weeklyRight, row.amount > 0 && styles.weeklyAmount]}>
                 {row.amount > 0
                   ? `₱${row.amount.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
@@ -174,6 +245,44 @@ export const DashboardScreen = observer(function DashboardScreen() {
             </View>
           ))}
         </View>
+      </View>
+
+      {/* Natural Language Query */}
+      <View style={styles.section}>
+        <View style={styles.sectionTitleRow}>
+          <Ionicons name="chatbubble-ellipses-outline" size={15} color={colors.primary} />
+          <Text style={styles.sectionTitle}>Ask About Your Store</Text>
+        </View>
+        <View style={styles.queryInputRow}>
+          <TextInput
+            style={styles.queryInput}
+            placeholder="e.g. How much did I earn today?"
+            placeholderTextColor={colors.textMuted}
+            value={query}
+            onChangeText={setQuery}
+            onSubmitEditing={handleAskQuery}
+            returnKeyType="send"
+          />
+          <Pressable
+            style={[styles.askBtn, (!query.trim() || queryLoading) && styles.askBtnDisabled]}
+            onPress={handleAskQuery}
+            disabled={!query.trim() || queryLoading}
+          >
+            {queryLoading
+              ? <ActivityIndicator size="small" color="#fff" />
+              : <Text style={styles.askBtnText}>Ask</Text>}
+          </Pressable>
+        </View>
+        {queryAnswer && (
+          <View style={styles.aiCard}>
+            <Text style={styles.aiSummaryText}>{queryAnswer}</Text>
+          </View>
+        )}
+        {queryError && (
+          <View style={[styles.aiCard, styles.aiErrorCard]}>
+            <Text style={styles.aiErrorText}>Could not get an answer. Try again.</Text>
+          </View>
+        )}
       </View>
 
       {/* Stock movement history */}
@@ -185,28 +294,15 @@ export const DashboardScreen = observer(function DashboardScreen() {
           recentMovements.map((m) => (
             <View key={m.id} style={styles.movementRow}>
               <View style={styles.movementLeft}>
-                <Text style={styles.movementProduct}>
-                  {m.product?.name ?? 'Unknown'}
-                </Text>
+                <Text style={styles.movementProduct}>{m.product?.name ?? 'Unknown'}</Text>
                 <Text style={styles.movementDate}>
                   {new Date(m.created_at).toLocaleDateString('en-PH', {
-                    month: 'short',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
+                    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
                   })}
                 </Text>
               </View>
-              <Text
-                style={[
-                  styles.movementQty,
-                  m.quantity_change < 0
-                    ? styles.movementSale
-                    : styles.movementRestock,
-                ]}
-              >
-                {m.quantity_change > 0 ? '+' : ''}
-                {m.quantity_change}
+              <Text style={[styles.movementQty, m.quantity_change < 0 ? styles.movementSale : styles.movementRestock]}>
+                {m.quantity_change > 0 ? '+' : ''}{m.quantity_change}
               </Text>
             </View>
           ))
