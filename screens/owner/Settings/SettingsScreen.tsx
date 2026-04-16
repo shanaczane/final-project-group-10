@@ -81,16 +81,12 @@ export function SettingsScreen() {
         return;
       }
 
-      const newUserId: string | undefined = result.id;
+      // When email confirmation is disabled, Supabase returns a session object
+      // with the user nested under result.user.id instead of result.id
+      const newUserId: string | undefined = result.user?.id ?? result.id;
       if (!newUserId) {
         setCreatingHelper(false);
-        Alert.alert(
-          'Error',
-          'Could not get user ID from Supabase.\n\n' +
-          '• Go to Supabase → Authentication → Providers → Email\n' +
-          '• Disable "Confirm email"\n' +
-          '• Try again',
-        );
+        Alert.alert('Error', 'Could not get user ID from Supabase. Please try again.');
         return;
       }
 
