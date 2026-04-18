@@ -30,7 +30,17 @@ export async function loadAllData(): Promise<void> {
     store$.loading.set(false);
     return;
   }
-  const ownerId = session.user.id;
+
+  const { data: userData } = await supabase
+    .from('users')
+    .select('role, owner_id')
+    .eq('id', session.user.id)
+    .single();
+
+  const ownerId =
+    userData?.role === 'helper' && userData?.owner_id
+      ? userData.owner_id
+      : session.user.id;
 
   const [productsRes, categoriesRes, movementsRes] = await Promise.all([
     supabase
