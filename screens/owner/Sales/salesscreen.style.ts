@@ -12,20 +12,18 @@ export function createStyles(colors: Colors) {
       paddingTop: 56,
       paddingBottom: 40,
     },
+    header: {
+      paddingHorizontal: 20,
+      paddingTop: 56,
+      paddingBottom: 12,
+    },
     pageTitle: {
       fontSize: 22,
       fontWeight: '500',
       color: colors.textPrimary,
-      marginBottom: 24,
+      marginBottom: 16,
     },
-    label: {
-      fontSize: 13,
-      fontWeight: '500',
-      color: colors.labelText,
-      marginBottom: 8,
-      marginTop: 20,
-    },
-    searchBox: {
+    searchRow: {
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: colors.surface,
@@ -33,16 +31,81 @@ export function createStyles(colors: Colors) {
       borderColor: colors.border,
       borderRadius: 12,
       paddingHorizontal: 14,
-      paddingVertical: 12,
+      paddingVertical: 10,
       gap: 10,
     },
-    searchBoxText: {
+    searchInput: {
       flex: 1,
       fontSize: 15,
       color: colors.textPrimary,
     },
-    searchBoxPlaceholder: {
+    listContent: {
+      paddingBottom: 24,
+    },
+    productRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 20,
+      paddingVertical: 14,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    productRowInfo: {
+      flex: 1,
+    },
+    productRowName: {
+      fontSize: 15,
+      fontWeight: '500',
+      color: colors.textPrimary,
+    },
+    productRowMeta: {
+      fontSize: 12,
       color: colors.textMuted,
+      marginTop: 2,
+    },
+    productRowPrice: {
+      fontSize: 14,
+      fontWeight: '500',
+      color: colors.success,
+    },
+    selectedHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.surface,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 12,
+      padding: 14,
+      gap: 12,
+    },
+    selectedName: {
+      fontSize: 16,
+      fontWeight: '500',
+      color: colors.textPrimary,
+    },
+    selectedMeta: {
+      fontSize: 12,
+      color: colors.textMuted,
+      marginTop: 2,
+    },
+    changeBtn: {
+      paddingHorizontal: 14,
+      paddingVertical: 6,
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: colors.primary,
+    },
+    changeBtnText: {
+      fontSize: 13,
+      fontWeight: '500',
+      color: colors.primary,
+    },
+    label: {
+      fontSize: 13,
+      fontWeight: '500',
+      color: colors.labelText,
+      marginBottom: 8,
+      marginTop: 20,
     },
     infoCard: {
       backgroundColor: colors.surface,
@@ -152,8 +215,9 @@ export function createStyles(colors: Colors) {
       fontWeight: '500',
     },
     emptyContainer: {
+      flex: 1,
       alignItems: 'center',
-      paddingTop: 60,
+      justifyContent: 'center',
       gap: 12,
     },
     emptyText: {
@@ -161,74 +225,6 @@ export function createStyles(colors: Colors) {
       color: colors.textMuted,
       textAlign: 'center',
       paddingHorizontal: 40,
-    },
-    // Picker modal
-    pickerContainer: {
-      flex: 1,
-    },
-    pickerHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      paddingHorizontal: 20,
-      paddingTop: 20,
-      paddingBottom: 16,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
-    },
-    pickerTitle: {
-      fontSize: 18,
-      fontWeight: '500',
-      color: colors.textPrimary,
-    },
-    pickerSearch: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      margin: 16,
-      backgroundColor: colors.inputBackground,
-      borderWidth: 1,
-      borderColor: colors.border,
-      borderRadius: 12,
-      paddingHorizontal: 12,
-      paddingVertical: 10,
-      gap: 8,
-    },
-    pickerSearchInput: {
-      flex: 1,
-      fontSize: 14,
-      color: colors.textPrimary,
-    },
-    pickerRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      paddingHorizontal: 20,
-      paddingVertical: 14,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
-    },
-    pickerRowInfo: {
-      flex: 1,
-    },
-    pickerRowName: {
-      fontSize: 15,
-      fontWeight: '500',
-      color: colors.textPrimary,
-    },
-    pickerRowMeta: {
-      fontSize: 12,
-      color: colors.textMuted,
-      marginTop: 2,
-    },
-    pickerRowPrice: {
-      fontSize: 14,
-      fontWeight: '500',
-      color: colors.success,
-    },
-    pickerEmpty: {
-      textAlign: 'center',
-      color: colors.textMuted,
-      fontSize: 14,
-      paddingTop: 40,
     },
   });
 }
