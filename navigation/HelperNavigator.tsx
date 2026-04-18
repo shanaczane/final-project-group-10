@@ -1,6 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../context/ThemeContext';
 import { HelperDashboardScreen } from '../screens/helper/Dashboard/DashboardScreen';
 import { HelperInventoryScreen } from '../screens/helper/Inventory/InventoryScreen';
@@ -25,6 +26,7 @@ const TAB_ICONS: Record<string, { focused: string; unfocused: string }> = {
 
 export function HelperNavigator() {
   const { colors } = useTheme();
+  const insets = useSafeAreaInsets();
 
   return (
     <Tab.Navigator
@@ -35,8 +37,8 @@ export function HelperNavigator() {
         tabBarStyle: {
           backgroundColor: colors.tabBar,
           borderTopColor: colors.tabBarBorder,
-          paddingBottom: 4,
-          height: 60,
+          paddingBottom: insets.bottom || 4,
+          height: 60 + (insets.bottom || 0),
         },
         tabBarLabelStyle: {
           fontSize: 11,
