@@ -89,5 +89,21 @@ export function createStyles(colors: Colors) {
       color: colors.primary,
       fontWeight: '600',
     },
+    hintsContainer: {
+      marginTop: 8,
+      gap: 4,
+    },
+    hintRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+    },
+    hintText: {
+      fontSize: 12,
+      color: colors.textMuted,
+    },
+    hintMet: {
+      color: colors.success,
+    },
   });
 }

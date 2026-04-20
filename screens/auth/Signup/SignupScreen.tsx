@@ -32,17 +32,22 @@ export function SignupScreen({ onNavigateToLogin }: Props) {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const hasMinLength = password.length >= 8;
+  const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+  const passwordValid = hasMinLength && hasSpecialChar;
+  const showHints = password.length > 0;
+
   async function handleSignup(): Promise<void> {
     if (!email.trim() || !password.trim() || !storeName.trim()) {
       Alert.alert('Error', 'Please fill in all fields.');
       return;
     }
-    if (password !== confirmPassword) {
-      Alert.alert('Error', 'Passwords do not match.');
+    if (!passwordValid) {
+      Alert.alert('Weak Password', 'Password must be at least 8 characters and include a special character (e.g. @, #, $).');
       return;
     }
-    if (password.length < 6) {
-      Alert.alert('Error', 'Password must be at least 6 characters.');
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match.');
       return;
     }
 
@@ -117,6 +122,31 @@ export function SignupScreen({ onNavigateToLogin }: Props) {
               />
             </Pressable>
           </View>
+
+          {showHints && (
+            <View style={styles.hintsContainer}>
+              <View style={styles.hintRow}>
+                <Ionicons
+                  name={hasMinLength ? 'checkmark-circle' : 'ellipse-outline'}
+                  size={14}
+                  color={hasMinLength ? colors.success : colors.textMuted}
+                />
+                <Text style={[styles.hintText, hasMinLength && styles.hintMet]}>
+                  At least 8 characters
+                </Text>
+              </View>
+              <View style={styles.hintRow}>
+                <Ionicons
+                  name={hasSpecialChar ? 'checkmark-circle' : 'ellipse-outline'}
+                  size={14}
+                  color={hasSpecialChar ? colors.success : colors.textMuted}
+                />
+                <Text style={[styles.hintText, hasSpecialChar && styles.hintMet]}>
+                  At least 1 special character (e.g. @, #, $)
+                </Text>
+              </View>
+            </View>
+          )}
 
           <Text style={styles.label}>Confirm Password</Text>
           <View style={styles.inputWrapper}>

@@ -33,6 +33,10 @@ export function LoginScreen({ onNavigateToSignup }: Props) {
       Alert.alert('Error', 'Please enter your email and password.');
       return;
     }
+    if (password.length < 8 || !/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+      Alert.alert('Invalid Password', 'Password must be at least 8 characters and include a special character (e.g. @, #, $).');
+      return;
+    }
     setLoading(true);
     const { error } = await signIn(email.trim(), password);
     setLoading(false);
