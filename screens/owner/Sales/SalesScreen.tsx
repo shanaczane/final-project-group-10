@@ -97,6 +97,11 @@ export const SalesScreen = observer(function SalesScreen() {
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
+        <Pressable style={styles.backBtn} onPress={clearSelection}>
+          <Ionicons name="arrow-back" size={22} color={colors.textPrimary} />
+          <Text style={styles.backBtnText}>Back</Text>
+        </Pressable>
+
         <Text style={styles.pageTitle}>Record Sale</Text>
 
         <View style={styles.selectedHeader}>

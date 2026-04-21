@@ -17,6 +17,16 @@ export function createStyles(colors: Colors) {
       paddingTop: 56,
       paddingBottom: 12,
     },
+    backBtn: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      marginBottom: 16,
+    },
+    backBtnText: {
+      fontSize: 15,
+      color: colors.textPrimary,
+    },
     pageTitle: {
       fontSize: 22,
       fontWeight: '500',
