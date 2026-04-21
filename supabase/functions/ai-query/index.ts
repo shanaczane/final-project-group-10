@@ -68,38 +68,70 @@ serve(async (req) => {
     );
 
     // Build data summary for context
-    const today = new Date().toDateString();
-    const todayMovements = movements.filter(
-      (m: any) => new Date(m.created_at).toDateString() === today && m.movement_type === 'sale',
-    );
-    const todaySales = todayMovements.reduce(
-      (sum: number, m: any) => sum + Math.abs(m.quantity_change) * (m.product?.sell_price ?? 0), 0,
-    );
+    const now = new Date();
+    const todayLabel = now.toLocaleDateString('en-PH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-    const lowStock = products.filter(
-      (p: any) => p.quantity <= p.min_threshold,
-    );
+    const saleMoves = (movements as any[]).filter((m) => m.movement_type === 'sale');
 
-    const productList = products.map(
-      (p: any) => `${p.name} (qty: ${p.quantity}, price: ₱${p.sell_price})`,
+    // Build per-date sales breakdown for last 7 days
+    const dayMap = new Map<string, { label: string; units: number; total: number }>();
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(now);
+      d.setDate(d.getDate() - i);
+      const key = d.toDateString();
+      const label = d.toLocaleDateString('en-PH', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+      dayMap.set(key, { label, units: 0, total: 0 });
+    }
+    for (const m of saleMoves) {
+      const key = new Date(m.created_at).toDateString();
+      if (dayMap.has(key)) {
+        const entry = dayMap.get(key)!;
+        const units = Math.abs(m.quantity_change);
+        entry.units += units;
+        entry.total += units * (m.product?.sell_price ?? 0);
+      }
+    }
+    const weeklySales = Array.from(dayMap.values())
+      .map((d) => `  ${d.label}: ${d.units} units, ₱${d.total.toFixed(2)}`)
+      .join('\n');
+
+    // Recent individual sales (last 20)
+    const recentSales = saleMoves.slice(0, 20).map((m: any) => {
+      const d = new Date(m.created_at);
+      const dateStr = d.toLocaleDateString('en-PH', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+      const timeStr = d.toLocaleTimeString('en-PH', { hour: '2-digit', minute: '2-digit' });
+      const units = Math.abs(m.quantity_change);
+      const amount = units * (m.product?.sell_price ?? 0);
+      return `  ${m.product?.name ?? 'Unknown'} x${units} on ${dateStr} at ${timeStr}: ₱${amount.toFixed(2)}`;
+    }).join('\n');
+
+    const lowStock = (products as any[]).filter((p) => p.quantity <= p.min_threshold);
+    const productList = (products as any[]).map(
+      (p) => `${p.name} (qty: ${p.quantity}, price: ₱${p.sell_price})`,
     ).join('\n');
-
     const lowStockList = lowStock.map(
       (p: any) => `${p.name} (${p.quantity} left, min: ${p.min_threshold})`,
     ).join(', ');
 
     const prompt = `You are a helpful assistant for a small Filipino retail store. Answer the owner's question based on their store data.
 
-Store data snapshot:
+Today is ${todayLabel}.
+
+Sales by day (last 7 days):
+${weeklySales}
+
+Recent individual sales:
+${recentSales || '  No sales yet.'}
+
+Inventory:
 - Total products: ${products.length}
-- Today's sales total: ₱${todaySales.toFixed(2)} across ${todayMovements.length} transactions
-- Low stock products (${lowStock.length}): ${lowStockList || 'none'}
+- Low stock (${lowStock.length}): ${lowStockList || 'none'}
 - Product list:
 ${productList}
 
 Question: "${question}"
 
-Answer in 1-3 sentences in the same language as the question (Filipino or English). Be direct and specific. Use ₱ for prices.`;
+Answer in 1-3 sentences in the same language as the question (Filipino or English). Be direct and specific with dates and amounts. Use ₱ for prices.`;
 
     const geminiRes = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${Deno.env.get('GEMINI_API_KEY')}`,
@@ -118,7 +150,8 @@ Answer in 1-3 sentences in the same language as the question (Filipino or Englis
     }
 
     const geminiData = await geminiRes.json();
-    const answer = geminiData.candidates?.[0]?.content?.parts?.[0]?.text ?? 'Could not generate an answer.';
+    const parts: { text?: string }[] = geminiData.candidates?.[0]?.content?.parts ?? [];
+    const answer = parts.map((p) => p.text ?? '').join('') || 'Could not generate an answer.';
 
     return new Response(JSON.stringify({ answer }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

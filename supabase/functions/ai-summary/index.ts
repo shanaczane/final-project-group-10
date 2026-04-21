@@ -110,7 +110,7 @@ Write a brief, actionable summary. Use ₱ for prices. Keep it under 4 sentences
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.7, maxOutputTokens: 200 },
+          generationConfig: { temperature: 0.7, maxOutputTokens: 400 },
         }),
       },
     );
@@ -120,7 +120,8 @@ Write a brief, actionable summary. Use ₱ for prices. Keep it under 4 sentences
     }
 
     const geminiData = await geminiRes.json();
-    const summary = geminiData.candidates?.[0]?.content?.parts?.[0]?.text ?? 'Could not generate summary.';
+    const parts = geminiData.candidates?.[0]?.content?.parts ?? [];
+    const summary = parts.map((p: any) => p.text ?? '').join('') || 'Could not generate summary.';
 
     return new Response(JSON.stringify({ summary }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
