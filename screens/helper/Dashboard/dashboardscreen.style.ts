@@ -315,5 +315,55 @@ export function createStyles(colors: Colors) {
       textAlign: 'center',
       paddingVertical: 16,
     },
+    weekNavRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 12,
+    },
+    weekNavControls: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+    },
+    weekNavBtn: {
+      padding: 4,
+    },
+    weekNavBtnDisabled: {
+      opacity: 0.3,
+    },
+    weekNavLabel: {
+      fontSize: 12,
+      color: colors.textMuted,
+      minWidth: 100,
+      textAlign: 'center',
+    },
+    viewAllText: {
+      fontSize: 13,
+      color: colors.primary,
+      fontWeight: '500',
+    },
+    modalContainer: {
+      flex: 1,
+    },
+    modalHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingHorizontal: 20,
+      paddingTop: 20,
+      paddingBottom: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    modalTitle: {
+      fontSize: 18,
+      fontWeight: '500',
+      color: colors.textPrimary,
+    },
+    modalList: {
+      paddingHorizontal: 20,
+      paddingBottom: 40,
+    },
   });
 }

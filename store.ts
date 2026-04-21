@@ -205,12 +205,13 @@ export function getSalesToday(movements: StockMovement[]): number {
 
 export function getWeeklySales(
   movements: StockMovement[],
+  weekOffset = 0,
 ): { day: string; qty: number; amount: number }[] {
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const now = new Date();
   return Array.from({ length: 7 }, (_, i) => {
     const d = new Date(now);
-    d.setDate(now.getDate() - (6 - i));
+    d.setDate(now.getDate() - (6 - i) - weekOffset * 7);
     const dayStr = d.toDateString();
     const dayMoves = movements.filter(
       (m) =>
@@ -225,4 +226,15 @@ export function getWeeklySales(
     );
     return { day: days[d.getDay()], qty, amount };
   });
+}
+
+export function getWeekLabel(weekOffset = 0): string {
+  const now = new Date();
+  const start = new Date(now);
+  start.setDate(now.getDate() - 6 - weekOffset * 7);
+  const end = new Date(now);
+  end.setDate(now.getDate() - weekOffset * 7);
+  const fmt = (d: Date) =>
+    d.toLocaleDateString('en-PH', { month: 'short', day: 'numeric' });
+  return `${fmt(start)} – ${fmt(end)}`;
 }

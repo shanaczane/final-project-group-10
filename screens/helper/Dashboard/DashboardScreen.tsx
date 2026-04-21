@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
+  FlatList,
+  Modal,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -19,6 +21,7 @@ import {
   getTotalInventoryValue,
   getSalesToday,
   getWeeklySales,
+  getWeekLabel,
 } from '../../../store';
 import { createStyles } from './dashboardscreen.style';
 
@@ -38,6 +41,9 @@ export const HelperDashboardScreen = observer(function HelperDashboardScreen() {
   const [queryAnswer, setQueryAnswer] = useState<string | null>(null);
   const [queryLoading, setQueryLoading] = useState(false);
   const [queryError, setQueryError] = useState(false);
+
+  const [weekOffset, setWeekOffset] = useState(0);
+  const [activityVisible, setActivityVisible] = useState(false);
 
   useEffect(() => {
     loadAllData();
@@ -95,8 +101,9 @@ export const HelperDashboardScreen = observer(function HelperDashboardScreen() {
   const lowStockItems = getLowStockItems(products);
   const totalValue = getTotalInventoryValue(products);
   const salesToday = getSalesToday(movements);
-  const weeklySales = getWeeklySales(movements);
-  const recentMovements = movements.slice(0, 10);
+  const weeklySales = getWeeklySales(movements, weekOffset);
+  const weekLabel = getWeekLabel(weekOffset);
+  const recentMovements = movements.slice(0, 3);
 
   if (loading && products.length === 0) {
     return (
@@ -238,7 +245,22 @@ export const HelperDashboardScreen = observer(function HelperDashboardScreen() {
 
       {/* Weekly sales */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Weekly Sales</Text>
+        <View style={styles.weekNavRow}>
+          <Text style={styles.sectionTitle}>Weekly Sales</Text>
+          <View style={styles.weekNavControls}>
+            <Pressable style={styles.weekNavBtn} onPress={() => setWeekOffset((w) => w + 1)}>
+              <Ionicons name="chevron-back" size={16} color={colors.textPrimary} />
+            </Pressable>
+            <Text style={styles.weekNavLabel}>{weekLabel}</Text>
+            <Pressable
+              style={[styles.weekNavBtn, weekOffset === 0 && styles.weekNavBtnDisabled]}
+              onPress={() => setWeekOffset((w) => Math.max(0, w - 1))}
+              disabled={weekOffset === 0}
+            >
+              <Ionicons name="chevron-forward" size={16} color={weekOffset === 0 ? colors.textMuted : colors.textPrimary} />
+            </Pressable>
+          </View>
+        </View>
         <View style={styles.weeklyTable}>
           <View style={styles.weeklyHeader}>
             <Text style={[styles.weeklyCell, styles.weeklyHeadText]}>Day</Text>
@@ -261,8 +283,13 @@ export const HelperDashboardScreen = observer(function HelperDashboardScreen() {
 
       {/* Recent activity */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Recent Activity</Text>
-        {recentMovements.length === 0 ? (
+        <View style={styles.weekNavRow}>
+          <Text style={styles.sectionTitle}>Recent Activity</Text>
+          <Pressable onPress={() => setActivityVisible(true)}>
+            <Text style={styles.viewAllText}>View all →</Text>
+          </Pressable>
+        </View>
+        {movements.length === 0 ? (
           <Text style={styles.emptyText}>No activity recorded yet.</Text>
         ) : (
           recentMovements.map((m) => (
@@ -282,6 +309,39 @@ export const HelperDashboardScreen = observer(function HelperDashboardScreen() {
           ))
         )}
       </View>
+
+      {/* All activity modal */}
+      <Modal visible={activityVisible} animationType="slide" presentationStyle="pageSheet">
+        <View style={[styles.modalContainer, { backgroundColor: colors.background }]}>
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>All Activity</Text>
+            <Pressable onPress={() => setActivityVisible(false)}>
+              <Ionicons name="close" size={22} color={colors.textPrimary} />
+            </Pressable>
+          </View>
+          <FlatList
+            data={movements}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={styles.modalList}
+            ListEmptyComponent={<Text style={styles.emptyText}>No activity recorded yet.</Text>}
+            renderItem={({ item: m }) => (
+              <View style={styles.movementRow}>
+                <View style={styles.movementLeft}>
+                  <Text style={styles.movementProduct}>{m.product?.name ?? 'Unknown'}</Text>
+                  <Text style={styles.movementDate}>
+                    {new Date(m.created_at).toLocaleDateString('en-PH', {
+                      month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
+                    })}
+                  </Text>
+                </View>
+                <Text style={[styles.movementQty, m.quantity_change < 0 ? styles.movementSale : styles.movementRestock]}>
+                  {m.quantity_change > 0 ? '+' : ''}{m.quantity_change}
+                </Text>
+              </View>
+            )}
+          />
+        </View>
+      </Modal>
     </ScrollView>
   );
 });
