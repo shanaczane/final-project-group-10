@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { observer } from '@legendapp/state/react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../../../context/ThemeContext';
 import { supabase } from '../../../lib/supabase';
 import {
@@ -36,6 +37,7 @@ export const HelperDashboardScreen = observer(function HelperDashboardScreen() {
   const [aiSummary, setAiSummary] = useState<string | null>(null);
   const [aiSummaryLoading, setAiSummaryLoading] = useState(false);
   const [aiSummaryError, setAiSummaryError] = useState<string | null>(null);
+  const [aiSummaryAge, setAiSummaryAge] = useState<string | null>(null);
 
   const [query, setQuery] = useState('');
   const [queryAnswer, setQueryAnswer] = useState<string | null>(null);
@@ -45,10 +47,36 @@ export const HelperDashboardScreen = observer(function HelperDashboardScreen() {
   const [weekOffset, setWeekOffset] = useState(0);
   const [activityVisible, setActivityVisible] = useState(false);
 
+  const CACHE_KEY = 'ai_summary_cache';
+  const CACHE_TTL = 30 * 60 * 1000;
+
   useEffect(() => {
     loadAllData();
-    fetchAiSummary();
+    loadSummaryWithCache();
   }, []);
+
+  async function loadSummaryWithCache(): Promise<void> {
+    try {
+      const raw = await AsyncStorage.getItem(CACHE_KEY);
+      if (raw) {
+        const { text, timestamp } = JSON.parse(raw) as { text: string; timestamp: number };
+        setAiSummary(text);
+        setAiSummaryAge(formatAge(timestamp));
+        if (Date.now() - timestamp < CACHE_TTL) return;
+      }
+    } catch {
+      // cache unreadable, continue to fetch
+    }
+    fetchAiSummary();
+  }
+
+  function formatAge(timestamp: number): string {
+    const mins = Math.floor((Date.now() - timestamp) / 60000);
+    if (mins < 1) return 'updated just now';
+    if (mins < 60) return `updated ${mins}m ago`;
+    const hrs = Math.floor(mins / 60);
+    return `updated ${hrs}h ago`;
+  }
 
   async function fetchAiSummary(): Promise<void> {
     setAiSummaryLoading(true);
@@ -61,12 +89,22 @@ export const HelperDashboardScreen = observer(function HelperDashboardScreen() {
         headers: { Authorization: `Bearer ${token}`, apikey: anonKey },
       });
       if (error || !data?.summary) {
-        setAiSummaryError(data?.error ?? error?.message ?? 'Could not load summary.');
+        if (!aiSummary) {
+          setAiSummaryError(data?.error ?? error?.message ?? 'Could not load summary.');
+        }
       } else {
         setAiSummary(data.summary);
+        setAiSummaryAge('updated just now');
+        setAiSummaryError(null);
+        await AsyncStorage.setItem(
+          CACHE_KEY,
+          JSON.stringify({ text: data.summary, timestamp: Date.now() }),
+        );
       }
-    } catch (e) {
-      setAiSummaryError(e instanceof Error ? e.message : 'Could not load summary.');
+    } catch {
+      if (!aiSummary) {
+        setAiSummaryError('Could not load summary.');
+      }
     } finally {
       setAiSummaryLoading(false);
     }
@@ -166,8 +204,8 @@ export const HelperDashboardScreen = observer(function HelperDashboardScreen() {
             <Text style={styles.aiCardTitle}>AI Weekly Summary</Text>
           </View>
           <View style={styles.aiCardHeaderRight}>
-            {aiSummary && !aiSummaryLoading && (
-              <Text style={styles.aiTimestamp}>updated just now</Text>
+            {aiSummaryAge && !aiSummaryLoading && (
+              <Text style={styles.aiTimestamp}>{aiSummaryAge}</Text>
             )}
             <Pressable onPress={fetchAiSummary} disabled={aiSummaryLoading} style={styles.refreshBtn}>
               {aiSummaryLoading
