@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { observer } from '@legendapp/state/react';
-import { useAuth } from '../../../context/AuthContext';
 import { useTheme } from '../../../context/ThemeContext';
 import { supabase } from '../../../lib/supabase';
 import {
@@ -24,7 +23,6 @@ import {
 import { createStyles } from './dashboardscreen.style';
 
 export const HelperDashboardScreen = observer(function HelperDashboardScreen() {
-  const { user } = useAuth();
   const { colors } = useTheme();
   const styles = createStyles(colors);
 
@@ -34,7 +32,7 @@ export const HelperDashboardScreen = observer(function HelperDashboardScreen() {
 
   const [aiSummary, setAiSummary] = useState<string | null>(null);
   const [aiSummaryLoading, setAiSummaryLoading] = useState(false);
-  const [aiSummaryError, setAiSummaryError] = useState(false);
+  const [aiSummaryError, setAiSummaryError] = useState<string | null>(null);
 
   const [query, setQuery] = useState('');
   const [queryAnswer, setQueryAnswer] = useState<string | null>(null);
@@ -43,11 +41,12 @@ export const HelperDashboardScreen = observer(function HelperDashboardScreen() {
 
   useEffect(() => {
     loadAllData();
+    fetchAiSummary();
   }, []);
 
   async function fetchAiSummary(): Promise<void> {
     setAiSummaryLoading(true);
-    setAiSummaryError(false);
+    setAiSummaryError(null);
     try {
       const { data: sessionData } = await supabase.auth.getSession();
       const anonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!.trim();
@@ -56,12 +55,12 @@ export const HelperDashboardScreen = observer(function HelperDashboardScreen() {
         headers: { Authorization: `Bearer ${token}`, apikey: anonKey },
       });
       if (error || !data?.summary) {
-        setAiSummaryError(true);
+        setAiSummaryError(data?.error ?? error?.message ?? 'Could not load summary.');
       } else {
         setAiSummary(data.summary);
       }
-    } catch {
-      setAiSummaryError(true);
+    } catch (e) {
+      setAiSummaryError(e instanceof Error ? e.message : 'Could not load summary.');
     } finally {
       setAiSummaryLoading(false);
     }
@@ -84,6 +83,7 @@ export const HelperDashboardScreen = observer(function HelperDashboardScreen() {
         setQueryError(true);
       } else {
         setQueryAnswer(data.answer);
+        setQuery('');
       }
     } catch {
       setQueryError(true);
@@ -97,8 +97,6 @@ export const HelperDashboardScreen = observer(function HelperDashboardScreen() {
   const salesToday = getSalesToday(movements);
   const weeklySales = getWeeklySales(movements);
   const recentMovements = movements.slice(0, 10);
-
-  const storeName = user?.store_name ?? 'My Store';
 
   if (loading && products.length === 0) {
     return (
@@ -120,7 +118,7 @@ export const HelperDashboardScreen = observer(function HelperDashboardScreen() {
       {/* Header */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.storeName}>{storeName}</Text>
+          <Text style={styles.storeName}>Dashboard</Text>
           <Text style={styles.subtitle}>Good day, here's your summary</Text>
         </View>
         <View style={styles.helperBadge}>
@@ -153,20 +151,26 @@ export const HelperDashboardScreen = observer(function HelperDashboardScreen() {
         </View>
       </View>
 
-      {/* AI Weekly Summary */}
-      <View style={styles.section}>
-        <View style={styles.sectionHeader}>
-          <View style={styles.sectionTitleRow}>
-            <Ionicons name="sparkles" size={15} color={colors.primary} />
-            <Text style={styles.sectionTitle}>AI Weekly Summary</Text>
+      {/* AI Unified Card */}
+      <View style={styles.aiSection}>
+        <View style={styles.aiCardHeader}>
+          <View style={styles.aiCardTitleRow}>
+            <Ionicons name="sparkles" size={14} color={colors.primary} />
+            <Text style={styles.aiCardTitle}>AI Weekly Summary</Text>
           </View>
-          <Pressable onPress={fetchAiSummary} disabled={aiSummaryLoading} style={styles.refreshBtn}>
-            {aiSummaryLoading
-              ? <ActivityIndicator size="small" color={colors.primary} />
-              : <Ionicons name="refresh-outline" size={16} color={colors.primary} />}
-          </Pressable>
+          <View style={styles.aiCardHeaderRight}>
+            {aiSummary && !aiSummaryLoading && (
+              <Text style={styles.aiTimestamp}>updated just now</Text>
+            )}
+            <Pressable onPress={fetchAiSummary} disabled={aiSummaryLoading} style={styles.refreshBtn}>
+              {aiSummaryLoading
+                ? <ActivityIndicator size="small" color={colors.primary} />
+                : <Ionicons name="refresh-outline" size={15} color={colors.primary} />}
+            </Pressable>
+          </View>
         </View>
-        <View style={styles.aiCard}>
+
+        <View style={styles.aiSummaryBody}>
           {aiSummaryLoading && !aiSummary ? (
             <View style={styles.aiLoadingRow}>
               <ActivityIndicator size="small" color={colors.primary} />
@@ -174,18 +178,45 @@ export const HelperDashboardScreen = observer(function HelperDashboardScreen() {
             </View>
           ) : aiSummaryError ? (
             <View style={styles.aiErrorRow}>
-              <Ionicons name="alert-circle-outline" size={16} color={colors.danger} />
-              <Text style={styles.aiErrorText}>Could not load summary.</Text>
+              <Ionicons name="alert-circle-outline" size={14} color={colors.danger} />
+              <Text style={[styles.aiErrorText, { flex: 1 }]}>{aiSummaryError}</Text>
               <Pressable onPress={fetchAiSummary} style={styles.retryBtn}>
                 <Text style={styles.retryBtnText}>Retry</Text>
               </Pressable>
             </View>
           ) : aiSummary ? (
-            <>
-              <Text style={styles.aiSummaryText}>{aiSummary}</Text>
-              <Text style={styles.aiTimestamp}>Generated just now</Text>
-            </>
+            <Text style={styles.aiSummaryText}>{aiSummary}</Text>
           ) : null}
+        </View>
+
+        {(queryAnswer || queryError) && (
+          <View style={styles.aiAnswerBody}>
+            {queryError
+              ? <Text style={styles.aiErrorText}>Could not get an answer. Try again.</Text>
+              : <Text style={styles.aiAnswerText}>{queryAnswer}</Text>}
+          </View>
+        )}
+
+        <View style={styles.aiInputDivider} />
+        <View style={styles.aiInputRow}>
+          <TextInput
+            style={styles.aiInput}
+            placeholder="Ask a follow-up…"
+            placeholderTextColor={colors.textMuted}
+            value={query}
+            onChangeText={setQuery}
+            onSubmitEditing={handleAskQuery}
+            returnKeyType="send"
+          />
+          <Pressable
+            style={[styles.aiSendBtn, (!query.trim() || queryLoading) && styles.aiSendBtnDisabled]}
+            onPress={handleAskQuery}
+            disabled={!query.trim() || queryLoading}
+          >
+            {queryLoading
+              ? <ActivityIndicator size="small" color="#fff" />
+              : <Ionicons name="send" size={14} color="#fff" />}
+          </Pressable>
         </View>
       </View>
 
@@ -228,45 +259,7 @@ export const HelperDashboardScreen = observer(function HelperDashboardScreen() {
         </View>
       </View>
 
-      {/* Natural Language Query */}
-      <View style={styles.section}>
-        <View style={styles.sectionTitleRow}>
-          <Ionicons name="chatbubble-ellipses-outline" size={15} color={colors.primary} />
-          <Text style={styles.sectionTitle}>Ask About Your Store</Text>
-        </View>
-        <View style={styles.queryInputRow}>
-          <TextInput
-            style={styles.queryInput}
-            placeholder="e.g. Ilan ang nabenta ngayon?"
-            placeholderTextColor={colors.textMuted}
-            value={query}
-            onChangeText={setQuery}
-            onSubmitEditing={handleAskQuery}
-            returnKeyType="send"
-          />
-          <Pressable
-            style={[styles.askBtn, (!query.trim() || queryLoading) && styles.askBtnDisabled]}
-            onPress={handleAskQuery}
-            disabled={!query.trim() || queryLoading}
-          >
-            {queryLoading
-              ? <ActivityIndicator size="small" color="#fff" />
-              : <Text style={styles.askBtnText}>Ask</Text>}
-          </Pressable>
-        </View>
-        {queryAnswer && (
-          <View style={styles.aiCard}>
-            <Text style={styles.aiSummaryText}>{queryAnswer}</Text>
-          </View>
-        )}
-        {queryError && (
-          <View style={[styles.aiCard, styles.aiErrorCard]}>
-            <Text style={styles.aiErrorText}>Could not get an answer. Try again.</Text>
-          </View>
-        )}
-      </View>
-
-      {/* Movement history */}
+      {/* Recent activity */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Recent Activity</Text>
         {recentMovements.length === 0 ? (

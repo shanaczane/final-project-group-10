@@ -79,40 +79,72 @@ export function createStyles(colors: Colors) {
     section: {
       marginBottom: 28,
     },
-    sectionHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: 12,
-    },
-    sectionTitleRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 6,
-      marginBottom: 12,
-    },
     sectionTitle: {
       fontSize: 15,
       fontWeight: '500',
       color: colors.textPrimary,
+      marginBottom: 12,
     },
-    refreshBtn: {
-      padding: 4,
-      width: 28,
-      alignItems: 'center',
-    },
-    // AI card
-    aiCard: {
+    // Unified AI card
+    aiSection: {
       backgroundColor: colors.surface,
-      borderRadius: 12,
+      borderRadius: 14,
       borderWidth: 1,
       borderColor: colors.border,
+      marginBottom: 28,
+      overflow: 'hidden',
+    },
+    aiCardHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingHorizontal: 16,
+      paddingTop: 14,
+      paddingBottom: 12,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    aiCardTitleRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+    },
+    aiCardTitle: {
+      fontSize: 13,
+      fontWeight: '600',
+      color: colors.textPrimary,
+    },
+    aiCardHeaderRight: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+    },
+    aiTimestamp: {
+      fontSize: 11,
+      color: colors.textMuted,
+    },
+    refreshBtn: {
+      padding: 2,
+    },
+    aiSummaryBody: {
       padding: 16,
     },
-    aiErrorCard: {
-      borderColor: colors.danger,
-      backgroundColor: colors.dangerBackground,
-      marginTop: 8,
+    aiSummaryText: {
+      fontSize: 14,
+      color: colors.textPrimary,
+      lineHeight: 22,
+    },
+    aiAnswerBody: {
+      paddingHorizontal: 16,
+      paddingVertical: 12,
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
+      backgroundColor: colors.cardBackground,
+    },
+    aiAnswerText: {
+      fontSize: 14,
+      color: colors.textPrimary,
+      lineHeight: 22,
     },
     aiLoadingRow: {
       flexDirection: 'row',
@@ -131,7 +163,6 @@ export function createStyles(colors: Colors) {
     aiErrorText: {
       fontSize: 13,
       color: colors.danger,
-      flex: 1,
     },
     retryBtn: {
       paddingHorizontal: 10,
@@ -145,47 +176,33 @@ export function createStyles(colors: Colors) {
       color: colors.danger,
       fontWeight: '500',
     },
-    aiSummaryText: {
-      fontSize: 14,
-      color: colors.textPrimary,
-      lineHeight: 21,
+    aiInputDivider: {
+      height: 1,
+      backgroundColor: colors.border,
     },
-    aiTimestamp: {
-      fontSize: 11,
-      color: colors.textMuted,
-      marginTop: 8,
-    },
-    // NL Query
-    queryInputRow: {
+    aiInputRow: {
       flexDirection: 'row',
-      gap: 8,
-      marginBottom: 10,
-    },
-    queryInput: {
-      flex: 1,
-      backgroundColor: colors.surface,
-      borderWidth: 1,
-      borderColor: colors.border,
-      borderRadius: 10,
+      alignItems: 'center',
       paddingHorizontal: 14,
-      paddingVertical: 11,
+      paddingVertical: 10,
+      gap: 10,
+    },
+    aiInput: {
+      flex: 1,
       fontSize: 14,
       color: colors.textPrimary,
+      paddingVertical: 4,
     },
-    askBtn: {
+    aiSendBtn: {
+      width: 32,
+      height: 32,
+      borderRadius: 16,
       backgroundColor: colors.primary,
-      borderRadius: 10,
-      paddingHorizontal: 18,
-      justifyContent: 'center',
       alignItems: 'center',
+      justifyContent: 'center',
     },
-    askBtnDisabled: {
-      opacity: 0.5,
-    },
-    askBtnText: {
-      color: '#ffffff',
-      fontSize: 14,
-      fontWeight: '500',
+    aiSendBtnDisabled: {
+      opacity: 0.4,
     },
     alertRow: {
       flexDirection: 'row',
