@@ -41,7 +41,7 @@ export function createStyles(colors: Colors) {
       borderColor: colors.border,
       borderRadius: 12,
       paddingHorizontal: 14,
-      paddingVertical: 10,
+      paddingVertical: 7,
       gap: 10,
     },
     searchInput: {

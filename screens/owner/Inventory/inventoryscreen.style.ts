@@ -17,7 +17,7 @@ export function createStyles(colors: Colors) {
       borderRadius: 12,
       marginHorizontal: 20,
       paddingHorizontal: 12,
-      paddingVertical: 10,
+      paddingVertical: 7,
       gap: 8,
     },
     searchInput: {
@@ -36,13 +36,14 @@ export function createStyles(colors: Colors) {
       alignItems: 'center',
     },
     filterChip: {
-      paddingHorizontal: 14,
+      paddingHorizontal: 16,
       paddingVertical: 6,
       borderRadius: 20,
       backgroundColor: colors.surface,
       borderWidth: 1,
       borderColor: colors.border,
-      alignSelf: 'flex-start',
+      minWidth: 56,
+      alignItems: 'center',
     },
     filterChipActive: {
       backgroundColor: colors.primary,
@@ -288,13 +289,15 @@ export function createStyles(colors: Colors) {
       width: 38,
     },
     chip: {
-      paddingHorizontal: 14,
+      paddingHorizontal: 16,
       paddingVertical: 6,
       borderRadius: 20,
       backgroundColor: colors.surface,
       borderWidth: 1,
       borderColor: colors.border,
       marginRight: 8,
+      minWidth: 56,
+      alignItems: 'center',
     },
     chipActive: {
       backgroundColor: colors.primary,
