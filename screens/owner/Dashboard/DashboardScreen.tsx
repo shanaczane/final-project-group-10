@@ -23,9 +23,8 @@ import {
   getLowStockItems,
   getTotalInventoryValue,
   getSalesToday,
-  getWeeklySales,
-  getWeekLabel,
 } from '../../../store';
+import { SalesCalendar } from '../../../components/SalesCalendar';
 import { createStyles } from './dashboardscreen.style';
 
 function MetricCard({
@@ -74,7 +73,6 @@ export const DashboardScreen = observer(function DashboardScreen() {
   const [queryLoading, setQueryLoading] = useState(false);
   const [queryError, setQueryError] = useState(false);
 
-  const [weekOffset, setWeekOffset] = useState(0);
   const [activityVisible, setActivityVisible] = useState(false);
 
   const CACHE_KEY = 'ai_summary_cache';
@@ -161,8 +159,6 @@ export const DashboardScreen = observer(function DashboardScreen() {
   const lowStockItems = getLowStockItems(products);
   const totalValue = getTotalInventoryValue(products);
   const salesToday = getSalesToday(movements);
-  const weeklySales = getWeeklySales(movements, weekOffset);
-  const weekLabel = getWeekLabel(weekOffset);
   const recentMovements = movements.slice(0, 3);
 
   const greeting = user?.store_name ?? 'My Store';
@@ -307,42 +303,10 @@ export const DashboardScreen = observer(function DashboardScreen() {
         </View>
       )}
 
-      {/* Weekly sales table */}
+      {/* Sales calendar */}
       <View style={styles.section}>
-        <View style={styles.weekNavRow}>
-          <Text style={styles.sectionTitle}>Weekly Sales</Text>
-          <View style={styles.weekNavControls}>
-            <Pressable style={styles.weekNavBtn} onPress={() => setWeekOffset((w) => w + 1)}>
-              <Ionicons name="chevron-back" size={16} color={colors.textPrimary} />
-            </Pressable>
-            <Text style={styles.weekNavLabel}>{weekLabel}</Text>
-            <Pressable
-              style={[styles.weekNavBtn, weekOffset === 0 && styles.weekNavBtnDisabled]}
-              onPress={() => setWeekOffset((w) => Math.max(0, w - 1))}
-              disabled={weekOffset === 0}
-            >
-              <Ionicons name="chevron-forward" size={16} color={weekOffset === 0 ? colors.textMuted : colors.textPrimary} />
-            </Pressable>
-          </View>
-        </View>
-        <View style={styles.weeklyTable}>
-          <View style={styles.weeklyHeader}>
-            <Text style={[styles.weeklyCell, styles.weeklyHeadText]}>Day</Text>
-            <Text style={[styles.weeklyCell, styles.weeklyHeadText, styles.weeklyRight]}>Units</Text>
-            <Text style={[styles.weeklyCell, styles.weeklyHeadText, styles.weeklyRight]}>Amount</Text>
-          </View>
-          {weeklySales.map((row, i) => (
-            <View key={i} style={[styles.weeklyRow, i % 2 === 0 && styles.weeklyRowAlt]}>
-              <Text style={styles.weeklyCell}>{row.day}</Text>
-              <Text style={[styles.weeklyCell, styles.weeklyRight]}>{row.qty > 0 ? row.qty : '—'}</Text>
-              <Text style={[styles.weeklyCell, styles.weeklyRight, row.amount > 0 && styles.weeklyAmount]}>
-                {row.amount > 0
-                  ? `₱${row.amount.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-                  : '—'}
-              </Text>
-            </View>
-          ))}
-        </View>
+        <Text style={styles.sectionTitle}>Sales Calendar</Text>
+        <SalesCalendar movements={movements} colors={colors} />
       </View>
 
       {/* Recent activity */}
