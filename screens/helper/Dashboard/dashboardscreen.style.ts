@@ -79,7 +79,15 @@ export function createStyles(colors: Colors) {
       marginTop: 2,
     },
     section: {
-      marginBottom: 28,
+      marginBottom: 20,
+    },
+    sectionCard: {
+      backgroundColor: colors.surface,
+      borderRadius: 14,
+      borderWidth: 1,
+      borderColor: colors.border,
+      padding: 16,
+      marginBottom: 20,
     },
     sectionTitle: {
       fontSize: 15,
