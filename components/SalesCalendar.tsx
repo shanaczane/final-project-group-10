@@ -72,23 +72,26 @@ export function SalesCalendar({ movements, colors }: Props) {
 
   return (
     <View>
-      {/* Month nav */}
+      {/* Header row: title left, month nav right */}
       <View style={styles.navRow}>
-        <Pressable style={styles.navBtn} onPress={prevMonth}>
-          <Ionicons name="chevron-back" size={18} color={colors.textPrimary} />
-        </Pressable>
-        <Text style={[styles.navLabel, { color: colors.textPrimary }]}>{monthLabel}</Text>
-        <Pressable
-          style={[styles.navBtn, isNextDisabled && styles.navBtnDisabled]}
-          onPress={nextMonth}
-          disabled={isNextDisabled}
-        >
-          <Ionicons
-            name="chevron-forward"
-            size={18}
-            color={isNextDisabled ? colors.textMuted : colors.textPrimary}
-          />
-        </Pressable>
+        <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Sales Calendar</Text>
+        <View style={styles.navControls}>
+          <Pressable style={styles.navBtn} onPress={prevMonth}>
+            <Ionicons name="chevron-back" size={16} color={colors.textPrimary} />
+          </Pressable>
+          <Text style={[styles.navLabel, { color: colors.textMuted }]}>{monthLabel}</Text>
+          <Pressable
+            style={[styles.navBtn, isNextDisabled && styles.navBtnDisabled]}
+            onPress={nextMonth}
+            disabled={isNextDisabled}
+          >
+            <Ionicons
+              name="chevron-forward"
+              size={16}
+              color={isNextDisabled ? colors.textMuted : colors.textPrimary}
+            />
+          </Pressable>
+        </View>
       </View>
 
       {/* Day headers */}
@@ -170,9 +173,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 12,
   },
-  navBtn: { padding: 6 },
+  navBtn: { padding: 4 },
   navBtnDisabled: { opacity: 0.3 },
-  navLabel: { fontSize: 15, fontWeight: '500' },
+  navControls: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  sectionTitle: {
+    fontSize: 15,
+    fontWeight: '500',
+  },
+  navLabel: { fontSize: 13, fontWeight: '500' },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-around',

@@ -95,6 +95,11 @@ export function createStyles(colors: Colors) {
       color: colors.textPrimary,
       marginBottom: 12,
     },
+    rowTitle: {
+      fontSize: 15,
+      fontWeight: '500',
+      color: colors.textPrimary,
+    },
     aiSection: {
       backgroundColor: colors.surface,
       borderRadius: 14,

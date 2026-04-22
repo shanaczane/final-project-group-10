@@ -305,14 +305,13 @@ export const DashboardScreen = observer(function DashboardScreen() {
 
       {/* Sales calendar */}
       <View style={styles.sectionCard}>
-        <Text style={styles.sectionTitle}>Sales Calendar</Text>
         <SalesCalendar movements={movements} colors={colors} />
       </View>
 
       {/* Recent activity */}
       <View style={styles.sectionCard}>
         <View style={styles.weekNavRow}>
-          <Text style={styles.sectionTitle}>Recent Activity</Text>
+          <Text style={styles.rowTitle}>Recent Activity</Text>
           <Pressable onPress={() => setActivityVisible(true)}>
             <Text style={styles.viewAllText}>View all →</Text>
           </Pressable>
