@@ -71,44 +71,6 @@ function ProductFormModal({ visible, editing, onClose, colors, styles }: Product
   const [minThreshold, setMinThreshold] = useState('');
   const [saving, setSaving] = useState(false);
 
-  // AI suggest state
-  const [aiLoading, setAiLoading] = useState(false);
-  const [aiSuggestions, setAiSuggestions] = useState<{
-    category: string | null;
-    priceRange: string | null;
-    minStock: number | null;
-  } | null>(null);
-
-  async function handleAiFill(): Promise<void> {
-    if (!name.trim()) return;
-    setAiLoading(true);
-    setAiSuggestions(null);
-    try {
-      const { data, error } = await supabase.functions.invoke('ai-suggest', {
-        body: { productName: name.trim() },
-      });
-      if (!error && data) setAiSuggestions(data);
-    } catch {
-      // silently fail — AI is additive
-    } finally {
-      setAiLoading(false);
-    }
-  }
-
-  function applyAiCategory(): void {
-    if (!aiSuggestions?.category) return;
-    const match = categories.find(
-      (c) => c.name.toLowerCase() === aiSuggestions.category!.toLowerCase(),
-    );
-    if (match) setCategoryId(match.id);
-  }
-
-  function applyAiMinStock(): void {
-    if (aiSuggestions?.minStock != null) {
-      setMinThreshold(String(aiSuggestions.minStock));
-    }
-  }
-
   useEffect(() => {
     if (editing) {
       setName(editing.name);
@@ -198,60 +160,10 @@ function ProductFormModal({ visible, editing, onClose, colors, styles }: Product
           <TextInput
             style={styles.fieldInput}
             value={name}
-            onChangeText={(v) => { setName(v); setAiSuggestions(null); }}
+            onChangeText={setName}
             placeholder="e.g. Coca-Cola 1.5L"
             placeholderTextColor={colors.textMuted}
           />
-
-          {/* AI Fill button — only show when name has content and not editing */}
-          {!editing && name.trim().length > 1 && (
-            <Pressable
-              style={styles.aiFillBtn}
-              onPress={handleAiFill}
-              disabled={aiLoading}
-            >
-              {aiLoading ? (
-                <ActivityIndicator size="small" color={colors.primary} />
-              ) : (
-                <>
-                  <Ionicons name="sparkles" size={14} color={colors.primary} />
-                  <Text style={styles.aiFillBtnText}>Fill with AI…</Text>
-                </>
-              )}
-            </Pressable>
-          )}
-
-          {/* AI Suggestions */}
-          {aiSuggestions && (
-            <View style={styles.aiSuggestBox}>
-              <Text style={styles.aiSuggestTitle}>AI Suggestions</Text>
-              {aiSuggestions.category && (
-                <View style={styles.aiSuggestRow}>
-                  <Text style={styles.aiSuggestLabel}>Category</Text>
-                  <Text style={styles.aiSuggestValue}>{aiSuggestions.category}</Text>
-                  <Pressable style={styles.useBtn} onPress={applyAiCategory}>
-                    <Text style={styles.useBtnText}>Use</Text>
-                  </Pressable>
-                </View>
-              )}
-              {aiSuggestions.priceRange && (
-                <View style={styles.aiSuggestRow}>
-                  <Text style={styles.aiSuggestLabel}>Price Range</Text>
-                  <Text style={styles.aiSuggestValue}>{aiSuggestions.priceRange}</Text>
-                  <View style={styles.useBtnPlaceholder} />
-                </View>
-              )}
-              {aiSuggestions.minStock != null && (
-                <View style={styles.aiSuggestRow}>
-                  <Text style={styles.aiSuggestLabel}>Min Stock</Text>
-                  <Text style={styles.aiSuggestValue}>{aiSuggestions.minStock} units</Text>
-                  <Pressable style={styles.useBtn} onPress={applyAiMinStock}>
-                    <Text style={styles.useBtnText}>Use</Text>
-                  </Pressable>
-                </View>
-              )}
-            </View>
-          )}
 
           <Text style={styles.fieldLabel}>Category</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoryChips}>
