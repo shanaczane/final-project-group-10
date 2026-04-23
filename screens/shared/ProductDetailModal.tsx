@@ -82,7 +82,6 @@ export function ProductDetailModal({
         >
           {/* Status badge */}
           <View style={[styles.statusBadge, statusStyle]}>
-            <View style={[styles.statusDot, statusStyle, { marginRight: 6 }]} />
             <Text style={[styles.statusText, statusTextStyle]}>{statusLabel}</Text>
           </View>
 

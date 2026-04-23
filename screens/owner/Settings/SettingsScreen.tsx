@@ -35,9 +35,53 @@ export function SettingsScreen() {
   const [showHelperPwd, setShowHelperPwd] = useState(false);
   const [creatingHelper, setCreatingHelper] = useState(false);
 
+  // Edit account fields
+  const [displayStoreName, setDisplayStoreName] = useState(user?.store_name ?? '');
+  const [displayEmail, setDisplayEmail] = useState(user?.email ?? '');
+  const [editField, setEditField] = useState<'store_name' | 'email' | null>(null);
+  const [editValue, setEditValue] = useState('');
+  const [saving, setSaving] = useState(false);
+
   useEffect(() => {
     fetchHelpers();
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      setDisplayStoreName(user.store_name ?? '');
+      setDisplayEmail(user.email ?? '');
+    }
+  }, [user]);
+
+  function openEdit(field: 'store_name' | 'email'): void {
+    setEditValue(field === 'store_name' ? displayStoreName : displayEmail);
+    setEditField(field);
+  }
+
+  async function handleSaveField(): Promise<void> {
+    if (!editValue.trim()) return;
+    setSaving(true);
+    try {
+      if (editField === 'store_name') {
+        const { error } = await supabase
+          .from('users')
+          .update({ store_name: editValue.trim() })
+          .eq('id', user!.id);
+        if (error) { Alert.alert('Error', error.message); return; }
+        setDisplayStoreName(editValue.trim());
+      } else {
+        const { error } = await supabase.auth.updateUser({ email: editValue.trim() });
+        if (error) { Alert.alert('Error', error.message); return; }
+        setDisplayEmail(editValue.trim());
+        Alert.alert('Check your email', 'A confirmation link was sent to the new address.');
+      }
+      setEditField(null);
+    } catch {
+      Alert.alert('Error', 'Something went wrong. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  }
 
   async function fetchHelpers(): Promise<void> {
     if (!user) return;
@@ -62,7 +106,6 @@ export function SettingsScreen() {
 
     setCreatingHelper(true);
     try {
-      // Use fetch directly — avoids createClient AsyncStorage issues in React Native
       const res = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
         method: 'POST',
         headers: {
@@ -81,8 +124,6 @@ export function SettingsScreen() {
         return;
       }
 
-      // When email confirmation is disabled, Supabase returns a session object
-      // with the user nested under result.user.id instead of result.id
       const newUserId: string | undefined = result.user?.id ?? result.id;
       if (!newUserId) {
         setCreatingHelper(false);
@@ -90,7 +131,6 @@ export function SettingsScreen() {
         return;
       }
 
-      // Call SECURITY DEFINER RPC to set role=helper (bypasses RLS)
       const { error: rpcErr } = await supabase.rpc('set_helper_role', {
         helper_id:    newUserId,
         helper_email: email,
@@ -112,7 +152,7 @@ export function SettingsScreen() {
         `${email} has been added.\n\nMake sure to share the password with them — it cannot be retrieved later.`,
       );
       fetchHelpers();
-    } catch (err) {
+    } catch {
       setCreatingHelper(false);
       Alert.alert('Error', 'Network error. Please check your connection and try again.');
     }
@@ -153,9 +193,9 @@ export function SettingsScreen() {
         </View>
         <View style={styles.profileInfo}>
           <Text style={styles.profileName}>
-            {user?.store_name ?? 'My Store'}
+            {displayStoreName || 'My Store'}
           </Text>
-          <Text style={styles.profileEmail}>{user?.email}</Text>
+          <Text style={styles.profileEmail}>{displayEmail}</Text>
         </View>
         <View style={styles.ownerBadge}>
           <Text style={styles.ownerBadgeText}>Owner</Text>
@@ -199,10 +239,21 @@ export function SettingsScreen() {
         <Text style={styles.sectionTitle}>Account</Text>
 
         <View style={styles.settingsCard}>
-          <View style={styles.settingsRow}>
+          <Pressable style={styles.settingsRow} onPress={() => openEdit('store_name')}>
             <Text style={styles.settingsLabel}>Store Name</Text>
-            <Text style={styles.settingsValue}>{user?.store_name ?? '—'}</Text>
-          </View>
+            <View style={styles.settingsRowRight}>
+              <Text style={styles.settingsValue} numberOfLines={1}>{displayStoreName || '—'}</Text>
+              <Ionicons name="pencil-outline" size={14} color={colors.textMuted} />
+            </View>
+          </Pressable>
+
+          <Pressable style={[styles.settingsRow, styles.settingsRowBorder]} onPress={() => openEdit('email')}>
+            <Text style={styles.settingsLabel}>Email</Text>
+            <View style={styles.settingsRowRight}>
+              <Text style={styles.settingsValue} numberOfLines={1}>{displayEmail || '—'}</Text>
+              <Ionicons name="pencil-outline" size={14} color={colors.textMuted} />
+            </View>
+          </Pressable>
 
           <View style={[styles.settingsRow, styles.settingsRowBorder]}>
             <Text style={styles.settingsLabel}>Dark Mode</Text>
@@ -221,6 +272,49 @@ export function SettingsScreen() {
         <Ionicons name="log-out-outline" size={18} color={colors.danger} />
         <Text style={styles.signOutText}>Sign Out</Text>
       </Pressable>
+
+      {/* Edit field modal */}
+      <Modal visible={editField !== null} transparent animationType="fade">
+        <KeyboardAvoidingView
+          style={styles.modalOverlay}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        >
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>
+              {editField === 'store_name' ? 'Edit Store Name' : 'Edit Email'}
+            </Text>
+            <TextInput
+              style={[styles.fieldInput, { marginTop: 12 }]}
+              value={editValue}
+              onChangeText={setEditValue}
+              placeholder={editField === 'store_name' ? 'Store name' : 'email@example.com'}
+              placeholderTextColor={colors.textMuted}
+              autoCapitalize={editField === 'email' ? 'none' : 'words'}
+              keyboardType={editField === 'email' ? 'email-address' : 'default'}
+              autoFocus
+            />
+            <View style={styles.modalActions}>
+              <Pressable
+                style={styles.cancelBtn}
+                onPress={() => setEditField(null)}
+              >
+                <Text style={styles.cancelBtnText}>Cancel</Text>
+              </Pressable>
+              <Pressable
+                style={[styles.confirmBtn, saving && styles.confirmBtnDisabled]}
+                onPress={handleSaveField}
+                disabled={saving}
+              >
+                {saving ? (
+                  <ActivityIndicator color="#fff" size="small" />
+                ) : (
+                  <Text style={styles.confirmBtnText}>Save</Text>
+                )}
+              </Pressable>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
 
       {/* Add Helper Modal */}
       <Modal visible={addModalVisible} transparent animationType="fade">

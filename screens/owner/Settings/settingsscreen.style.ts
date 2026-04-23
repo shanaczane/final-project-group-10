@@ -73,6 +73,7 @@ export function createStyles(colors: Colors) {
       fontSize: 15,
       fontWeight: '500',
       color: colors.textPrimary,
+      marginBottom: 12,
     },
     addHelperBtn: {
       flexDirection: 'row',
@@ -146,6 +147,12 @@ export function createStyles(colors: Colors) {
     settingsValue: {
       fontSize: 14,
       color: colors.textMuted,
+      maxWidth: 160,
+    },
+    settingsRowRight: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
     },
     signOutBtn: {
       flexDirection: 'row',
