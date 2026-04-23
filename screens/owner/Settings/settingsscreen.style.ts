@@ -12,46 +12,41 @@ export function createStyles(colors: Colors) {
       paddingTop: 56,
       paddingBottom: 40,
     },
+
+    // Profile
     profileCard: {
-      flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: colors.surface,
-      borderRadius: 16,
-      padding: 16,
-      borderWidth: 1,
-      borderColor: colors.border,
-      marginBottom: 24,
-      gap: 14,
+      paddingVertical: 24,
+      marginBottom: 28,
     },
     avatar: {
-      width: 52,
-      height: 52,
-      borderRadius: 26,
+      width: 64,
+      height: 64,
+      borderRadius: 32,
       backgroundColor: colors.ownerBadgeBackground,
       alignItems: 'center',
       justifyContent: 'center',
+      marginBottom: 12,
     },
     avatarText: {
-      fontSize: 18,
-      fontWeight: '500',
+      fontSize: 22,
+      fontWeight: '600',
       color: colors.ownerBadgeText,
     },
-    profileInfo: {
-      flex: 1,
-    },
     profileName: {
-      fontSize: 16,
-      fontWeight: '500',
+      fontSize: 18,
+      fontWeight: '600',
       color: colors.textPrimary,
+      marginBottom: 4,
     },
     profileEmail: {
       fontSize: 13,
       color: colors.textMuted,
-      marginTop: 2,
+      marginBottom: 10,
     },
     ownerBadge: {
       backgroundColor: colors.ownerBadgeBackground,
-      paddingHorizontal: 10,
+      paddingHorizontal: 12,
       paddingVertical: 4,
       borderRadius: 20,
     },
@@ -60,117 +55,63 @@ export function createStyles(colors: Colors) {
       fontWeight: '500',
       color: colors.ownerBadgeText,
     },
-    section: {
-      marginBottom: 24,
-    },
-    sectionHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: 12,
-    },
+
+    // Section
     sectionTitle: {
-      fontSize: 15,
-      fontWeight: '500',
-      color: colors.textPrimary,
-      marginBottom: 12,
-    },
-    addHelperBtn: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 4,
-      paddingHorizontal: 12,
-      paddingVertical: 6,
-      borderRadius: 8,
-      borderWidth: 1,
-      borderColor: colors.primary,
-    },
-    addHelperBtnText: {
       fontSize: 13,
-      color: colors.primary,
       fontWeight: '500',
-    },
-    emptyHint: {
-      fontSize: 13,
       color: colors.textMuted,
-      paddingVertical: 8,
-    },
-    helperRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: colors.surface,
-      borderRadius: 10,
-      padding: 12,
+      textTransform: 'uppercase',
+      letterSpacing: 0.6,
       marginBottom: 8,
-      borderWidth: 1,
-      borderColor: colors.border,
-      gap: 10,
+      marginLeft: 4,
     },
-    helperAvatar: {
-      width: 32,
-      height: 32,
-      borderRadius: 16,
-      backgroundColor: colors.cardBackground,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    helperEmail: {
-      flex: 1,
-      fontSize: 14,
-      color: colors.textPrimary,
-    },
-    removeBtn: {
-      padding: 4,
-    },
-    settingsCard: {
+
+    // List card
+    listCard: {
       backgroundColor: colors.surface,
-      borderRadius: 12,
+      borderRadius: 14,
       borderWidth: 1,
       borderColor: colors.border,
       overflow: 'hidden',
+      marginBottom: 24,
     },
-    settingsRow: {
+    listRow: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
       alignItems: 'center',
       paddingHorizontal: 16,
-      paddingVertical: 14,
+      paddingVertical: 13,
+      gap: 12,
     },
-    settingsRowBorder: {
-      borderTopWidth: 1,
-      borderTopColor: colors.border,
+    listIconWrap: {
+      width: 30,
+      alignItems: 'center',
     },
-    settingsLabel: {
-      fontSize: 14,
+    listLabel: {
+      flex: 1,
+      fontSize: 15,
       color: colors.textPrimary,
     },
-    settingsValue: {
+    listRight: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+    },
+    listValue: {
       fontSize: 14,
       color: colors.textMuted,
-      maxWidth: 160,
+      maxWidth: 140,
     },
-    settingsRowRight: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 6,
+    listDivider: {
+      height: 1,
+      backgroundColor: colors.border,
+      marginLeft: 58,
     },
-    signOutBtn: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: 8,
-      paddingVertical: 14,
-      borderRadius: 12,
-      borderWidth: 1,
-      borderColor: colors.danger,
-      marginTop: 8,
+    removeBtn: {
+      padding: 2,
     },
-    signOutText: {
-      color: colors.danger,
-      fontSize: 15,
-      fontWeight: '500',
-    },
-    // Modal
+
+    // Modals
     modalOverlay: {
       flex: 1,
       backgroundColor: 'rgba(0,0,0,0.4)',
