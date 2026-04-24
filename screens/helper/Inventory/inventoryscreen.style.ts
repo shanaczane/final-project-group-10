@@ -27,7 +27,7 @@ export function createStyles(colors: Colors) {
     },
     chipsScroll: {
       marginTop: 12,
-      maxHeight: 44,
+      height: 42,
       flexGrow: 0,
     },
     chipsContent: {
@@ -36,14 +36,16 @@ export function createStyles(colors: Colors) {
       alignItems: 'center',
     },
     filterChip: {
-      paddingHorizontal: 16,
-      paddingVertical: 6,
-      borderRadius: 20,
+      paddingHorizontal: 18,
+      height: 34,
+      borderRadius: 999,
       backgroundColor: colors.surface,
       borderWidth: 1,
       borderColor: colors.border,
-      minWidth: 80,
+      minWidth: 64,
       alignItems: 'center',
+      justifyContent: 'center',
+      elevation: 0,
     },
     filterChipActive: {
       backgroundColor: colors.primary,
@@ -51,6 +53,7 @@ export function createStyles(colors: Colors) {
     },
     filterChipText: {
       fontSize: 13,
+      lineHeight: 18,
       color: colors.textSecondary,
       fontWeight: '500',
     },
