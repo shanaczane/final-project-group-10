@@ -16,7 +16,7 @@ serve(async (req) => {
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
       return new Response(JSON.stringify({ error: 'Missing authorization' }), {
-        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
@@ -29,8 +29,8 @@ serve(async (req) => {
     // Get current user
     const { data: { user }, error: userErr } = await supabase.auth.getUser();
     if (userErr || !user) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
-        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      return new Response(JSON.stringify({ error: 'Could not verify user — please sign in again.' }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
@@ -110,26 +110,40 @@ Write a brief, actionable summary. Use ₱ for prices. Keep it under 4 sentences
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: { temperature: 0.7, maxOutputTokens: 400 },
+          generationConfig: { temperature: 0.7, maxOutputTokens: 800 },
         }),
       },
     );
 
     if (!geminiRes.ok) {
-      throw new Error(`Gemini API error: ${geminiRes.status}`);
+      const errBody = await geminiRes.json().catch(() => ({}));
+      const errMsg = geminiRes.status === 429
+        ? 'AI is busy — please retry in a moment.'
+        : `Gemini error ${geminiRes.status}: ${errBody?.error?.message ?? 'unknown'}`;
+      return new Response(JSON.stringify({ error: errMsg }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     const geminiData = await geminiRes.json();
-    const parts = geminiData.candidates?.[0]?.content?.parts ?? [];
-    const summary = parts.map((p: any) => p.text ?? '').join('') || 'Could not generate summary.';
+    const candidate = geminiData.candidates?.[0];
+    const parts = candidate?.content?.parts ?? [];
+    const finishReason = candidate?.finishReason ?? '';
+    const raw = parts.map((p: any) => p.text ?? '').join('');
 
-    return new Response(JSON.stringify({ summary }), {
+    if (!raw || finishReason === 'MAX_TOKENS') {
+      return new Response(JSON.stringify({ error: 'Summary was cut off — please retry.' }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    return new Response(JSON.stringify({ summary: raw }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Unknown error';
     return new Response(JSON.stringify({ error: msg }), {
-      status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 });

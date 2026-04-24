@@ -7,16 +7,13 @@ import {
   RefreshControl,
   ScrollView,
   Text,
-  TextInput,
   View,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { observer } from '@legendapp/state/react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useAuth } from '../../../context/AuthContext';
 import { useTheme } from '../../../context/ThemeContext';
-import { supabase } from '../../../lib/supabase';
 import {
   store$,
   loadAllData,
@@ -63,98 +60,11 @@ export const DashboardScreen = observer(function DashboardScreen() {
   const products = store$.products.get();
   const movements = store$.stockMovements.get();
 
-  const [aiSummary, setAiSummary] = useState<string | null>(null);
-  const [aiSummaryLoading, setAiSummaryLoading] = useState(false);
-  const [aiSummaryError, setAiSummaryError] = useState<string | null>(null);
-  const [aiSummaryAge, setAiSummaryAge] = useState<string | null>(null);
-
-  const [query, setQuery] = useState('');
-  const [queryAnswer, setQueryAnswer] = useState<string | null>(null);
-  const [queryLoading, setQueryLoading] = useState(false);
-  const [queryError, setQueryError] = useState(false);
-
   const [activityVisible, setActivityVisible] = useState(false);
-
-  const CACHE_KEY = 'ai_summary_cache';
-  const CACHE_TTL = 30 * 60 * 1000; // 30 minutes
 
   useEffect(() => {
     loadAllData();
-    loadSummaryWithCache();
   }, []);
-
-  async function loadSummaryWithCache(): Promise<void> {
-    try {
-      const raw = await AsyncStorage.getItem(CACHE_KEY);
-      if (raw) {
-        const { text, timestamp } = JSON.parse(raw) as { text: string; timestamp: number };
-        setAiSummary(text);
-        setAiSummaryAge(formatAge(timestamp));
-        if (Date.now() - timestamp < CACHE_TTL) return;
-      }
-    } catch {
-      // cache unreadable, continue to fetch
-    }
-    fetchAiSummary();
-  }
-
-  function formatAge(timestamp: number): string {
-    const mins = Math.floor((Date.now() - timestamp) / 60000);
-    if (mins < 1) return 'updated just now';
-    if (mins < 60) return `updated ${mins}m ago`;
-    const hrs = Math.floor(mins / 60);
-    return `updated ${hrs}h ago`;
-  }
-
-  async function fetchAiSummary(): Promise<void> {
-    setAiSummaryLoading(true);
-    setAiSummaryError(null);
-    try {
-      const { data, error } = await supabase.functions.invoke('ai-summary');
-      if (error || !data?.summary) {
-        // Don't overwrite a cached summary with an error
-        if (!aiSummary) {
-          setAiSummaryError(data?.error ?? error?.message ?? 'Could not load summary.');
-        }
-      } else {
-        setAiSummary(data.summary);
-        setAiSummaryAge('updated just now');
-        setAiSummaryError(null);
-        await AsyncStorage.setItem(
-          CACHE_KEY,
-          JSON.stringify({ text: data.summary, timestamp: Date.now() }),
-        );
-      }
-    } catch {
-      if (!aiSummary) {
-        setAiSummaryError('Could not load summary.');
-      }
-    } finally {
-      setAiSummaryLoading(false);
-    }
-  }
-
-  async function handleAskQuery(): Promise<void> {
-    if (!query.trim()) return;
-    setQueryLoading(true);
-    setQueryError(false);
-    setQueryAnswer(null);
-    try {
-      const { data, error } = await supabase.functions.invoke('ai-query', {
-        body: { question: query.trim() },
-      });
-      if (error || !data?.answer) {
-        setQueryError(true);
-      } else {
-        setQueryAnswer(data.answer);
-        setQuery('');
-      }
-    } catch {
-      setQueryError(true);
-    } finally {
-      setQueryLoading(false);
-    }
-  }
 
   const lowStockItems = getLowStockItems(products);
   const totalValue = getTotalInventoryValue(products);
@@ -212,79 +122,6 @@ export const DashboardScreen = observer(function DashboardScreen() {
           colors={colors}
         />
         <MetricCard label="Sales Today" value={String(salesToday)} sub="units sold" styles={styles} colors={colors} />
-      </View>
-
-      {/* AI Unified Card */}
-      <View style={styles.aiSection}>
-        {/* Card header */}
-        <View style={styles.aiCardHeader}>
-          <View style={styles.aiCardTitleRow}>
-            <Ionicons name="sparkles" size={14} color={colors.primary} />
-            <Text style={styles.aiCardTitle}>AI Weekly Summary</Text>
-          </View>
-          <View style={styles.aiCardHeaderRight}>
-            {aiSummaryAge && !aiSummaryLoading && (
-              <Text style={styles.aiTimestamp}>{aiSummaryAge}</Text>
-            )}
-            <Pressable onPress={fetchAiSummary} disabled={aiSummaryLoading} style={styles.refreshBtn}>
-              {aiSummaryLoading
-                ? <ActivityIndicator size="small" color={colors.primary} />
-                : <Ionicons name="refresh-outline" size={15} color={colors.primary} />}
-            </Pressable>
-          </View>
-        </View>
-
-        {/* Summary body */}
-        <View style={styles.aiSummaryBody}>
-          {aiSummaryLoading && !aiSummary ? (
-            <View style={styles.aiLoadingRow}>
-              <ActivityIndicator size="small" color={colors.primary} />
-              <Text style={styles.aiLoadingText}>Generating summary…</Text>
-            </View>
-          ) : aiSummaryError ? (
-            <View style={styles.aiErrorRow}>
-              <Ionicons name="alert-circle-outline" size={14} color={colors.danger} />
-              <Text style={[styles.aiErrorText, { flex: 1 }]}>{aiSummaryError}</Text>
-              <Pressable onPress={fetchAiSummary} style={styles.retryBtn}>
-                <Text style={styles.retryBtnText}>Retry</Text>
-              </Pressable>
-            </View>
-          ) : aiSummary ? (
-            <Text style={styles.aiSummaryText}>{aiSummary}</Text>
-          ) : null}
-        </View>
-
-        {/* Answer */}
-        {(queryAnswer || queryError) && (
-          <View style={styles.aiAnswerBody}>
-            {queryError
-              ? <Text style={styles.aiErrorText}>Could not get an answer. Try again.</Text>
-              : <Text style={styles.aiAnswerText}>{queryAnswer}</Text>}
-          </View>
-        )}
-
-        {/* Ask input */}
-        <View style={styles.aiInputDivider} />
-        <View style={styles.aiInputRow}>
-          <TextInput
-            style={styles.aiInput}
-            placeholder="Ask a follow-up…"
-            placeholderTextColor={colors.textMuted}
-            value={query}
-            onChangeText={setQuery}
-            onSubmitEditing={handleAskQuery}
-            returnKeyType="send"
-          />
-          <Pressable
-            style={[styles.aiSendBtn, (!query.trim() || queryLoading) && styles.aiSendBtnDisabled]}
-            onPress={handleAskQuery}
-            disabled={!query.trim() || queryLoading}
-          >
-            {queryLoading
-              ? <ActivityIndicator size="small" color="#fff" />
-              : <Ionicons name="send" size={14} color="#fff" />}
-          </Pressable>
-        </View>
       </View>
 
       {/* Low-stock alerts */}

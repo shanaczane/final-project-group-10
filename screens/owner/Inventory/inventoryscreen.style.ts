@@ -42,7 +42,7 @@ export function createStyles(colors: Colors) {
       backgroundColor: colors.surface,
       borderWidth: 1,
       borderColor: colors.border,
-      minWidth: 56,
+      minWidth: 80,
       alignItems: 'center',
     },
     filterChipActive: {
