@@ -51,5 +51,11 @@ export function createStyles(colors: Colors) {
     activityWhen: { fontSize: 11, color: colors.textMuted, marginTop: 1 },
     activityQty: { fontSize: 14, fontWeight: '700' },
     emptyText: { fontSize: 13, color: colors.textMuted, textAlign: 'center', paddingVertical: 24 },
+    seeAllText: { fontSize: 13, color: colors.primary, fontWeight: '600' },
+
+    modalContainer: { flex: 1 },
+    modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingTop: 20, paddingBottom: 16, borderBottomWidth: 1, borderBottomColor: colors.border },
+    modalTitle: { fontSize: 18, fontWeight: '700', color: colors.textPrimary },
+    modalList: { paddingHorizontal: 16, paddingTop: 8, paddingBottom: 32 },
   });
 }
