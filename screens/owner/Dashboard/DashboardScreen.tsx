@@ -1,53 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  Modal,
-  Pressable,
-  RefreshControl,
-  ScrollView,
-  Text,
-  View,
-} from 'react-native';
+import React, { useEffect } from 'react';
+import { ActivityIndicator, RefreshControl, ScrollView, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { observer } from '@legendapp/state/react';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useAuth } from '../../../context/AuthContext';
 import { useTheme } from '../../../context/ThemeContext';
 import {
-  store$,
-  loadAllData,
-  getLowStockItems,
-  getTotalInventoryValue,
-  getSalesToday,
+  store$, loadAllData, getLowStockItems, getTotalInventoryValue, getWeeklySales,
 } from '../../../store';
-import { SalesCalendar } from '../../../components/SalesCalendar';
 import { createStyles } from './dashboardscreen.style';
 
-function MetricCard({
-  label,
-  value,
-  sub,
-  accent,
-  styles,
-  colors,
-}: {
-  label: string;
-  value: string;
-  sub?: string;
-  accent?: string;
-  styles: ReturnType<typeof createStyles>;
-  colors: ReturnType<typeof import('../../../context/ThemeContext').useTheme>['colors'];
-}) {
-  return (
-    <View style={styles.metricCard}>
-      <Text style={styles.metricLabel}>{label}</Text>
-      <Text style={[styles.metricValue, accent ? { color: accent } : {}]}>
-        {value}
-      </Text>
-      {sub ? <Text style={styles.metricSub}>{sub}</Text> : null}
-    </View>
-  );
+function peso(n: number): string {
+  return '₱' + n.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 export const DashboardScreen = observer(function DashboardScreen() {
@@ -60,18 +24,18 @@ export const DashboardScreen = observer(function DashboardScreen() {
   const products = store$.products.get();
   const movements = store$.stockMovements.get();
 
-  const [activityVisible, setActivityVisible] = useState(false);
-
-  useEffect(() => {
-    loadAllData();
-  }, []);
+  useEffect(() => { loadAllData(); }, []);
 
   const lowStockItems = getLowStockItems(products);
   const totalValue = getTotalInventoryValue(products);
-  const salesToday = getSalesToday(movements);
-  const recentMovements = movements.slice(0, 3);
+  const weekly = getWeeklySales(movements);
+  const recentMovements = movements.slice(0, 4);
+  const todayRow = weekly[weekly.length - 1] ?? { qty: 0, amount: 0 };
+  const maxAmount = Math.max(...weekly.map(d => d.amount), 1);
 
-  const greeting = user?.store_name ?? 'My Store';
+  const storeName = user?.store_name ?? 'My Store';
+  const initials = storeName.split(' ').map(s => s[0]).filter(Boolean).slice(0, 2).join('').toUpperCase();
+  const dateLabel = new Date().toLocaleDateString('en-PH', { weekday: 'long', month: 'short', day: 'numeric' });
 
   if (loading && products.length === 0) {
     return (
@@ -86,126 +50,110 @@ export const DashboardScreen = observer(function DashboardScreen() {
       style={styles.container}
       contentContainerStyle={[styles.content, { paddingBottom: tabBarHeight + 16 }]}
       showsVerticalScrollIndicator={false}
-      refreshControl={
-        <RefreshControl
-          refreshing={loading}
-          onRefresh={loadAllData}
-          tintColor={colors.primary}
-        />
-      }
+      refreshControl={<RefreshControl refreshing={loading} onRefresh={loadAllData} tintColor={colors.primary} />}
     >
-      {/* Header */}
       <View style={styles.header}>
-        <View>
-          <Text style={styles.storeName}>{greeting}</Text>
-          <Text style={styles.subtitle}>Good day, here's your summary</Text>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.dateLabel}>{dateLabel}</Text>
+          <Text style={styles.storeName}>{storeName}</Text>
         </View>
-        <View style={styles.roleBadge}>
-          <Text style={styles.roleBadgeText}>Owner</Text>
+        <View style={styles.avatar}>
+          <Text style={styles.avatarText}>{initials}</Text>
         </View>
       </View>
 
-      {/* Metric cards */}
-      <View style={styles.metricsGrid}>
-        <MetricCard label="Total Products" value={String(products.length)} styles={styles} colors={colors} />
-        <MetricCard
-          label="Low Stock"
-          value={String(lowStockItems.length)}
-          accent={lowStockItems.length > 0 ? colors.danger : colors.success}
-          styles={styles}
-          colors={colors}
-        />
-        <MetricCard
-          label="Inventory Value"
-          value={`₱${totalValue.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
-          styles={styles}
-          colors={colors}
-        />
-        <MetricCard label="Sales Today" value={String(salesToday)} sub="units sold" styles={styles} colors={colors} />
+      <View style={styles.heroCard}>
+        <Text style={styles.heroLabel}>SALES TODAY</Text>
+        <Text style={styles.heroValue}>{peso(todayRow.amount)}</Text>
+        <View style={styles.heroSubRow}>
+          <Ionicons name="trending-up" size={14} color="#fff" />
+          <Text style={styles.heroSub}>{todayRow.qty} units sold</Text>
+        </View>
+        <View style={styles.barRow}>
+          {weekly.map((d, i) => {
+            const isToday = i === weekly.length - 1;
+            const h = (d.amount / maxAmount) * 32 + 2;
+            return (
+              <View key={i} style={styles.barCol}>
+                <View style={[styles.bar, { height: h, backgroundColor: isToday ? '#fff' : 'rgba(255,255,255,0.4)' }]} />
+                <Text style={styles.barLabel}>{d.day[0]}</Text>
+              </View>
+            );
+          })}
+        </View>
       </View>
 
-      {/* Low-stock alerts */}
+      <View style={styles.statRow}>
+        <View style={styles.statCard}>
+          <Text style={styles.statLabel}>PRODUCTS</Text>
+          <Text style={styles.statValue}>{products.length}</Text>
+          <Text style={styles.statSub}>in catalog</Text>
+        </View>
+        <View style={[styles.statCard, lowStockItems.length > 0 && { borderColor: colors.danger, backgroundColor: colors.dangerBackground }]}>
+          <Text style={[styles.statLabel, lowStockItems.length > 0 && { color: colors.danger }]}>LOW STOCK</Text>
+          <Text style={[styles.statValue, { color: lowStockItems.length > 0 ? colors.danger : colors.success }]}>{lowStockItems.length}</Text>
+          <Text style={[styles.statSub, lowStockItems.length > 0 && { color: colors.danger, opacity: 0.8 }]}>
+            {lowStockItems.length > 0 ? 'need restock' : 'all good'}
+          </Text>
+        </View>
+      </View>
+
+      <View style={styles.wideCard}>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.statLabel}>INVENTORY VALUE</Text>
+          <Text style={styles.wideValue}>{peso(totalValue)}</Text>
+        </View>
+        <View style={styles.wideIcon}>
+          <Ionicons name="storefront-outline" size={20} color={colors.primary} />
+        </View>
+      </View>
+
       {lowStockItems.length > 0 && (
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Low Stock Alerts</Text>
-          {lowStockItems.map((p) => (
-            <View key={p.id} style={styles.alertRow}>
-              <View style={styles.alertLeft}>
-                <View style={styles.alertDot} />
-                <Text style={styles.alertName}>{p.name}</Text>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Low Stock</Text>
+          </View>
+          {lowStockItems.slice(0, 5).map((p) => (
+            <View key={p.id} style={styles.lowRow}>
+              <View style={styles.qtyPill}>
+                <Text style={styles.qtyPillText}>{p.quantity}</Text>
               </View>
-              <Text style={styles.alertQty}>{p.quantity} left</Text>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.lowName}>{p.name}</Text>
+                <Text style={styles.lowSub}>Only {p.quantity} left</Text>
+              </View>
             </View>
           ))}
         </View>
       )}
 
-      {/* Sales calendar */}
-      <View style={styles.sectionCard}>
-        <SalesCalendar movements={movements} colors={colors} />
-      </View>
-
-      {/* Recent activity */}
-      <View style={styles.sectionCard}>
-        <View style={styles.weekNavRow}>
-          <Text style={styles.rowTitle}>Recent Activity</Text>
-          <Pressable onPress={() => setActivityVisible(true)}>
-            <Text style={styles.viewAllText}>View all →</Text>
-          </Pressable>
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Recent Activity</Text>
         </View>
-        {movements.length === 0 ? (
-          <Text style={styles.emptyText}>No activity recorded yet.</Text>
-        ) : (
-          recentMovements.map((m) => (
-            <View key={m.id} style={styles.movementRow}>
-              <View style={styles.movementLeft}>
-                <Text style={styles.movementProduct}>{m.product?.name ?? 'Unknown'}</Text>
-                <Text style={styles.movementDate}>
-                  {new Date(m.created_at).toLocaleDateString('en-PH', {
-                    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
-                  })}
-                </Text>
-              </View>
-              <Text style={[styles.movementQty, m.quantity_change < 0 ? styles.movementSale : styles.movementRestock]}>
-                {m.quantity_change > 0 ? '+' : ''}{m.quantity_change}
-              </Text>
-            </View>
-          ))
-        )}
-      </View>
-
-      {/* All activity modal */}
-      <Modal visible={activityVisible} animationType="slide" presentationStyle="pageSheet">
-        <View style={[styles.modalContainer, { backgroundColor: colors.background }]}>
-          <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>All Activity</Text>
-            <Pressable onPress={() => setActivityVisible(false)}>
-              <Ionicons name="close" size={22} color={colors.textPrimary} />
-            </Pressable>
-          </View>
-          <FlatList
-            data={movements}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.modalList}
-            ListEmptyComponent={<Text style={styles.emptyText}>No activity recorded yet.</Text>}
-            renderItem={({ item: m }) => (
-              <View style={styles.movementRow}>
-                <View style={styles.movementLeft}>
-                  <Text style={styles.movementProduct}>{m.product?.name ?? 'Unknown'}</Text>
-                  <Text style={styles.movementDate}>
-                    {new Date(m.created_at).toLocaleDateString('en-PH', {
-                      month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
-                    })}
+        <View style={styles.activityCard}>
+          {recentMovements.length === 0 ? (
+            <Text style={styles.emptyText}>No activity yet.</Text>
+          ) : (
+            recentMovements.map((m, i) => (
+              <View key={m.id} style={[styles.activityRow, i < recentMovements.length - 1 && styles.activityRowBorder]}>
+                <View style={[styles.activityIcon, { backgroundColor: m.quantity_change < 0 ? colors.dangerBackground : colors.successBackground }]}>
+                  <Ionicons name={m.quantity_change < 0 ? 'arrow-down' : 'arrow-up'} size={13} color={m.quantity_change < 0 ? colors.danger : colors.success} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.activityName} numberOfLines={1}>{m.product?.name ?? 'Unknown'}</Text>
+                  <Text style={styles.activityWhen}>
+                    {new Date(m.created_at).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                   </Text>
                 </View>
-                <Text style={[styles.movementQty, m.quantity_change < 0 ? styles.movementSale : styles.movementRestock]}>
+                <Text style={[styles.activityQty, { color: m.quantity_change < 0 ? colors.danger : colors.success }]}>
                   {m.quantity_change > 0 ? '+' : ''}{m.quantity_change}
                 </Text>
               </View>
-            )}
-          />
+            ))
+          )}
         </View>
-      </Modal>
+      </View>
     </ScrollView>
   );
 });

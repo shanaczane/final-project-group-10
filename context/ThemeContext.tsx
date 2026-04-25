@@ -26,56 +26,68 @@ export interface Colors {
   cardBackground: string;
   ownerBadgeBackground: string;
   ownerBadgeText: string;
+  surfaceAlt: string;
+  borderStrong: string;
+  accentSoft: string;
+  chipBg: string;
 }
 
 export const lightColors: Colors = {
-  background: '#fafaf9',
-  surface: '#ffffff',
-  primary: '#185FA5',
-  textPrimary: '#111110',
-  textSecondary: '#555553',
-  textMuted: '#888886',
-  border: '#e0e0de',
-  inputBackground: '#f2f2f0',
-  labelText: '#333331',
-  tabBar: '#ffffff',
-  tabBarBorder: '#e0e0de',
-  danger: '#c73030',
-  dangerBackground: '#fde8e8',
-  dangerText: '#c73030',
-  success: '#4a8f1e',
-  successBackground: '#e8f5df',
-  warning: '#c47d1a',
-  warningBackground: '#fef3e0',
-  info: '#185FA5',
-  cardBackground: '#f2f2f0',
-  ownerBadgeBackground: '#dbeafe',
-  ownerBadgeText: '#185FA5',
+  background: '#F8F4EE',
+  surface: '#FFFFFF',
+  primary: '#E07A5F',
+  textPrimary: '#1F1A14',
+  textSecondary: '#5C5246',
+  textMuted: '#9A8E7E',
+  border: '#E8DFD2',
+  inputBackground: '#F1ECE3',
+  labelText: '#5C5246',
+  tabBar: '#FFFFFF',
+  tabBarBorder: '#E8DFD2',
+  danger: '#C75A4F',
+  dangerBackground: '#F8DDD9',
+  dangerText: '#B85040',
+  success: '#4A8F6B',
+  successBackground: '#DCEEDF',
+  warning: '#D89B4A',
+  warningBackground: '#F8E8CC',
+  info: '#E07A5F',
+  cardBackground: '#F1ECE3',
+  ownerBadgeBackground: '#FBE5DD',
+  ownerBadgeText: '#B85940',
+  surfaceAlt: '#F1ECE3',
+  borderStrong: '#D4C7B3',
+  accentSoft: '#FBE5DD',
+  chipBg: '#EFE7DA',
 };
 
 export const darkColors: Colors = {
-  background: '#1c1c1a',
-  surface: '#2a2a28',
-  primary: '#4a8fd4',
-  textPrimary: '#f2f2f0',
-  textSecondary: '#a0a09e',
-  textMuted: '#666664',
-  border: '#3a3a38',
-  inputBackground: '#333331',
-  labelText: '#c8c8c6',
-  tabBar: '#1c1c1a',
-  tabBarBorder: '#3a3a38',
-  danger: '#e05050',
-  dangerBackground: '#3a1010',
-  dangerText: '#f08080',
-  success: '#6abf3a',
-  successBackground: '#1a2e10',
-  warning: '#d49030',
-  warningBackground: '#2e2010',
-  info: '#4a8fd4',
-  cardBackground: '#2a2a28',
-  ownerBadgeBackground: '#1e3a5f',
-  ownerBadgeText: '#4a8fd4',
+  background: '#15110C',
+  surface: '#1F1A14',
+  primary: '#E89074',
+  textPrimary: '#F5EFE3',
+  textSecondary: '#B5A892',
+  textMuted: '#7A6F5E',
+  border: '#332A1F',
+  inputBackground: '#2A2218',
+  labelText: '#B5A892',
+  tabBar: '#1F1A14',
+  tabBarBorder: '#332A1F',
+  danger: '#E07670',
+  dangerBackground: '#3A1E1B',
+  dangerText: '#F09890',
+  success: '#7BBF92',
+  successBackground: '#1E2E25',
+  warning: '#E0B370',
+  warningBackground: '#332817',
+  info: '#E89074',
+  cardBackground: '#2A2218',
+  ownerBadgeBackground: '#3A2218',
+  ownerBadgeText: '#E89074',
+  surfaceAlt: '#2A2218',
+  borderStrong: '#473C2D',
+  accentSoft: '#3A2218',
+  chipBg: '#2A2218',
 };
 
 const THEME_STORAGE_KEY = 'app_theme';
@@ -94,9 +106,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     AsyncStorage.getItem(THEME_STORAGE_KEY).then((saved) => {
-      if (saved !== null) {
-        setIsDark(saved === 'dark');
-      }
+      if (saved !== null) setIsDark(saved === 'dark');
     });
   }, []);
 
