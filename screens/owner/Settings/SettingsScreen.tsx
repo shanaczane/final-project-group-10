@@ -35,6 +35,9 @@ export function SettingsScreen() {
   const [showHelperPwd, setShowHelperPwd] = useState(false);
   const [creatingHelper, setCreatingHelper] = useState(false);
 
+  const [viewHelper, setViewHelper] = useState<AppUser | null>(null);
+  const [showViewPwd, setShowViewPwd] = useState(false);
+
   const [displayStoreName, setDisplayStoreName] = useState(user?.store_name ?? '');
   const [displayEmail, setDisplayEmail] = useState(user?.email ?? '');
   const [editField, setEditField] = useState<'store_name' | 'email' | null>(null);
@@ -124,11 +127,12 @@ export function SettingsScreen() {
         p_owner_id: user!.id,
       });
       if (rpcErr) { setCreatingHelper(false); Alert.alert('Error', rpcErr.message); return; }
+      await supabase.rpc('store_helper_password', { helper_id: newUserId, pwd: password });
       setCreatingHelper(false);
       setAddModalVisible(false);
       setHelperEmail('');
       setHelperPassword('');
-      Alert.alert('Helper Added', `${email} has been added.\n\nMake sure to share the password with them — it cannot be retrieved later.`);
+      Alert.alert('Helper Added', `${email} has been added. You can view their password by tapping their name in the list.`);
       fetchHelpers();
     } catch {
       setCreatingHelper(false);
@@ -234,7 +238,7 @@ export function SettingsScreen() {
           helpers.map((h, i) => (
             <React.Fragment key={h.id}>
               {i > 0 && <View style={styles.listDivider} />}
-              <View style={styles.listRow}>
+              <Pressable style={styles.listRow} onPress={() => { setViewHelper(h); setShowViewPwd(false); }}>
                 <View style={styles.listIconWrap}>
                   <Ionicons name="person-outline" size={17} color={colors.textSecondary} />
                 </View>
@@ -242,7 +246,7 @@ export function SettingsScreen() {
                 <Pressable onPress={() => confirmRemoveHelper(h)} style={styles.removeBtn}>
                   <Ionicons name="close-circle-outline" size={20} color={colors.danger} />
                 </Pressable>
-              </View>
+              </Pressable>
             </React.Fragment>
           ))
         )}
@@ -362,6 +366,41 @@ export function SettingsScreen() {
                 {creatingHelper
                   ? <ActivityIndicator color="#fff" size="small" />
                   : <Text style={styles.confirmBtnText}>Create</Text>}
+              </Pressable>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
+      {/* View Helper Password Modal */}
+      <Modal visible={viewHelper !== null} transparent animationType="fade">
+        <KeyboardAvoidingView
+          style={styles.modalOverlay}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        >
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>Helper Account</Text>
+            <Text style={styles.modalSubtitle}>{viewHelper?.email}</Text>
+
+            <Text style={styles.fieldLabel}>Saved Password</Text>
+            <View style={styles.pwdWrapper}>
+              <Text style={[styles.pwdInput, { paddingVertical: 12, color: colors.textPrimary }]}>
+                {showViewPwd ? (viewHelper?.temp_password ?? '—') : '••••••••'}
+              </Text>
+              <Pressable onPress={() => setShowViewPwd((p) => !p)} style={styles.eyeBtn}>
+                <Ionicons
+                  name={showViewPwd ? 'eye-off-outline' : 'eye-outline'}
+                  size={18}
+                  color={colors.textMuted}
+                />
+              </Pressable>
+            </View>
+
+            <View style={styles.modalActions}>
+              <Pressable style={styles.cancelBtn} onPress={() => setViewHelper(null)}>
+                <Text style={styles.cancelBtnText}>Close</Text>
+              </Pressable>
+              <Pressable style={[styles.cancelBtn, { borderWidth: 1, borderColor: colors.danger }]} onPress={() => { setViewHelper(null); confirmRemoveHelper(viewHelper!); }}>
+                <Text style={[styles.cancelBtnText, { color: colors.danger }]}>Remove</Text>
               </Pressable>
             </View>
           </View>

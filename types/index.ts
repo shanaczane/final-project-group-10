@@ -6,6 +6,7 @@ export interface AppUser {
   role: Role;
   store_name: string | null;
   owner_id: string | null; // null for owners; owner's user id for helpers
+  temp_password: string | null;
   created_at: string;
 }
 
