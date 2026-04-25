@@ -243,7 +243,7 @@ export function SettingsScreen() {
                   <Ionicons name="person-outline" size={17} color={colors.textSecondary} />
                 </View>
                 <Text style={styles.listLabel} numberOfLines={1}>{h.email}</Text>
-                <Pressable onPress={() => confirmRemoveHelper(h)} style={styles.removeBtn}>
+                <Pressable onPress={(e) => { e.stopPropagation(); confirmRemoveHelper(h); }} style={styles.removeBtn}>
                   <Ionicons name="close-circle-outline" size={20} color={colors.danger} />
                 </Pressable>
               </Pressable>
