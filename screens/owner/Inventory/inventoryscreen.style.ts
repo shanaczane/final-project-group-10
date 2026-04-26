@@ -12,18 +12,21 @@ export function createStyles(colors: Colors) {
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: colors.surface,
-      borderWidth: 1,
-      borderColor: colors.border,
-      borderRadius: 12,
+      borderRadius: 999,
       marginHorizontal: 20,
-      paddingHorizontal: 12,
-      paddingVertical: 7,
+      paddingHorizontal: 14,
+      paddingVertical: 8,
       gap: 8,
     },
     searchInput: {
       flex: 1,
       fontSize: 14,
       color: colors.textPrimary,
+    },
+    searchDivider: {
+      width: 1,
+      height: 16,
+      backgroundColor: colors.border,
     },
     chipsScroll: {
       marginTop: 12,
@@ -63,23 +66,20 @@ export function createStyles(colors: Colors) {
     productRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      paddingHorizontal: 20,
+      backgroundColor: colors.surface,
+      borderRadius: 14,
+      marginHorizontal: 20,
+      marginBottom: 8,
+      paddingHorizontal: 16,
       paddingVertical: 14,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
       gap: 12,
-    },
-    statusDot: {
-      width: 9,
-      height: 9,
-      borderRadius: 5,
     },
     productInfo: {
       flex: 1,
     },
     productName: {
       fontSize: 15,
-      fontWeight: '500',
+      fontWeight: '600',
       color: colors.textPrimary,
     },
     productMeta: {
@@ -88,15 +88,17 @@ export function createStyles(colors: Colors) {
       marginTop: 2,
     },
     productRight: {
-      flexDirection: 'row',
       alignItems: 'center',
-      gap: 6,
+      justifyContent: 'center',
     },
     qtyBadge: {
-      paddingHorizontal: 10,
-      paddingVertical: 3,
-      borderRadius: 8,
+      minWidth: 40,
+      height: 40,
+      borderRadius: 10,
       backgroundColor: colors.successBackground,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: 8,
     },
     qtyBadgeDanger: {
       backgroundColor: colors.dangerBackground,
@@ -105,8 +107,8 @@ export function createStyles(colors: Colors) {
       backgroundColor: colors.warningBackground,
     },
     qtyText: {
-      fontSize: 13,
-      fontWeight: '500',
+      fontSize: 15,
+      fontWeight: '700',
       color: colors.success,
     },
     qtyTextDanger: {
@@ -114,13 +116,6 @@ export function createStyles(colors: Colors) {
     },
     qtyTextWarning: {
       color: colors.warning,
-    },
-    rowActions: {
-      flexDirection: 'row',
-      gap: 8,
-    },
-    actionBtn: {
-      padding: 4,
     },
     emptyContainer: {
       alignItems: 'center',
@@ -133,6 +128,10 @@ export function createStyles(colors: Colors) {
       color: colors.textMuted,
       textAlign: 'center',
       paddingHorizontal: 40,
+    },
+    listContent: {
+      paddingTop: 8,
+      paddingBottom: 100,
     },
     fab: {
       position: 'absolute',

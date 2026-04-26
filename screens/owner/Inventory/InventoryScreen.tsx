@@ -321,13 +321,6 @@ export const InventoryScreen = observer(function InventoryScreen() {
     );
   }
 
-  const dotColor = (p: Product) => {
-    const s = stockStatus(p);
-    if (s === 'red') return colors.danger;
-    if (s === 'amber') return colors.warning;
-    return colors.success;
-  };
-
   return (
     <View style={styles.container}>
       {/* Search bar */}
@@ -341,11 +334,17 @@ export const InventoryScreen = observer(function InventoryScreen() {
           onChangeText={setSearch}
           autoCorrect={false}
         />
-        {search.length > 0 && (
-          <Pressable onPress={() => setSearch('')}>
-            <Ionicons name="close-circle" size={18} color={colors.textMuted} />
-          </Pressable>
-        )}
+        {search.length > 0
+          ? (
+            <Pressable onPress={() => setSearch('')}>
+              <Ionicons name="close-circle" size={18} color={colors.textMuted} />
+            </Pressable>
+          ) : (
+            <>
+              <View style={styles.searchDivider} />
+              <Ionicons name="options-outline" size={18} color={colors.textMuted} />
+            </>
+          )}
       </View>
 
       {/* Filter chips */}
@@ -380,6 +379,7 @@ export const InventoryScreen = observer(function InventoryScreen() {
       <FlatList
         data={filtered}
         keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.listContent}
         refreshControl={
           <RefreshControl refreshing={loading} onRefresh={loadAllData} tintColor={colors.primary} />
         }
@@ -393,7 +393,6 @@ export const InventoryScreen = observer(function InventoryScreen() {
         }
         renderItem={({ item }) => (
           <Pressable style={styles.productRow} onPress={() => openDetail(item)}>
-            <View style={[styles.statusDot, { backgroundColor: dotColor(item) }]} />
             <View style={styles.productInfo}>
               <Text style={styles.productName}>{item.name}</Text>
               <Text style={styles.productMeta}>
@@ -414,7 +413,6 @@ export const InventoryScreen = observer(function InventoryScreen() {
                   {item.quantity}
                 </Text>
               </View>
-              <Ionicons name="chevron-forward" size={16} color={colors.textMuted} />
             </View>
           </Pressable>
         )}
