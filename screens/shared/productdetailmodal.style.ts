@@ -20,7 +20,7 @@ export function createStyles(colors: Colors) {
     headerTitle: {
       flex: 1,
       fontSize: 18,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textPrimary,
       marginRight: 12,
     },
@@ -52,7 +52,7 @@ export function createStyles(colors: Colors) {
     },
     statusText: {
       fontSize: 13,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
     },
     statusGreen: {
       backgroundColor: colors.successBackground,
@@ -95,7 +95,7 @@ export function createStyles(colors: Colors) {
     },
     stockValue: {
       fontSize: 22,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textPrimary,
     },
     stockLabel: {
@@ -130,7 +130,7 @@ export function createStyles(colors: Colors) {
     },
     infoValue: {
       fontSize: 14,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textPrimary,
     },
     divider: {
@@ -154,7 +154,7 @@ export function createStyles(colors: Colors) {
     editBtnText: {
       color: '#ffffff',
       fontSize: 15,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
     },
     deleteBtn: {
       flexDirection: 'row',
@@ -169,7 +169,7 @@ export function createStyles(colors: Colors) {
     deleteBtnText: {
       color: colors.danger,
       fontSize: 15,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
     },
   });
 }

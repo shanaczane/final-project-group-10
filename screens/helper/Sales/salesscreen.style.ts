@@ -29,7 +29,7 @@ export function createStyles(colors: Colors) {
     },
     pageTitle: {
       fontSize: 22,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textPrimary,
       marginBottom: 16,
     },
@@ -65,7 +65,7 @@ export function createStyles(colors: Colors) {
     },
     productRowName: {
       fontSize: 15,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textPrimary,
     },
     productRowMeta: {
@@ -75,7 +75,7 @@ export function createStyles(colors: Colors) {
     },
     productRowPrice: {
       fontSize: 14,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.success,
     },
     selectedHeader: {
@@ -90,7 +90,7 @@ export function createStyles(colors: Colors) {
     },
     selectedName: {
       fontSize: 16,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textPrimary,
     },
     selectedMeta: {
@@ -107,12 +107,12 @@ export function createStyles(colors: Colors) {
     },
     changeBtnText: {
       fontSize: 13,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.primary,
     },
     label: {
       fontSize: 13,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.labelText,
       marginBottom: 8,
       marginTop: 20,
@@ -137,7 +137,7 @@ export function createStyles(colors: Colors) {
     },
     infoValue: {
       fontSize: 14,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textPrimary,
     },
     infoValueDanger: {
@@ -167,7 +167,7 @@ export function createStyles(colors: Colors) {
     },
     stepValue: {
       fontSize: 28,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textPrimary,
       minWidth: 48,
       textAlign: 'center',
@@ -198,12 +198,12 @@ export function createStyles(colors: Colors) {
     },
     summaryTotal: {
       fontSize: 20,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.success,
     },
     summaryStock: {
       fontSize: 15,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textPrimary,
     },
     summaryStockLow: {
@@ -222,7 +222,7 @@ export function createStyles(colors: Colors) {
     confirmBtnText: {
       color: '#ffffff',
       fontSize: 16,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
     },
     emptyContainer: {
       flex: 1,

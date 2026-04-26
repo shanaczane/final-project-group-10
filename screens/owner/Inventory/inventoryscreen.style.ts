@@ -58,7 +58,7 @@ export function createStyles(colors: Colors) {
       fontSize: 13,
       lineHeight: 18,
       color: colors.textSecondary,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
     },
     filterChipTextActive: {
       color: '#ffffff',
@@ -79,7 +79,7 @@ export function createStyles(colors: Colors) {
     },
     productName: {
       fontSize: 15,
-      fontWeight: '600',
+      fontFamily: 'Manrope_600SemiBold',
       color: colors.textPrimary,
     },
     productMeta: {
@@ -108,7 +108,7 @@ export function createStyles(colors: Colors) {
     },
     qtyText: {
       fontSize: 15,
-      fontWeight: '700',
+      fontFamily: 'Manrope_700Bold',
       color: colors.success,
     },
     qtyTextDanger: {
@@ -165,7 +165,7 @@ export function createStyles(colors: Colors) {
     },
     modalTitle: {
       fontSize: 18,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textPrimary,
     },
     modalClose: {
@@ -181,7 +181,7 @@ export function createStyles(colors: Colors) {
     },
     fieldLabel: {
       fontSize: 13,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.labelText,
       marginBottom: 6,
       marginTop: 16,
@@ -225,7 +225,7 @@ export function createStyles(colors: Colors) {
     saveButtonText: {
       color: '#ffffff',
       fontSize: 15,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
     },
     chip: {
       paddingHorizontal: 16,
@@ -248,7 +248,7 @@ export function createStyles(colors: Colors) {
     },
     chipTextActive: {
       color: '#ffffff',
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
     },
   });
 }

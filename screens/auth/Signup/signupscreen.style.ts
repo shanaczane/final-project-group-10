@@ -15,7 +15,7 @@ export function createStyles(colors: Colors) {
     },
     appTitle: {
       fontSize: 32,
-      fontWeight: '700',
+      fontFamily: 'Manrope_700Bold',
       color: colors.primary,
       textAlign: 'center',
       marginBottom: 8,
@@ -38,7 +38,7 @@ export function createStyles(colors: Colors) {
     },
     label: {
       fontSize: 14,
-      fontWeight: '600',
+      fontFamily: 'Manrope_600SemiBold',
       color: colors.labelText,
       marginBottom: 6,
       marginTop: 12,
@@ -75,7 +75,7 @@ export function createStyles(colors: Colors) {
     buttonText: {
       color: '#FFFFFF',
       fontSize: 16,
-      fontWeight: '600',
+      fontFamily: 'Manrope_600SemiBold',
     },
     linkRow: {
       marginTop: 24,
@@ -87,7 +87,7 @@ export function createStyles(colors: Colors) {
     },
     link: {
       color: colors.primary,
-      fontWeight: '600',
+      fontFamily: 'Manrope_600SemiBold',
     },
     hintsContainer: {
       marginTop: 8,

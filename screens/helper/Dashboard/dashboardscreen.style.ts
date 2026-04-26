@@ -26,7 +26,7 @@ export function createStyles(colors: Colors) {
     },
     storeName: {
       fontSize: 22,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textPrimary,
     },
     subtitle: {
@@ -44,7 +44,7 @@ export function createStyles(colors: Colors) {
     },
     helperBadgeText: {
       fontSize: 12,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textSecondary,
     },
     metricsGrid: {
@@ -65,12 +65,12 @@ export function createStyles(colors: Colors) {
     metricLabel: {
       fontSize: 12,
       color: colors.textMuted,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       marginBottom: 6,
     },
     metricValue: {
       fontSize: 22,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textPrimary,
     },
     metricSub: {
@@ -91,13 +91,13 @@ export function createStyles(colors: Colors) {
     },
     sectionTitle: {
       fontSize: 15,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textPrimary,
       marginBottom: 12,
     },
     rowTitle: {
       fontSize: 15,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textPrimary,
     },
     aiSection: {
@@ -125,7 +125,7 @@ export function createStyles(colors: Colors) {
     },
     aiCardTitle: {
       fontSize: 13,
-      fontWeight: '600',
+      fontFamily: 'Manrope_600SemiBold',
       color: colors.textPrimary,
     },
     aiCardHeaderRight: {
@@ -188,7 +188,7 @@ export function createStyles(colors: Colors) {
     retryBtnText: {
       fontSize: 12,
       color: colors.danger,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
     },
     aiInputDivider: {
       height: 1,
@@ -243,13 +243,13 @@ export function createStyles(colors: Colors) {
     alertName: {
       fontSize: 14,
       color: colors.dangerText,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       flex: 1,
     },
     alertQty: {
       fontSize: 13,
       color: colors.dangerText,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
     },
     weeklyTable: {
       backgroundColor: colors.surface,
@@ -281,7 +281,7 @@ export function createStyles(colors: Colors) {
     },
     weeklyHeadText: {
       color: colors.textMuted,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       fontSize: 12,
     },
     weeklyRight: {
@@ -289,7 +289,7 @@ export function createStyles(colors: Colors) {
     },
     weeklyAmount: {
       color: colors.success,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
     },
     movementRow: {
       flexDirection: 'row',
@@ -305,7 +305,7 @@ export function createStyles(colors: Colors) {
     movementProduct: {
       fontSize: 14,
       color: colors.textPrimary,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
     },
     movementDate: {
       fontSize: 12,
@@ -314,7 +314,7 @@ export function createStyles(colors: Colors) {
     },
     movementQty: {
       fontSize: 15,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
     },
     movementSale: {
       color: colors.danger,
@@ -354,7 +354,7 @@ export function createStyles(colors: Colors) {
     viewAllText: {
       fontSize: 13,
       color: colors.primary,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
     },
     modalContainer: {
       flex: 1,
@@ -371,7 +371,7 @@ export function createStyles(colors: Colors) {
     },
     modalTitle: {
       fontSize: 18,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textPrimary,
     },
     modalList: {

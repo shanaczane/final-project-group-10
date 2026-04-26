@@ -30,12 +30,12 @@ export function createStyles(colors: Colors) {
     },
     avatarText: {
       fontSize: 22,
-      fontWeight: '600',
+      fontFamily: 'Manrope_600SemiBold',
       color: colors.ownerBadgeText,
     },
     profileName: {
       fontSize: 18,
-      fontWeight: '600',
+      fontFamily: 'Manrope_600SemiBold',
       color: colors.textPrimary,
       marginBottom: 4,
     },
@@ -52,14 +52,14 @@ export function createStyles(colors: Colors) {
     },
     ownerBadgeText: {
       fontSize: 12,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.ownerBadgeText,
     },
 
     // Section
     sectionTitle: {
       fontSize: 13,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textMuted,
       textTransform: 'uppercase',
       letterSpacing: 0.6,
@@ -127,7 +127,7 @@ export function createStyles(colors: Colors) {
     },
     modalTitle: {
       fontSize: 17,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textPrimary,
       marginBottom: 4,
     },
@@ -138,7 +138,7 @@ export function createStyles(colors: Colors) {
     },
     fieldLabel: {
       fontSize: 13,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.labelText,
       marginBottom: 6,
       marginTop: 12,
@@ -186,7 +186,7 @@ export function createStyles(colors: Colors) {
     cancelBtnText: {
       fontSize: 14,
       color: colors.textSecondary,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
     },
     confirmBtn: {
       paddingHorizontal: 18,
@@ -202,7 +202,7 @@ export function createStyles(colors: Colors) {
     confirmBtnText: {
       fontSize: 14,
       color: '#ffffff',
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
     },
   });
 }

@@ -27,7 +27,7 @@ export function createStyles(colors: Colors) {
     },
     appTitle: {
       fontSize: 30,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textPrimary,
       letterSpacing: -0.5,
     },
@@ -45,13 +45,13 @@ export function createStyles(colors: Colors) {
     },
     formHeading: {
       fontSize: 18,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textPrimary,
       marginBottom: 20,
     },
     label: {
       fontSize: 13,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.labelText,
       marginBottom: 6,
       marginTop: 14,
@@ -98,7 +98,7 @@ export function createStyles(colors: Colors) {
     buttonText: {
       color: '#ffffff',
       fontSize: 15,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
     },
     helperHint: {
       flexDirection: 'row',
@@ -121,7 +121,7 @@ export function createStyles(colors: Colors) {
     },
     ownerLinkAction: {
       color: colors.primary,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
     },
   });
 }

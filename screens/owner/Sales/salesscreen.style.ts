@@ -26,7 +26,7 @@ export function createStyles(colors: Colors) {
     },
     pageTitle: {
       fontSize: 26,
-      fontWeight: '800',
+      fontFamily: 'Manrope_800ExtraBold',
       color: colors.textPrimary,
       letterSpacing: -0.5,
     },
@@ -62,14 +62,14 @@ export function createStyles(colors: Colors) {
     },
     statCardLabel: {
       fontSize: 11,
-      fontWeight: '600',
+      fontFamily: 'Manrope_600SemiBold',
       color: colors.textMuted,
       letterSpacing: 0.6,
       marginBottom: 4,
     },
     statCardValue: {
       fontSize: 22,
-      fontWeight: '800',
+      fontFamily: 'Manrope_800ExtraBold',
       color: colors.textPrimary,
       letterSpacing: -0.5,
     },
@@ -78,7 +78,7 @@ export function createStyles(colors: Colors) {
     },
     statCardUnits: {
       fontSize: 26,
-      fontWeight: '800',
+      fontFamily: 'Manrope_800ExtraBold',
       color: colors.primary,
       letterSpacing: -0.5,
     },
@@ -102,7 +102,7 @@ export function createStyles(colors: Colors) {
     },
     productRowName: {
       fontSize: 15,
-      fontWeight: '600',
+      fontFamily: 'Manrope_600SemiBold',
       color: colors.textPrimary,
     },
     productRowMeta: {
@@ -112,7 +112,7 @@ export function createStyles(colors: Colors) {
     },
     productRowPrice: {
       fontSize: 15,
-      fontWeight: '700',
+      fontFamily: 'Manrope_700Bold',
       color: colors.primary,
     },
 
@@ -137,7 +137,7 @@ export function createStyles(colors: Colors) {
     },
     selectedName: {
       fontSize: 16,
-      fontWeight: '600',
+      fontFamily: 'Manrope_600SemiBold',
       color: colors.textPrimary,
     },
     selectedMeta: {
@@ -154,12 +154,12 @@ export function createStyles(colors: Colors) {
     },
     changeBtnText: {
       fontSize: 13,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.primary,
     },
     label: {
       fontSize: 13,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.labelText,
       marginBottom: 8,
       marginTop: 20,
@@ -182,7 +182,7 @@ export function createStyles(colors: Colors) {
     },
     infoValue: {
       fontSize: 14,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textPrimary,
     },
     infoValueDanger: {
@@ -210,7 +210,7 @@ export function createStyles(colors: Colors) {
     },
     stepValue: {
       fontSize: 28,
-      fontWeight: '700',
+      fontFamily: 'Manrope_700Bold',
       color: colors.textPrimary,
       minWidth: 48,
       textAlign: 'center',
@@ -239,12 +239,12 @@ export function createStyles(colors: Colors) {
     },
     summaryTotal: {
       fontSize: 20,
-      fontWeight: '700',
+      fontFamily: 'Manrope_700Bold',
       color: colors.primary,
     },
     summaryStock: {
       fontSize: 15,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textPrimary,
     },
     summaryStockLow: {
@@ -263,7 +263,7 @@ export function createStyles(colors: Colors) {
     confirmBtnText: {
       color: '#ffffff',
       fontSize: 16,
-      fontWeight: '600',
+      fontFamily: 'Manrope_600SemiBold',
     },
     emptyContainer: {
       flex: 1,

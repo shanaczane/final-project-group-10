@@ -24,7 +24,7 @@ export function createStyles(colors: Colors) {
     },
     title: {
       fontSize: 26,
-      fontWeight: '800',
+      fontFamily: 'Manrope_800ExtraBold',
       color: colors.textPrimary,
       letterSpacing: -0.5,
     },
@@ -40,7 +40,7 @@ export function createStyles(colors: Colors) {
     addBtnText: {
       color: '#ffffff',
       fontSize: 14,
-      fontWeight: '600',
+      fontFamily: 'Manrope_600SemiBold',
     },
 
     // ── Grid ─────────────────────────────────────────────────────────────────
@@ -71,7 +71,7 @@ export function createStyles(colors: Colors) {
     },
     gridCardName: {
       fontSize: 15,
-      fontWeight: '700',
+      fontFamily: 'Manrope_700Bold',
       color: colors.textPrimary,
     },
     gridCardCount: {
@@ -109,7 +109,7 @@ export function createStyles(colors: Colors) {
     },
     detailTitle: {
       fontSize: 26,
-      fontWeight: '800',
+      fontFamily: 'Manrope_800ExtraBold',
       color: colors.textPrimary,
       letterSpacing: -0.5,
     },
@@ -139,7 +139,7 @@ export function createStyles(colors: Colors) {
     },
     hotCount: {
       fontSize: 17,
-      fontWeight: '800',
+      fontFamily: 'Manrope_800ExtraBold',
       color: '#fff',
     },
     hotSub: {
@@ -164,20 +164,20 @@ export function createStyles(colors: Colors) {
     },
     detailQtyText: {
       fontSize: 16,
-      fontWeight: '800',
+      fontFamily: 'Manrope_800ExtraBold',
     },
     detailProductInfo: {
       flex: 1,
     },
     detailProductName: {
       fontSize: 14,
-      fontWeight: '600',
+      fontFamily: 'Manrope_600SemiBold',
       color: colors.textPrimary,
     },
     detailProductSub: {
       fontSize: 12,
       marginTop: 2,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
     },
     restockBtn: {
       backgroundColor: colors.primary,
@@ -187,7 +187,7 @@ export function createStyles(colors: Colors) {
     },
     restockBtnText: {
       fontSize: 13,
-      fontWeight: '600',
+      fontFamily: 'Manrope_600SemiBold',
       color: '#fff',
     },
 
@@ -219,7 +219,7 @@ export function createStyles(colors: Colors) {
     },
     modalTitle: {
       fontSize: 17,
-      fontWeight: '700',
+      fontFamily: 'Manrope_700Bold',
       color: colors.textPrimary,
       marginBottom: 4,
     },
@@ -230,7 +230,7 @@ export function createStyles(colors: Colors) {
     },
     modalLabel: {
       fontSize: 13,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.labelText,
       marginBottom: 8,
     },
@@ -259,7 +259,7 @@ export function createStyles(colors: Colors) {
     cancelBtnText: {
       fontSize: 14,
       color: colors.textSecondary,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
     },
     confirmBtn: {
       paddingHorizontal: 18,
@@ -275,7 +275,7 @@ export function createStyles(colors: Colors) {
     confirmBtnText: {
       fontSize: 14,
       color: '#ffffff',
-      fontWeight: '600',
+      fontFamily: 'Manrope_600SemiBold',
     },
   });
 }

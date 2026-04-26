@@ -55,7 +55,7 @@ export function createStyles(colors: Colors) {
       fontSize: 13,
       lineHeight: 18,
       color: colors.textSecondary,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
     },
     filterChipTextActive: {
       color: '#ffffff',
@@ -79,7 +79,7 @@ export function createStyles(colors: Colors) {
     },
     productName: {
       fontSize: 15,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textPrimary,
     },
     productMeta: {
@@ -101,7 +101,7 @@ export function createStyles(colors: Colors) {
     },
     qtyText: {
       fontSize: 13,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.success,
     },
     qtyTextDanger: {

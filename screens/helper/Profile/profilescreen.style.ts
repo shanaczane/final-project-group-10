@@ -33,7 +33,7 @@ export function createStyles(colors: Colors) {
     },
     avatarText: {
       fontSize: 18,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textSecondary,
     },
     profileInfo: {
@@ -41,7 +41,7 @@ export function createStyles(colors: Colors) {
     },
     profileEmail: {
       fontSize: 14,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textPrimary,
     },
     profileStore: {
@@ -59,7 +59,7 @@ export function createStyles(colors: Colors) {
     },
     helperBadgeText: {
       fontSize: 12,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textSecondary,
     },
     section: {
@@ -67,7 +67,7 @@ export function createStyles(colors: Colors) {
     },
     sectionTitle: {
       fontSize: 15,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
       color: colors.textPrimary,
       marginBottom: 12,
     },
@@ -103,7 +103,7 @@ export function createStyles(colors: Colors) {
     signOutText: {
       color: colors.danger,
       fontSize: 15,
-      fontWeight: '500',
+      fontFamily: 'Manrope_500Medium',
     },
   });
 }
