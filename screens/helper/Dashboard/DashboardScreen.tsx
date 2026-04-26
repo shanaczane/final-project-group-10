@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
-  FlatList,
-  Modal,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -15,6 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../../../context/AuthContext';
 import { useTheme } from '../../../context/ThemeContext';
 import { store$, loadAllData, getWeeklySales } from '../../../store';
+import { ActivityModal } from '../../../components/ActivityModal';
 import { createStyles } from './dashboardscreen.style';
 
 function formatActivityTime(dateStr: string): string {
@@ -30,6 +29,7 @@ function formatActivityTime(dateStr: string): string {
   }
   return date.toLocaleDateString('en-PH', { month: 'short', day: 'numeric' });
 }
+
 
 export const HelperDashboardScreen = observer(function HelperDashboardScreen() {
   const { colors } = useTheme();
@@ -159,56 +159,11 @@ export const HelperDashboardScreen = observer(function HelperDashboardScreen() {
         )}
       </View>
 
-      {/* All activity modal */}
-      <Modal visible={activityVisible} animationType="slide" presentationStyle="pageSheet">
-        <View style={[styles.modalContainer, { backgroundColor: colors.background }]}>
-          <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>All Activity</Text>
-            <Pressable onPress={() => setActivityVisible(false)}>
-              <Ionicons name="close" size={22} color={colors.textPrimary} />
-            </Pressable>
-          </View>
-          <FlatList
-            data={movements}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.modalList}
-            ListEmptyComponent={<Text style={styles.emptyText}>No activity recorded yet.</Text>}
-            renderItem={({ item: m, index }) => (
-              <View
-                style={[
-                  styles.activityRow,
-                  index < movements.length - 1 && styles.activityRowBorder,
-                ]}
-              >
-                <View
-                  style={[
-                    styles.activityIconWrap,
-                    m.quantity_change < 0 ? styles.activityIconSale : styles.activityIconRestock,
-                  ]}
-                >
-                  <Ionicons
-                    name={m.quantity_change < 0 ? 'arrow-down' : 'arrow-up'}
-                    size={13}
-                    color={m.quantity_change < 0 ? colors.danger : colors.success}
-                  />
-                </View>
-                <View style={styles.activityInfo}>
-                  <Text style={styles.activityProduct}>{m.product?.name ?? 'Unknown'}</Text>
-                  <Text style={styles.activityTime}>{formatActivityTime(m.created_at)}</Text>
-                </View>
-                <Text
-                  style={[
-                    styles.activityQty,
-                    m.quantity_change < 0 ? styles.activityQtySale : styles.activityQtyRestock,
-                  ]}
-                >
-                  {m.quantity_change > 0 ? '+' : ''}{m.quantity_change}
-                </Text>
-              </View>
-            )}
-          />
-        </View>
-      </Modal>
+      <ActivityModal
+        visible={activityVisible}
+        movements={movements}
+        onClose={() => setActivityVisible(false)}
+      />
     </ScrollView>
   );
 });

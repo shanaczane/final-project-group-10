@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Modal, Pressable, RefreshControl, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, RefreshControl, ScrollView, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { observer } from '@legendapp/state/react';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
@@ -8,6 +8,7 @@ import { useTheme } from '../../../context/ThemeContext';
 import {
   store$, loadAllData, getLowStockItems, getTotalInventoryValue, getWeeklySales,
 } from '../../../store';
+import { ActivityModal } from '../../../components/ActivityModal';
 import { createStyles } from './dashboardscreen.style';
 
 function peso(n: number): string {
@@ -166,38 +167,11 @@ export const DashboardScreen = observer(function DashboardScreen() {
         </View>
       </View>
 
-      <Modal visible={activityVisible} animationType="slide" presentationStyle="pageSheet">
-        <View style={[styles.modalContainer, { backgroundColor: colors.background }]}>
-          <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>All Activity</Text>
-            <Pressable onPress={() => setActivityVisible(false)}>
-              <Ionicons name="close" size={22} color={colors.textPrimary} />
-            </Pressable>
-          </View>
-          <FlatList
-            data={movements}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.modalList}
-            ListEmptyComponent={<Text style={styles.emptyText}>No activity recorded yet.</Text>}
-            renderItem={({ item: m, index: i }) => (
-              <View style={[styles.activityRow, i < movements.length - 1 && styles.activityRowBorder]}>
-                <View style={[styles.activityIcon, { backgroundColor: m.quantity_change < 0 ? colors.dangerBackground : colors.successBackground }]}>
-                  <Ionicons name={m.quantity_change < 0 ? 'arrow-down' : 'arrow-up'} size={13} color={m.quantity_change < 0 ? colors.danger : colors.success} />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.activityName} numberOfLines={1}>{m.product?.name ?? 'Unknown'}</Text>
-                  <Text style={styles.activityWhen}>
-                    {new Date(m.created_at).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                  </Text>
-                </View>
-                <Text style={[styles.activityQty, { color: m.quantity_change < 0 ? colors.danger : colors.success }]}>
-                  {m.quantity_change > 0 ? '+' : ''}{m.quantity_change}
-                </Text>
-              </View>
-            )}
-          />
-        </View>
-      </Modal>
+      <ActivityModal
+        visible={activityVisible}
+        movements={movements}
+        onClose={() => setActivityVisible(false)}
+      />
     </ScrollView>
   );
 });
