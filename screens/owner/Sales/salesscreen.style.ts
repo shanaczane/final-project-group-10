@@ -12,11 +12,112 @@ export function createStyles(colors: Colors) {
       paddingTop: 56,
       paddingBottom: 40,
     },
+
+    // List view header
     header: {
       paddingHorizontal: 20,
       paddingTop: 56,
       paddingBottom: 12,
     },
+    headerSub: {
+      fontSize: 13,
+      color: colors.textMuted,
+      marginBottom: 2,
+    },
+    pageTitle: {
+      fontSize: 26,
+      fontWeight: '800',
+      color: colors.textPrimary,
+      letterSpacing: -0.5,
+      marginBottom: 14,
+    },
+
+    // Search bar
+    searchRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.surface,
+      borderRadius: 999,
+      marginHorizontal: 20,
+      paddingHorizontal: 14,
+      paddingVertical: 8,
+      gap: 8,
+      marginBottom: 12,
+    },
+    searchInput: {
+      flex: 1,
+      fontSize: 14,
+      color: colors.textPrimary,
+    },
+
+    // Sold Today stat card
+    statCard: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.surface,
+      borderRadius: 16,
+      marginHorizontal: 20,
+      paddingHorizontal: 18,
+      paddingVertical: 14,
+      marginBottom: 14,
+    },
+    statCardLabel: {
+      fontSize: 11,
+      fontWeight: '600',
+      color: colors.textMuted,
+      letterSpacing: 0.6,
+      marginBottom: 4,
+    },
+    statCardValue: {
+      fontSize: 22,
+      fontWeight: '800',
+      color: colors.textPrimary,
+      letterSpacing: -0.5,
+    },
+    statCardRight: {
+      alignItems: 'flex-end',
+    },
+    statCardUnits: {
+      fontSize: 26,
+      fontWeight: '800',
+      color: colors.primary,
+      letterSpacing: -0.5,
+    },
+
+    // Product list
+    listContent: {
+      paddingHorizontal: 20,
+      paddingBottom: 32,
+      gap: 8,
+    },
+    productRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.surface,
+      borderRadius: 14,
+      paddingHorizontal: 16,
+      paddingVertical: 14,
+    },
+    productRowInfo: {
+      flex: 1,
+    },
+    productRowName: {
+      fontSize: 15,
+      fontWeight: '600',
+      color: colors.textPrimary,
+    },
+    productRowMeta: {
+      fontSize: 12,
+      color: colors.textMuted,
+      marginTop: 2,
+    },
+    productRowPrice: {
+      fontSize: 15,
+      fontWeight: '700',
+      color: colors.primary,
+    },
+
+    // Detail / confirm view
     backBtn: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -27,70 +128,17 @@ export function createStyles(colors: Colors) {
       fontSize: 15,
       color: colors.textPrimary,
     },
-    pageTitle: {
-      fontSize: 22,
-      fontWeight: '500',
-      color: colors.textPrimary,
-      marginBottom: 16,
-    },
-    searchRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: colors.surface,
-      borderWidth: 1,
-      borderColor: colors.border,
-      borderRadius: 12,
-      paddingHorizontal: 14,
-      paddingVertical: 7,
-      gap: 10,
-    },
-    searchInput: {
-      flex: 1,
-      fontSize: 15,
-      color: colors.textPrimary,
-    },
-    listContent: {
-      paddingBottom: 24,
-    },
-    productRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      paddingHorizontal: 20,
-      paddingVertical: 14,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
-    },
-    productRowInfo: {
-      flex: 1,
-    },
-    productRowName: {
-      fontSize: 15,
-      fontWeight: '500',
-      color: colors.textPrimary,
-    },
-    productRowMeta: {
-      fontSize: 12,
-      color: colors.textMuted,
-      marginTop: 2,
-    },
-    productRowPrice: {
-      fontSize: 14,
-      fontWeight: '500',
-      color: colors.success,
-    },
     selectedHeader: {
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: colors.surface,
-      borderWidth: 1,
-      borderColor: colors.border,
-      borderRadius: 12,
+      borderRadius: 14,
       padding: 14,
       gap: 12,
     },
     selectedName: {
       fontSize: 16,
-      fontWeight: '500',
+      fontWeight: '600',
       color: colors.textPrimary,
     },
     selectedMeta: {
@@ -119,9 +167,7 @@ export function createStyles(colors: Colors) {
     },
     infoCard: {
       backgroundColor: colors.surface,
-      borderRadius: 12,
-      borderWidth: 1,
-      borderColor: colors.border,
+      borderRadius: 14,
       padding: 16,
       marginTop: 12,
       gap: 10,
@@ -148,9 +194,7 @@ export function createStyles(colors: Colors) {
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor: colors.surface,
-      borderWidth: 1,
-      borderColor: colors.border,
-      borderRadius: 12,
+      borderRadius: 14,
       padding: 8,
       gap: 24,
     },
@@ -167,16 +211,14 @@ export function createStyles(colors: Colors) {
     },
     stepValue: {
       fontSize: 28,
-      fontWeight: '500',
+      fontWeight: '700',
       color: colors.textPrimary,
       minWidth: 48,
       textAlign: 'center',
     },
     summaryCard: {
       backgroundColor: colors.surface,
-      borderRadius: 12,
-      borderWidth: 1,
-      borderColor: colors.border,
+      borderRadius: 14,
       marginTop: 16,
       overflow: 'hidden',
     },
@@ -198,8 +240,8 @@ export function createStyles(colors: Colors) {
     },
     summaryTotal: {
       fontSize: 20,
-      fontWeight: '500',
-      color: colors.success,
+      fontWeight: '700',
+      color: colors.primary,
     },
     summaryStock: {
       fontSize: 15,
@@ -211,7 +253,7 @@ export function createStyles(colors: Colors) {
     },
     confirmBtn: {
       backgroundColor: colors.primary,
-      borderRadius: 12,
+      borderRadius: 14,
       paddingVertical: 16,
       alignItems: 'center',
       marginTop: 24,
@@ -222,7 +264,7 @@ export function createStyles(colors: Colors) {
     confirmBtnText: {
       color: '#ffffff',
       fontSize: 16,
-      fontWeight: '500',
+      fontWeight: '600',
     },
     emptyContainer: {
       flex: 1,

@@ -13,7 +13,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { observer } from '@legendapp/state/react';
 import { useAuth } from '../../../context/AuthContext';
 import { useTheme } from '../../../context/ThemeContext';
-import { store$, loadAllData, recordSale } from '../../../store';
+import { store$, loadAllData, recordSale, getWeeklySales } from '../../../store';
 import type { Product } from '../../../types';
 import { createStyles } from './salesscreen.style';
 
@@ -23,6 +23,7 @@ export const SalesScreen = observer(function SalesScreen() {
   const styles = createStyles(colors);
 
   const products = store$.products.get();
+  const movements = store$.stockMovements.get();
 
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<Product | null>(null);
@@ -32,6 +33,9 @@ export const SalesScreen = observer(function SalesScreen() {
   useEffect(() => {
     if (products.length === 0) loadAllData();
   }, []);
+
+  const weekly = getWeeklySales(movements);
+  const todayRow = weekly[weekly.length - 1] ?? { qty: 0, amount: 0 };
 
   const filteredProducts = products.filter((p) =>
     p.name.toLowerCase().includes(search.toLowerCase()),
@@ -177,21 +181,36 @@ export const SalesScreen = observer(function SalesScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
+        <Text style={styles.headerSub}>Tap a product to sell</Text>
         <Text style={styles.pageTitle}>Record Sale</Text>
-        <View style={styles.searchRow}>
-          <Ionicons name="search-outline" size={18} color={colors.textMuted} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search product…"
-            placeholderTextColor={colors.textMuted}
-            value={search}
-            onChangeText={setSearch}
-          />
-          {search.length > 0 && (
-            <Pressable onPress={() => setSearch('')}>
-              <Ionicons name="close-circle" size={18} color={colors.textMuted} />
-            </Pressable>
-          )}
+      </View>
+
+      <View style={styles.searchRow}>
+        <Ionicons name="search-outline" size={17} color={colors.textMuted} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search product…"
+          placeholderTextColor={colors.textMuted}
+          value={search}
+          onChangeText={setSearch}
+        />
+        {search.length > 0 && (
+          <Pressable onPress={() => setSearch('')}>
+            <Ionicons name="close-circle" size={17} color={colors.textMuted} />
+          </Pressable>
+        )}
+      </View>
+
+      <View style={styles.statCard}>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.statCardLabel}>SOLD TODAY</Text>
+          <Text style={styles.statCardValue}>
+            ₱{todayRow.amount.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </Text>
+        </View>
+        <View style={styles.statCardRight}>
+          <Text style={styles.statCardLabel}>UNITS</Text>
+          <Text style={styles.statCardUnits}>{todayRow.qty}</Text>
         </View>
       </View>
 
@@ -214,9 +233,7 @@ export const SalesScreen = observer(function SalesScreen() {
           <Pressable style={styles.productRow} onPress={() => selectProduct(item)}>
             <View style={styles.productRowInfo}>
               <Text style={styles.productRowName}>{item.name}</Text>
-              <Text style={styles.productRowMeta}>
-                {item.category?.name ?? 'Uncategorized'} · {item.quantity} in stock
-              </Text>
+              <Text style={styles.productRowMeta}>{item.quantity} in stock</Text>
             </View>
             <Text style={styles.productRowPrice}>₱{item.sell_price.toFixed(2)}</Text>
           </Pressable>
