@@ -96,14 +96,6 @@ export function createStyles(colors: Colors) {
       paddingVertical: 14,
       gap: 12,
     },
-    productIconWrap: {
-      width: 40,
-      height: 40,
-      borderRadius: 10,
-      backgroundColor: colors.cardBackground,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
     productInfo: {
       flex: 1,
     },
@@ -116,6 +108,10 @@ export function createStyles(colors: Colors) {
       fontSize: 12,
       color: colors.textMuted,
       marginTop: 2,
+    },
+    productRight: {
+      flexDirection: 'row',
+      alignItems: 'center',
     },
     qtyBadge: {
       minWidth: 40,

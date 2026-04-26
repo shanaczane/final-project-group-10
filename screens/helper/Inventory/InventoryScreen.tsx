@@ -124,27 +124,26 @@ export const HelperInventoryScreen = observer(function HelperInventoryScreen() {
               style={styles.productRow}
               onPress={() => { setDetailProduct(item); setDetailVisible(true); }}
             >
-              <View style={styles.productIconWrap}>
-                <Ionicons name="cube-outline" size={20} color={colors.textMuted} />
-              </View>
               <View style={styles.productInfo}>
                 <Text style={styles.productName}>{item.name}</Text>
                 <Text style={styles.productMeta}>
                   {item.category?.name ?? 'Uncategorized'} · ₱{item.sell_price.toFixed(2)}
                 </Text>
               </View>
-              <View style={[
-                styles.qtyBadge,
-                status === 'red' && styles.qtyBadgeDanger,
-                status === 'amber' && styles.qtyBadgeWarning,
-              ]}>
-                <Text style={[
-                  styles.qtyText,
-                  status === 'red' && styles.qtyTextDanger,
-                  status === 'amber' && styles.qtyTextWarning,
+              <View style={styles.productRight}>
+                <View style={[
+                  styles.qtyBadge,
+                  status === 'red' && styles.qtyBadgeDanger,
+                  status === 'amber' && styles.qtyBadgeWarning,
                 ]}>
-                  {item.quantity}
-                </Text>
+                  <Text style={[
+                    styles.qtyText,
+                    status === 'red' && styles.qtyTextDanger,
+                    status === 'amber' && styles.qtyTextWarning,
+                  ]}>
+                    {item.quantity}
+                  </Text>
+                </View>
               </View>
             </Pressable>
           );
