@@ -2,10 +2,9 @@ import React, { useMemo, useState } from 'react';
 import {
   Modal,
   Pressable,
-  SectionList,
+  ScrollView,
   Text,
   View,
-  ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
@@ -24,14 +23,19 @@ function formatDateLabel(dateStr: string): string {
   const today = new Date();
   const yesterday = new Date();
   yesterday.setDate(today.getDate() - 1);
-  const monthDay = date.toLocaleDateString('en-PH', { month: 'short', day: 'numeric' }).toUpperCase();
+  const monthDay = date
+    .toLocaleDateString('en-PH', { month: 'short', day: 'numeric' })
+    .toUpperCase();
   if (date.toDateString() === today.toDateString()) return `TODAY · ${monthDay}`;
   if (date.toDateString() === yesterday.toDateString()) return `YESTERDAY · ${monthDay}`;
   return monthDay;
 }
 
 function formatTime(dateStr: string): string {
-  return new Date(dateStr).toLocaleTimeString('en-PH', { hour: '2-digit', minute: '2-digit' });
+  return new Date(dateStr).toLocaleTimeString('en-PH', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 }
 
 function peso(n: number): string {
@@ -57,7 +61,7 @@ export function ActivityModal({ visible, movements, onClose }: Props) {
   }, [movements, filter]);
 
   const sections = useMemo(() => {
-    const groups: Map<string, { label: string; revenue: number; data: StockMovement[] }> = new Map();
+    const groups = new Map<string, { label: string; revenue: number; data: StockMovement[] }>();
     for (const m of filtered) {
       const key = new Date(m.created_at).toDateString();
       if (!groups.has(key)) {
@@ -76,25 +80,31 @@ export function ActivityModal({ visible, movements, onClose }: Props) {
     { key: 'all', label: 'All', count: movements.length },
     { key: 'sale', label: 'Sales', count: salesCount },
     { key: 'restock', label: 'Restocks', count: restockedQty },
-    ...(adjustmentCount > 0 ? [{ key: 'adjustment' as FilterType, label: 'Edits', count: adjustmentCount }] : []),
+    ...(adjustmentCount > 0
+      ? [{ key: 'adjustment' as FilterType, label: 'Edits', count: adjustmentCount }]
+      : []),
   ];
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <View style={{ flex: 1, backgroundColor: colors.background }}>
 
-        {/* Modal header */}
+        {/* Header */}
         <View style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
           paddingHorizontal: 20,
           paddingTop: 20,
-          paddingBottom: 12,
+          paddingBottom: 16,
           borderBottomWidth: 1,
           borderBottomColor: colors.border,
         }}>
-          <Text style={{ fontSize: 18, fontFamily: 'Manrope_600SemiBold', color: colors.textPrimary }}>
+          <Text style={{
+            fontSize: 22,
+            fontFamily: 'Manrope_700Bold',
+            color: colors.textPrimary,
+          }}>
             Activity
           </Text>
           <Pressable onPress={onClose} hitSlop={8}>
@@ -102,47 +112,84 @@ export function ActivityModal({ visible, movements, onClose }: Props) {
           </Pressable>
         </View>
 
-        {/* Stats row */}
+        {/* Stats row — sits on page background */}
         <View style={{
           flexDirection: 'row',
           paddingHorizontal: 20,
-          paddingVertical: 16,
-          gap: 0,
+          paddingTop: 16,
+          paddingBottom: 16,
           borderBottomWidth: 1,
           borderBottomColor: colors.border,
-          backgroundColor: colors.surface,
         }}>
-          <View style={{ flex: 1 }}>
-            <Text style={{ fontSize: 10, fontFamily: 'Manrope_600SemiBold', color: colors.textMuted, letterSpacing: 0.6, marginBottom: 4 }}>
+          <View style={{ flex: 1.2 }}>
+            <Text style={{
+              fontSize: 10,
+              fontFamily: 'Manrope_600SemiBold',
+              color: colors.textMuted,
+              letterSpacing: 0.7,
+              marginBottom: 4,
+            }}>
               REVENUE
             </Text>
-            <Text style={{ fontSize: 18, fontFamily: 'Manrope_800ExtraBold', color: colors.textPrimary, letterSpacing: -0.3 }}>
+            <Text style={{
+              fontSize: 20,
+              fontFamily: 'Manrope_800ExtraBold',
+              color: colors.textPrimary,
+              letterSpacing: -0.3,
+            }}>
               {peso(totalRevenue)}
             </Text>
           </View>
-          <View style={{ flex: 1, alignItems: 'center' }}>
-            <Text style={{ fontSize: 10, fontFamily: 'Manrope_600SemiBold', color: colors.textMuted, letterSpacing: 0.6, marginBottom: 4 }}>
+          <View style={{ flex: 0.8, alignItems: 'center' }}>
+            <Text style={{
+              fontSize: 10,
+              fontFamily: 'Manrope_600SemiBold',
+              color: colors.textMuted,
+              letterSpacing: 0.7,
+              marginBottom: 4,
+            }}>
               SALES
             </Text>
-            <Text style={{ fontSize: 18, fontFamily: 'Manrope_800ExtraBold', color: colors.success, letterSpacing: -0.3 }}>
+            <Text style={{
+              fontSize: 20,
+              fontFamily: 'Manrope_800ExtraBold',
+              color: colors.success,
+              letterSpacing: -0.3,
+            }}>
               {salesCount}
             </Text>
           </View>
           <View style={{ flex: 1, alignItems: 'flex-end' }}>
-            <Text style={{ fontSize: 10, fontFamily: 'Manrope_600SemiBold', color: colors.textMuted, letterSpacing: 0.6, marginBottom: 4 }}>
+            <Text style={{
+              fontSize: 10,
+              fontFamily: 'Manrope_600SemiBold',
+              color: colors.textMuted,
+              letterSpacing: 0.7,
+              marginBottom: 4,
+            }}>
               RESTOCKED
             </Text>
-            <Text style={{ fontSize: 18, fontFamily: 'Manrope_800ExtraBold', color: colors.success, letterSpacing: -0.3 }}>
+            <Text style={{
+              fontSize: 20,
+              fontFamily: 'Manrope_800ExtraBold',
+              color: colors.success,
+              letterSpacing: -0.3,
+            }}>
               +{restockedQty}
             </Text>
           </View>
         </View>
 
-        {/* Filter chips */}
+        {/* Filter chips — inventory style */}
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingVertical: 12, gap: 8, alignItems: 'center' }}
+          contentContainerStyle={{
+            paddingHorizontal: 16,
+            paddingVertical: 12,
+            gap: 8,
+            alignItems: 'center',
+          }}
           style={{ flexGrow: 0 }}
         >
           {chips.map(chip => {
@@ -155,25 +202,25 @@ export function ActivityModal({ visible, movements, onClose }: Props) {
                   flexDirection: 'row',
                   alignItems: 'center',
                   gap: 6,
-                  paddingHorizontal: 14,
-                  paddingVertical: 7,
+                  paddingHorizontal: 16,
+                  height: 34,
                   borderRadius: 999,
-                  backgroundColor: active ? colors.textPrimary : colors.surface,
+                  backgroundColor: active ? colors.primary : colors.surface,
                   borderWidth: 1,
-                  borderColor: active ? colors.textPrimary : colors.border,
+                  borderColor: active ? colors.primary : colors.border,
                 }}
               >
                 <Text style={{
                   fontSize: 13,
                   fontFamily: 'Manrope_500Medium',
-                  color: active ? (colors.background) : colors.textSecondary,
+                  color: active ? '#ffffff' : colors.textSecondary,
                 }}>
                   {chip.label}
                 </Text>
                 <Text style={{
                   fontSize: 12,
                   fontFamily: 'Manrope_600SemiBold',
-                  color: active ? colors.background : colors.textMuted,
+                  color: active ? 'rgba(255,255,255,0.8)' : colors.textMuted,
                 }}>
                   {chip.count}
                 </Text>
@@ -182,13 +229,12 @@ export function ActivityModal({ visible, movements, onClose }: Props) {
           })}
         </ScrollView>
 
-        {/* Date-grouped list */}
-        <SectionList
-          sections={sections}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={{ paddingBottom: 40 }}
+        {/* Date-grouped list — items share one card per section */}
+        <ScrollView
           showsVerticalScrollIndicator={false}
-          ListEmptyComponent={
+          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 40 }}
+        >
+          {filtered.length === 0 ? (
             <Text style={{
               fontSize: 14,
               color: colors.textMuted,
@@ -197,106 +243,143 @@ export function ActivityModal({ visible, movements, onClose }: Props) {
             }}>
               No activity recorded yet.
             </Text>
-          }
-          renderSectionHeader={({ section }) => (
-            <View style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              paddingHorizontal: 20,
-              paddingTop: 18,
-              paddingBottom: 8,
-            }}>
-              <Text style={{
-                fontSize: 11,
-                fontFamily: 'Manrope_600SemiBold',
-                color: colors.textMuted,
-                letterSpacing: 0.6,
-              }}>
-                {section.label}
-              </Text>
-              {section.revenue > 0 && (
-                <Text style={{
-                  fontSize: 13,
-                  fontFamily: 'Manrope_600SemiBold',
-                  color: colors.textSecondary,
-                }}>
-                  {peso(section.revenue)}
-                </Text>
-              )}
-            </View>
-          )}
-          renderItem={({ item: m, index, section }) => {
-            const isSale = m.movement_type === 'sale';
-            const isRestock = m.movement_type === 'restock';
-            const amount = isSale
-              ? Math.abs(m.quantity_change) * (m.product?.sell_price ?? 0)
-              : 0;
-            const typeLabel = isSale ? 'SALE' : isRestock ? 'RESTOCK' : 'EDIT';
-            const isLast = index === section.data.length - 1;
-
-            return (
-              <View style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginHorizontal: 16,
-                marginBottom: isLast ? 0 : 6,
-                backgroundColor: colors.surface,
-                borderRadius: 12,
-                paddingHorizontal: 14,
-                paddingVertical: 12,
-                gap: 12,
-              }}>
-                {/* Icon */}
+          ) : (
+            sections.map(section => (
+              <View key={section.label}>
+                {/* Section header */}
                 <View style={{
-                  width: 34,
-                  height: 34,
-                  borderRadius: 10,
-                  backgroundColor: m.quantity_change < 0 ? colors.dangerBackground : colors.successBackground,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
                   alignItems: 'center',
-                  justifyContent: 'center',
+                  paddingTop: 18,
+                  paddingBottom: 8,
+                  paddingHorizontal: 4,
                 }}>
-                  <Ionicons
-                    name={m.quantity_change < 0 ? 'arrow-down' : 'arrow-up'}
-                    size={14}
-                    color={m.quantity_change < 0 ? colors.danger : colors.success}
-                  />
-                </View>
-
-                {/* Info */}
-                <View style={{ flex: 1 }}>
                   <Text style={{
-                    fontSize: 14,
+                    fontSize: 11,
                     fontFamily: 'Manrope_600SemiBold',
-                    color: colors.textPrimary,
-                  }} numberOfLines={1}>
-                    {m.product?.name ?? 'Unknown'}
-                  </Text>
-                  <Text style={{ fontSize: 11, color: isSale ? colors.danger : colors.success, marginTop: 1 }}>
-                    <Text style={{ fontFamily: 'Manrope_600SemiBold' }}>{typeLabel}</Text>
-                    {' · '}{formatTime(m.created_at)}
-                  </Text>
-                </View>
-
-                {/* Qty + amount */}
-                <View style={{ alignItems: 'flex-end' }}>
-                  <Text style={{
-                    fontSize: 15,
-                    fontFamily: 'Manrope_700Bold',
-                    color: m.quantity_change < 0 ? colors.danger : colors.success,
+                    color: colors.textMuted,
+                    letterSpacing: 0.6,
                   }}>
-                    {m.quantity_change > 0 ? '+' : ''}{m.quantity_change}
+                    {section.label}
                   </Text>
-                  {amount > 0 && (
-                    <Text style={{ fontSize: 12, color: colors.textMuted, marginTop: 1 }}>
-                      {peso(amount)}
+                  {section.revenue > 0 && (
+                    <Text style={{
+                      fontSize: 13,
+                      fontFamily: 'Manrope_600SemiBold',
+                      color: colors.textSecondary,
+                    }}>
+                      {peso(section.revenue)}
                     </Text>
                   )}
                 </View>
+
+                {/* Items card — one card per date group */}
+                <View style={{
+                  backgroundColor: colors.surface,
+                  borderRadius: 14,
+                  borderWidth: 1,
+                  borderColor: colors.border,
+                  overflow: 'hidden',
+                }}>
+                  {section.data.map((m, index) => {
+                    const isSale = m.movement_type === 'sale';
+                    const isRestock = m.movement_type === 'restock';
+                    const amount = isSale
+                      ? Math.abs(m.quantity_change) * (m.product?.sell_price ?? 0)
+                      : 0;
+                    const typeLabel = isSale ? 'SALE' : isRestock ? 'RESTOCK' : 'EDIT';
+                    const isLast = index === section.data.length - 1;
+
+                    return (
+                      <View key={m.id}>
+                        <View style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          paddingHorizontal: 14,
+                          paddingVertical: 14,
+                          gap: 12,
+                        }}>
+                          {/* Icon */}
+                          <View style={{
+                            width: 36,
+                            height: 36,
+                            borderRadius: 10,
+                            backgroundColor: m.quantity_change < 0
+                              ? colors.dangerBackground
+                              : colors.successBackground,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}>
+                            <Ionicons
+                              name={m.quantity_change < 0 ? 'arrow-down' : 'arrow-up'}
+                              size={14}
+                              color={m.quantity_change < 0 ? colors.danger : colors.success}
+                            />
+                          </View>
+
+                          {/* Info */}
+                          <View style={{ flex: 1 }}>
+                            <Text style={{
+                              fontSize: 14,
+                              fontFamily: 'Manrope_600SemiBold',
+                              color: colors.textPrimary,
+                            }} numberOfLines={1}>
+                              {m.product?.name ?? 'Unknown'}
+                            </Text>
+                            <Text style={{
+                              fontSize: 11,
+                              fontFamily: 'Manrope_600SemiBold',
+                              color: isSale ? colors.danger : colors.success,
+                              marginTop: 2,
+                            }}>
+                              {typeLabel}
+                              <Text style={{
+                                fontFamily: 'Manrope_400Regular',
+                                color: colors.textMuted,
+                              }}>
+                                {' · '}{formatTime(m.created_at)}
+                              </Text>
+                            </Text>
+                          </View>
+
+                          {/* Qty + amount */}
+                          <View style={{ alignItems: 'flex-end' }}>
+                            <Text style={{
+                              fontSize: 15,
+                              fontFamily: 'Manrope_700Bold',
+                              color: m.quantity_change < 0 ? colors.danger : colors.success,
+                            }}>
+                              {m.quantity_change > 0 ? '+' : ''}{m.quantity_change}
+                            </Text>
+                            {amount > 0 && (
+                              <Text style={{
+                                fontSize: 12,
+                                color: colors.textMuted,
+                                marginTop: 2,
+                              }}>
+                                {peso(amount)}
+                              </Text>
+                            )}
+                          </View>
+                        </View>
+
+                        {/* Divider between rows */}
+                        {!isLast && (
+                          <View style={{
+                            height: 1,
+                            backgroundColor: colors.border,
+                            marginLeft: 62,
+                          }} />
+                        )}
+                      </View>
+                    );
+                  })}
+                </View>
               </View>
-            );
-          }}
-        />
+            ))
+          )}
+        </ScrollView>
       </View>
     </Modal>
   );
