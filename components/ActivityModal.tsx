@@ -217,13 +217,15 @@ export function ActivityModal({ visible, movements, onClose }: Props) {
                 }}>
                   {chip.label}
                 </Text>
-                <Text style={{
-                  fontSize: 12,
-                  fontFamily: 'Manrope_600SemiBold',
-                  color: active ? 'rgba(255,255,255,0.8)' : colors.textMuted,
-                }}>
-                  {chip.count}
-                </Text>
+                {chip.key !== 'all' && (
+                  <Text style={{
+                    fontSize: 12,
+                    fontFamily: 'Manrope_600SemiBold',
+                    color: active ? 'rgba(255,255,255,0.8)' : colors.textMuted,
+                  }}>
+                    {chip.count}
+                  </Text>
+                )}
               </Pressable>
             );
           })}
