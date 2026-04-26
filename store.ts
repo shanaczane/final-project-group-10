@@ -182,6 +182,24 @@ export async function recordSale(
   return { error: null };
 }
 
+export async function recordRestock(
+  productId: string,
+  quantityAdded: number,
+): Promise<{ error: string | null }> {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) return { error: 'Not authenticated' };
+  const { error } = await supabase
+    .from('stock_movements')
+    .insert({
+      product_id: productId,
+      quantity_change: quantityAdded,
+      movement_type: 'restock',
+      recorded_by: session.user.id,
+    });
+  if (error) return { error: error.message };
+  return { error: null };
+}
+
 // ─── Computed helpers (plain functions, used in observer components) ──────────
 
 export function getLowStockItems(products: Product[]): Product[] {

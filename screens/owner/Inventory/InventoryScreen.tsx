@@ -23,6 +23,7 @@ import {
   addProduct,
   updateProduct,
   deleteProduct,
+  recordRestock,
 } from '../../../store';
 import type { Product } from '../../../types';
 import { ProductDetailModal } from '../../shared/ProductDetailModal';
@@ -130,6 +131,9 @@ function ProductFormModal({ visible, editing, onClose, colors, styles }: Product
       if (error) {
         Alert.alert('Error', error);
         return;
+      }
+      if (editing && qty > editing.quantity) {
+        await recordRestock(editing.id, qty - editing.quantity);
       }
       onClose();
     } catch (err) {

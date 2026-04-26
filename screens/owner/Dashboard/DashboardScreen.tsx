@@ -23,6 +23,7 @@ export const DashboardScreen = observer(function DashboardScreen() {
   const loading = store$.loading.get();
   const products = store$.products.get();
   const movements = store$.stockMovements.get();
+  const categories = store$.categories.get();
 
   const [activityVisible, setActivityVisible] = useState(false);
 
@@ -34,6 +35,9 @@ export const DashboardScreen = observer(function DashboardScreen() {
   const recentMovements = movements.slice(0, 4);
   const todayRow = weekly[weekly.length - 1] ?? { qty: 0, amount: 0 };
   const maxAmount = Math.max(...weekly.map(d => d.amount), 1);
+
+  const avgQty = weekly.slice(0, 6).reduce((s, d) => s + d.qty, 0) / 6;
+  const trendPct = avgQty > 0 ? Math.round(((todayRow.qty - avgQty) / avgQty) * 100) : null;
 
   const storeName = user?.store_name ?? 'My Store';
   const initials = storeName.split(' ').map(s => s[0]).filter(Boolean).slice(0, 2).join('').toUpperCase();
@@ -68,8 +72,10 @@ export const DashboardScreen = observer(function DashboardScreen() {
         <Text style={styles.heroLabel}>SALES TODAY</Text>
         <Text style={styles.heroValue}>{peso(todayRow.amount)}</Text>
         <View style={styles.heroSubRow}>
-          <Ionicons name="trending-up" size={14} color="#fff" />
-          <Text style={styles.heroSub}>{todayRow.qty} units sold</Text>
+          <Ionicons name={trendPct !== null && trendPct >= 0 ? 'trending-up' : 'trending-down'} size={14} color="#fff" />
+          <Text style={styles.heroSub}>
+            {todayRow.qty} units{trendPct !== null ? ` · ${trendPct >= 0 ? '+' : ''}${trendPct}% vs avg` : ''}
+          </Text>
         </View>
         <View style={styles.barRow}>
           {weekly.map((d, i) => {
@@ -89,7 +95,7 @@ export const DashboardScreen = observer(function DashboardScreen() {
         <View style={styles.statCard}>
           <Text style={styles.statLabel}>PRODUCTS</Text>
           <Text style={styles.statValue}>{products.length}</Text>
-          <Text style={styles.statSub}>in catalog</Text>
+          <Text style={styles.statSub}>across {categories.length} {categories.length === 1 ? 'category' : 'categories'}</Text>
         </View>
         <View style={[styles.statCard, lowStockItems.length > 0 && { borderColor: colors.danger, backgroundColor: colors.dangerBackground }]}>
           <Text style={[styles.statLabel, lowStockItems.length > 0 && { color: colors.danger }]}>LOW STOCK</Text>
