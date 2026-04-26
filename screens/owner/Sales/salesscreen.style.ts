@@ -17,7 +17,7 @@ export function createStyles(colors: Colors) {
     header: {
       paddingHorizontal: 20,
       paddingTop: 56,
-      paddingBottom: 12,
+      paddingBottom: 10,
     },
     headerSub: {
       fontSize: 13,
@@ -29,18 +29,17 @@ export function createStyles(colors: Colors) {
       fontWeight: '800',
       color: colors.textPrimary,
       letterSpacing: -0.5,
-      marginBottom: 14,
     },
 
     // Search bar
     searchRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: colors.surface,
+      backgroundColor: colors.inputBackground,
       borderRadius: 999,
       marginHorizontal: 20,
       paddingHorizontal: 14,
-      paddingVertical: 8,
+      paddingVertical: 10,
       gap: 8,
       marginBottom: 12,
     },

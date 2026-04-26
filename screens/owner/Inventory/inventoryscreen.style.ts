@@ -11,11 +11,11 @@ export function createStyles(colors: Colors) {
     searchBar: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: colors.surface,
+      backgroundColor: colors.inputBackground,
       borderRadius: 999,
       marginHorizontal: 20,
       paddingHorizontal: 14,
-      paddingVertical: 8,
+      paddingVertical: 10,
       gap: 8,
     },
     searchInput: {
