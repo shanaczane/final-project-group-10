@@ -8,27 +8,47 @@ export function createStyles(colors: Colors) {
       backgroundColor: colors.background,
       paddingTop: 56,
     },
+
+    // Header
+    header: {
+      paddingHorizontal: 20,
+      marginBottom: 14,
+    },
+    headerSub: {
+      fontSize: 13,
+      color: colors.textMuted,
+      marginBottom: 2,
+    },
+    pageTitle: {
+      fontSize: 26,
+      fontFamily: 'Manrope_800ExtraBold',
+      color: colors.textPrimary,
+      letterSpacing: -0.5,
+    },
+
+    // Search bar
     searchBar: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: colors.surface,
-      borderWidth: 1,
-      borderColor: colors.border,
-      borderRadius: 12,
+      backgroundColor: colors.inputBackground,
+      borderRadius: 999,
       marginHorizontal: 20,
-      paddingHorizontal: 12,
-      paddingVertical: 7,
+      paddingHorizontal: 14,
+      paddingVertical: 10,
       gap: 8,
+      marginBottom: 12,
     },
     searchInput: {
       flex: 1,
       fontSize: 14,
       color: colors.textPrimary,
     },
+
+    // Filter chips
     chipsScroll: {
-      marginTop: 12,
       height: 42,
       flexGrow: 0,
+      marginBottom: 8,
     },
     chipsContent: {
       paddingHorizontal: 20,
@@ -45,7 +65,6 @@ export function createStyles(colors: Colors) {
       minWidth: 64,
       alignItems: 'center',
       justifyContent: 'center',
-      elevation: 0,
     },
     filterChipActive: {
       backgroundColor: colors.primary,
@@ -60,26 +79,37 @@ export function createStyles(colors: Colors) {
     filterChipTextActive: {
       color: '#ffffff',
     },
+
+    // Product list
+    listContent: {
+      paddingHorizontal: 20,
+      paddingTop: 8,
+      paddingBottom: 32,
+      gap: 8,
+    },
     productRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      paddingHorizontal: 20,
+      backgroundColor: colors.surface,
+      borderRadius: 14,
+      paddingHorizontal: 14,
       paddingVertical: 14,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
       gap: 12,
     },
-    statusDot: {
-      width: 9,
-      height: 9,
-      borderRadius: 5,
+    productIconWrap: {
+      width: 40,
+      height: 40,
+      borderRadius: 10,
+      backgroundColor: colors.cardBackground,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     productInfo: {
       flex: 1,
     },
     productName: {
       fontSize: 15,
-      fontFamily: 'Manrope_500Medium',
+      fontFamily: 'Manrope_600SemiBold',
       color: colors.textPrimary,
     },
     productMeta: {
@@ -88,10 +118,13 @@ export function createStyles(colors: Colors) {
       marginTop: 2,
     },
     qtyBadge: {
-      paddingHorizontal: 10,
-      paddingVertical: 3,
-      borderRadius: 8,
+      minWidth: 40,
+      height: 40,
+      borderRadius: 10,
       backgroundColor: colors.successBackground,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: 6,
     },
     qtyBadgeDanger: {
       backgroundColor: colors.dangerBackground,
@@ -100,8 +133,8 @@ export function createStyles(colors: Colors) {
       backgroundColor: colors.warningBackground,
     },
     qtyText: {
-      fontSize: 13,
-      fontFamily: 'Manrope_500Medium',
+      fontSize: 15,
+      fontFamily: 'Manrope_700Bold',
       color: colors.success,
     },
     qtyTextDanger: {
@@ -110,11 +143,7 @@ export function createStyles(colors: Colors) {
     qtyTextWarning: {
       color: colors.warning,
     },
-    productRight: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 6,
-    },
+
     emptyContainer: {
       alignItems: 'center',
       justifyContent: 'center',

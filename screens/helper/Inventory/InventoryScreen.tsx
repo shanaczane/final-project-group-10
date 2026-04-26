@@ -45,15 +45,14 @@ export const HelperInventoryScreen = observer(function HelperInventoryScreen() {
     return matchSearch && matchCat;
   });
 
-  const dotColor = (p: Product) => {
-    const s = stockStatus(p);
-    if (s === 'red') return colors.danger;
-    if (s === 'amber') return colors.warning;
-    return colors.success;
-  };
-
   return (
     <View style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.headerSub}>{products.length} products</Text>
+        <Text style={styles.pageTitle}>Inventory</Text>
+      </View>
+
       {/* Search */}
       <View style={styles.searchBar}>
         <Ionicons name="search-outline" size={18} color={colors.textMuted} />
@@ -65,10 +64,12 @@ export const HelperInventoryScreen = observer(function HelperInventoryScreen() {
           onChangeText={setSearch}
           autoCorrect={false}
         />
-        {search.length > 0 && (
+        {search.length > 0 ? (
           <Pressable onPress={() => setSearch('')}>
             <Ionicons name="close-circle" size={18} color={colors.textMuted} />
           </Pressable>
+        ) : (
+          <Ionicons name="options-outline" size={18} color={colors.textMuted} />
         )}
       </View>
 
@@ -104,6 +105,7 @@ export const HelperInventoryScreen = observer(function HelperInventoryScreen() {
       <FlatList
         data={filtered}
         keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.listContent}
         refreshControl={
           <RefreshControl refreshing={loading} onRefresh={loadAllData} tintColor={colors.primary} />
         }
@@ -115,36 +117,38 @@ export const HelperInventoryScreen = observer(function HelperInventoryScreen() {
             </Text>
           </View>
         }
-        renderItem={({ item }) => (
-          <Pressable
-            style={styles.productRow}
-            onPress={() => { setDetailProduct(item); setDetailVisible(true); }}
-          >
-            <View style={[styles.statusDot, { backgroundColor: dotColor(item) }]} />
-            <View style={styles.productInfo}>
-              <Text style={styles.productName}>{item.name}</Text>
-              <Text style={styles.productMeta}>
-                {item.category?.name ?? 'Uncategorized'} · ₱{item.sell_price.toFixed(2)}
-              </Text>
-            </View>
-            <View style={styles.productRight}>
+        renderItem={({ item }) => {
+          const status = stockStatus(item);
+          return (
+            <Pressable
+              style={styles.productRow}
+              onPress={() => { setDetailProduct(item); setDetailVisible(true); }}
+            >
+              <View style={styles.productIconWrap}>
+                <Ionicons name="cube-outline" size={20} color={colors.textMuted} />
+              </View>
+              <View style={styles.productInfo}>
+                <Text style={styles.productName}>{item.name}</Text>
+                <Text style={styles.productMeta}>
+                  {item.category?.name ?? 'Uncategorized'} · ₱{item.sell_price.toFixed(2)}
+                </Text>
+              </View>
               <View style={[
                 styles.qtyBadge,
-                stockStatus(item) === 'red' && styles.qtyBadgeDanger,
-                stockStatus(item) === 'amber' && styles.qtyBadgeWarning,
+                status === 'red' && styles.qtyBadgeDanger,
+                status === 'amber' && styles.qtyBadgeWarning,
               ]}>
                 <Text style={[
                   styles.qtyText,
-                  stockStatus(item) === 'red' && styles.qtyTextDanger,
-                  stockStatus(item) === 'amber' && styles.qtyTextWarning,
+                  status === 'red' && styles.qtyTextDanger,
+                  status === 'amber' && styles.qtyTextWarning,
                 ]}>
                   {item.quantity}
                 </Text>
               </View>
-              <Ionicons name="chevron-forward" size={16} color={colors.textMuted} />
-            </View>
-          </Pressable>
-        )}
+            </Pressable>
+          );
+        }}
       />
 
       <ProductDetailModal

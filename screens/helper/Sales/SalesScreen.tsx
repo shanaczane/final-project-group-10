@@ -13,7 +13,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { observer } from '@legendapp/state/react';
 import { useAuth } from '../../../context/AuthContext';
 import { useTheme } from '../../../context/ThemeContext';
-import { store$, loadAllData, recordSale } from '../../../store';
+import { store$, loadAllData, recordSale, getWeeklySales } from '../../../store';
 import type { Product } from '../../../types';
 import { createStyles } from './salesscreen.style';
 
@@ -23,6 +23,7 @@ export const HelperSalesScreen = observer(function HelperSalesScreen() {
   const styles = createStyles(colors);
 
   const products = store$.products.get();
+  const movements = store$.stockMovements.get();
 
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<Product | null>(null);
@@ -32,6 +33,9 @@ export const HelperSalesScreen = observer(function HelperSalesScreen() {
   useEffect(() => {
     if (products.length === 0) loadAllData();
   }, []);
+
+  const weekly = getWeeklySales(movements);
+  const todayRow = weekly[weekly.length - 1] ?? { qty: 0, amount: 0 };
 
   const filteredProducts = products.filter((p) =>
     p.name.toLowerCase().includes(search.toLowerCase()),
@@ -96,8 +100,6 @@ export const HelperSalesScreen = observer(function HelperSalesScreen() {
           <Ionicons name="arrow-back" size={22} color={colors.textPrimary} />
           <Text style={styles.backBtnText}>Back</Text>
         </Pressable>
-
-        <Text style={styles.pageTitle}>Record Sale</Text>
 
         <View style={styles.selectedHeader}>
           <View style={{ flex: 1 }}>
@@ -167,23 +169,41 @@ export const HelperSalesScreen = observer(function HelperSalesScreen() {
 
   return (
     <View style={styles.container}>
+      {/* Header */}
       <View style={styles.header}>
+        <Text style={styles.headerSub}>Tap a product to sell</Text>
         <Text style={styles.pageTitle}>Record Sale</Text>
-        <View style={styles.searchRow}>
-          <Ionicons name="search-outline" size={18} color={colors.textMuted} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search product…"
-            placeholderTextColor={colors.textMuted}
-            value={search}
-            onChangeText={setSearch}
-          />
-          {search.length > 0 && (
-            <Pressable onPress={() => setSearch('')}>
-              <Ionicons name="close-circle" size={18} color={colors.textMuted} />
-            </Pressable>
-          )}
+      </View>
+
+      {/* Stat card */}
+      <View style={styles.statCard}>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.statCardLabel}>SOLD TODAY</Text>
+          <Text style={styles.statCardValue}>
+            ₱{todayRow.amount.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </Text>
         </View>
+        <View style={styles.statCardRight}>
+          <Text style={styles.statCardLabel}>UNITS</Text>
+          <Text style={styles.statCardUnits}>{todayRow.qty}</Text>
+        </View>
+      </View>
+
+      {/* Search */}
+      <View style={styles.searchRow}>
+        <Ionicons name="search-outline" size={18} color={colors.textMuted} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search product…"
+          placeholderTextColor={colors.textMuted}
+          value={search}
+          onChangeText={setSearch}
+        />
+        {search.length > 0 && (
+          <Pressable onPress={() => setSearch('')}>
+            <Ionicons name="close-circle" size={18} color={colors.textMuted} />
+          </Pressable>
+        )}
       </View>
 
       <FlatList

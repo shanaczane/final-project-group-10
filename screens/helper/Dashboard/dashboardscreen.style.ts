@@ -16,346 +16,186 @@ export function createStyles(colors: Colors) {
     content: {
       paddingHorizontal: 20,
       paddingTop: 56,
-      paddingBottom: 32,
+      paddingBottom: 40,
     },
+
+    // Header
     header: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'flex-start',
-      marginBottom: 24,
+      marginBottom: 20,
     },
-    storeName: {
-      fontSize: 22,
-      fontFamily: 'Manrope_500Medium',
-      color: colors.textPrimary,
-    },
-    subtitle: {
+    welcomeText: {
       fontSize: 13,
       color: colors.textMuted,
-      marginTop: 2,
+      marginBottom: 2,
     },
-    helperBadge: {
-      backgroundColor: colors.cardBackground,
-      paddingHorizontal: 10,
-      paddingVertical: 4,
+    helloText: {
+      fontSize: 26,
+      fontFamily: 'Manrope_800ExtraBold',
+      color: colors.textPrimary,
+      letterSpacing: -0.5,
+    },
+    avatarBadge: {
+      width: 40,
+      height: 40,
       borderRadius: 20,
-      borderWidth: 1,
-      borderColor: colors.border,
-    },
-    helperBadgeText: {
-      fontSize: 12,
-      fontFamily: 'Manrope_500Medium',
-      color: colors.textSecondary,
-    },
-    metricsGrid: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      gap: 12,
-      marginBottom: 28,
-    },
-    metricCard: {
-      flex: 1,
-      minWidth: '45%',
-      backgroundColor: colors.surface,
-      borderRadius: 12,
-      padding: 16,
-      borderWidth: 1,
-      borderColor: colors.border,
-    },
-    metricLabel: {
-      fontSize: 12,
-      color: colors.textMuted,
-      fontFamily: 'Manrope_500Medium',
-      marginBottom: 6,
-    },
-    metricValue: {
-      fontSize: 22,
-      fontFamily: 'Manrope_500Medium',
-      color: colors.textPrimary,
-    },
-    metricSub: {
-      fontSize: 11,
-      color: colors.textMuted,
-      marginTop: 2,
-    },
-    section: {
-      marginBottom: 20,
-    },
-    sectionCard: {
-      backgroundColor: colors.surface,
-      borderRadius: 14,
-      borderWidth: 1,
-      borderColor: colors.border,
-      padding: 16,
-      marginBottom: 20,
-    },
-    sectionTitle: {
-      fontSize: 15,
-      fontFamily: 'Manrope_500Medium',
-      color: colors.textPrimary,
-      marginBottom: 12,
-    },
-    rowTitle: {
-      fontSize: 15,
-      fontFamily: 'Manrope_500Medium',
-      color: colors.textPrimary,
-    },
-    aiSection: {
-      backgroundColor: colors.surface,
-      borderRadius: 14,
-      borderWidth: 1,
-      borderColor: colors.border,
-      marginBottom: 28,
-      overflow: 'hidden',
-    },
-    aiCardHeader: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      paddingHorizontal: 16,
-      paddingTop: 14,
-      paddingBottom: 12,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
-    },
-    aiCardTitleRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 6,
-    },
-    aiCardTitle: {
-      fontSize: 13,
-      fontFamily: 'Manrope_600SemiBold',
-      color: colors.textPrimary,
-    },
-    aiCardHeaderRight: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 8,
-    },
-    aiTimestamp: {
-      fontSize: 11,
-      color: colors.textMuted,
-    },
-    refreshBtn: {
-      padding: 2,
-    },
-    aiSummaryBody: {
-      padding: 16,
-    },
-    aiSummaryText: {
-      fontSize: 14,
-      color: colors.textPrimary,
-      lineHeight: 22,
-    },
-    aiAnswerBody: {
-      paddingHorizontal: 16,
-      paddingVertical: 12,
-      borderTopWidth: 1,
-      borderTopColor: colors.border,
       backgroundColor: colors.cardBackground,
-    },
-    aiAnswerText: {
-      fontSize: 14,
-      color: colors.textPrimary,
-      lineHeight: 22,
-    },
-    aiLoadingRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 10,
-    },
-    aiLoadingText: {
-      fontSize: 13,
-      color: colors.textMuted,
-    },
-    aiErrorRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 8,
-    },
-    aiErrorText: {
-      fontSize: 13,
-      color: colors.danger,
-    },
-    retryBtn: {
-      paddingHorizontal: 10,
-      paddingVertical: 4,
-      borderRadius: 6,
       borderWidth: 1,
-      borderColor: colors.danger,
-    },
-    retryBtnText: {
-      fontSize: 12,
-      color: colors.danger,
-      fontFamily: 'Manrope_500Medium',
-    },
-    aiInputDivider: {
-      height: 1,
-      backgroundColor: colors.border,
-    },
-    aiInputRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      paddingHorizontal: 14,
-      paddingVertical: 10,
-      gap: 10,
-    },
-    aiInput: {
-      flex: 1,
-      fontSize: 14,
-      color: colors.textPrimary,
-      paddingVertical: 4,
-    },
-    aiSendBtn: {
-      width: 32,
-      height: 32,
-      borderRadius: 16,
-      backgroundColor: colors.primary,
+      borderColor: colors.border,
       alignItems: 'center',
       justifyContent: 'center',
     },
-    aiSendBtnDisabled: {
-      opacity: 0.4,
-    },
-    alertRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      backgroundColor: colors.dangerBackground,
-      borderRadius: 10,
-      paddingHorizontal: 14,
-      paddingVertical: 12,
-      marginBottom: 6,
-    },
-    alertLeft: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 10,
-      flex: 1,
-    },
-    alertDot: {
-      width: 8,
-      height: 8,
-      borderRadius: 4,
-      backgroundColor: colors.danger,
-    },
-    alertName: {
-      fontSize: 14,
-      color: colors.dangerText,
-      fontFamily: 'Manrope_500Medium',
-      flex: 1,
-    },
-    alertQty: {
+    avatarBadgeText: {
       fontSize: 13,
-      color: colors.dangerText,
-      fontFamily: 'Manrope_500Medium',
+      fontFamily: 'Manrope_600SemiBold',
+      color: colors.textSecondary,
     },
-    weeklyTable: {
+
+    // Sales Today card
+    salesTodayCard: {
       backgroundColor: colors.surface,
-      borderRadius: 12,
+      borderRadius: 16,
+      padding: 20,
+      marginBottom: 14,
       borderWidth: 1,
       borderColor: colors.border,
-      overflow: 'hidden',
     },
-    weeklyHeader: {
-      flexDirection: 'row',
-      paddingHorizontal: 16,
-      paddingVertical: 10,
-      backgroundColor: colors.cardBackground,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
+    salesTodayLabel: {
+      fontSize: 11,
+      fontFamily: 'Manrope_600SemiBold',
+      color: colors.textMuted,
+      letterSpacing: 0.8,
+      marginBottom: 6,
     },
-    weeklyRow: {
-      flexDirection: 'row',
-      paddingHorizontal: 16,
-      paddingVertical: 10,
+    salesTodayAmount: {
+      fontSize: 32,
+      fontFamily: 'Manrope_800ExtraBold',
+      color: colors.textPrimary,
+      letterSpacing: -0.5,
+      marginBottom: 4,
     },
-    weeklyRowAlt: {
-      backgroundColor: colors.cardBackground,
-    },
-    weeklyCell: {
-      flex: 1,
+    salesTodayUnits: {
       fontSize: 13,
-      color: colors.textPrimary,
-    },
-    weeklyHeadText: {
       color: colors.textMuted,
-      fontFamily: 'Manrope_500Medium',
-      fontSize: 12,
     },
-    weeklyRight: {
-      textAlign: 'right',
-    },
-    weeklyAmount: {
-      color: colors.success,
-      fontFamily: 'Manrope_500Medium',
-    },
-    movementRow: {
+
+    // Quick action cards
+    actionsRow: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      paddingVertical: 10,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
+      gap: 12,
+      marginBottom: 28,
     },
-    movementLeft: {
+    actionCard: {
       flex: 1,
+      backgroundColor: colors.surface,
+      borderRadius: 16,
+      padding: 16,
+      borderWidth: 1,
+      borderColor: colors.border,
     },
-    movementProduct: {
-      fontSize: 14,
-      color: colors.textPrimary,
-      fontFamily: 'Manrope_500Medium',
-    },
-    movementDate: {
-      fontSize: 12,
-      color: colors.textMuted,
-      marginTop: 2,
-    },
-    movementQty: {
-      fontSize: 15,
-      fontFamily: 'Manrope_500Medium',
-    },
-    movementSale: {
-      color: colors.danger,
-    },
-    movementRestock: {
-      color: colors.success,
-    },
-    emptyText: {
-      fontSize: 14,
-      color: colors.textMuted,
-      textAlign: 'center',
-      paddingVertical: 16,
-    },
-    weekNavRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+    actionIconWrap: {
+      width: 40,
+      height: 40,
+      borderRadius: 12,
+      backgroundColor: colors.accentSoft,
       alignItems: 'center',
+      justifyContent: 'center',
       marginBottom: 12,
     },
-    weekNavControls: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 6,
+    actionTitle: {
+      fontSize: 14,
+      fontFamily: 'Manrope_600SemiBold',
+      color: colors.textPrimary,
+      marginBottom: 2,
     },
-    weekNavBtn: {
-      padding: 4,
-    },
-    weekNavBtnDisabled: {
-      opacity: 0.3,
-    },
-    weekNavLabel: {
+    actionSub: {
       fontSize: 12,
       color: colors.textMuted,
-      minWidth: 100,
-      textAlign: 'center',
+    },
+
+    // Recent Activity
+    activityHeaderRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 10,
+    },
+    activityLabel: {
+      fontSize: 11,
+      fontFamily: 'Manrope_600SemiBold',
+      color: colors.textMuted,
+      letterSpacing: 0.8,
     },
     viewAllText: {
       fontSize: 13,
       color: colors.primary,
       fontFamily: 'Manrope_500Medium',
     },
+    activityCard: {
+      backgroundColor: colors.surface,
+      borderRadius: 16,
+      borderWidth: 1,
+      borderColor: colors.border,
+      overflow: 'hidden',
+    },
+    activityRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 16,
+      paddingVertical: 14,
+      gap: 12,
+    },
+    activityRowBorder: {
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    activityIconWrap: {
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    activityIconSale: {
+      backgroundColor: colors.dangerBackground,
+    },
+    activityIconRestock: {
+      backgroundColor: colors.successBackground,
+    },
+    activityInfo: {
+      flex: 1,
+    },
+    activityProduct: {
+      fontSize: 14,
+      fontFamily: 'Manrope_500Medium',
+      color: colors.textPrimary,
+    },
+    activityTime: {
+      fontSize: 12,
+      color: colors.textMuted,
+      marginTop: 1,
+    },
+    activityQty: {
+      fontSize: 15,
+      fontFamily: 'Manrope_600SemiBold',
+    },
+    activityQtySale: {
+      color: colors.danger,
+    },
+    activityQtyRestock: {
+      color: colors.success,
+    },
+
+    emptyText: {
+      fontSize: 14,
+      color: colors.textMuted,
+      textAlign: 'center',
+      paddingVertical: 20,
+    },
+
+    // Modal
     modalContainer: {
       flex: 1,
     },
@@ -371,11 +211,12 @@ export function createStyles(colors: Colors) {
     },
     modalTitle: {
       fontSize: 18,
-      fontFamily: 'Manrope_500Medium',
+      fontFamily: 'Manrope_600SemiBold',
       color: colors.textPrimary,
     },
     modalList: {
       paddingHorizontal: 20,
+      paddingTop: 8,
       paddingBottom: 40,
     },
   });
