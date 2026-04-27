@@ -1,8 +1,12 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { Session } from "@supabase/supabase-js";
+import * as WebBrowser from 'expo-web-browser';
+import { makeRedirectUri } from 'expo-auth-session';
 import { supabase } from "../lib/supabase";
 import { AppUser } from "../types";
+
+WebBrowser.maybeCompleteAuthSession();
 
 interface AuthContextType {
   session: Session | null;
@@ -18,6 +22,7 @@ interface AuthContextType {
     storeName?: string,
   ) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
+  signInWithGoogle: () => Promise<{ error: string | null }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -28,8 +33,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // onAuthStateChange fires immediately with the current session,
-    // so we use it as the single source of truth instead of getSession().
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
@@ -51,19 +54,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  async function fetchUser(userId: string): Promise<void> {
+  async function fetchUser(userId: string, attempt = 1): Promise<void> {
     const { data, error } = await supabase
       .from("users")
       .select("*")
       .eq("id", userId)
       .single();
 
-    if (error) {
-      console.error("fetchUser error:", error.message, "userId:", userId);
-    }
     if (!error && data) {
       setUser(data as AppUser);
+      setLoading(false);
+      return;
     }
+
+    // DB trigger may not have fired yet — retry up to 3 times
+    if (attempt < 3) {
+      setTimeout(() => fetchUser(userId, attempt + 1), 1000);
+      return;
+    }
+
+    console.error("fetchUser error:", error?.message, "userId:", userId);
     setLoading(false);
   }
 
@@ -86,7 +96,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { data, error } = await supabase.auth.signUp({ email, password });
     if (error) return { error: error.message };
 
-    // Update store_name if provided (DB trigger handles role assignment)
     if (data.user && storeName) {
       await supabase
         .from("users")
@@ -101,9 +110,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await supabase.auth.signOut();
   }
 
+  async function signInWithGoogle(): Promise<{ error: string | null }> {
+    const redirectUrl = makeRedirectUri({ scheme: 'imbentaryo' });
+
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: redirectUrl,
+        skipBrowserRedirect: true,
+      },
+    });
+
+    if (error || !data.url) {
+      return { error: error?.message ?? 'Could not start Google sign-in' };
+    }
+
+    const result = await WebBrowser.openAuthSessionAsync(data.url, redirectUrl);
+
+    if (result.type === 'success' && result.url) {
+      const { error: sessionError } = await supabase.auth.exchangeCodeForSession(result.url);
+      if (sessionError) return { error: sessionError.message };
+    } else if (result.type === 'cancel') {
+      return { error: 'Sign-in was cancelled' };
+    }
+
+    return { error: null };
+  }
+
   return (
     <AuthContext.Provider
-      value={{ session, user, loading, signIn, signUp, signOut }}
+      value={{ session, user, loading, signIn, signUp, signOut, signInWithGoogle }}
     >
       {children}
     </AuthContext.Provider>

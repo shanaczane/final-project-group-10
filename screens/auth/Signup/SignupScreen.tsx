@@ -20,7 +20,7 @@ interface Props {
 }
 
 export function SignupScreen({ onNavigateToLogin }: Props) {
-  const { signUp } = useAuth();
+  const { signUp, signInWithGoogle } = useAuth();
   const { colors } = useTheme();
   const styles = createStyles(colors);
 
@@ -31,6 +31,7 @@ export function SignupScreen({ onNavigateToLogin }: Props) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   const hasMinLength = password.length >= 8;
   const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
@@ -63,6 +64,15 @@ export function SignupScreen({ onNavigateToLogin }: Props) {
         'Your account has been created. You can now sign in.',
         [{ text: 'OK', onPress: onNavigateToLogin }]
       );
+    }
+  }
+
+  async function handleGoogleSignIn(): Promise<void> {
+    setGoogleLoading(true);
+    const { error } = await signInWithGoogle();
+    setGoogleLoading(false);
+    if (error) {
+      Alert.alert('Google Sign-In Failed', error);
     }
   }
 
@@ -179,6 +189,29 @@ export function SignupScreen({ onNavigateToLogin }: Props) {
               <ActivityIndicator color="#fff" />
             ) : (
               <Text style={styles.buttonText}>Create Account</Text>
+            )}
+          </Pressable>
+
+          {/* Divider */}
+          <View style={styles.dividerRow}>
+            <View style={styles.dividerLine} />
+            <Text style={styles.dividerText}>or</Text>
+            <View style={styles.dividerLine} />
+          </View>
+
+          {/* Google Sign-Up */}
+          <Pressable
+            style={[styles.googleButton, googleLoading && styles.buttonDisabled]}
+            onPress={handleGoogleSignIn}
+            disabled={googleLoading}
+          >
+            {googleLoading ? (
+              <ActivityIndicator color={colors.textPrimary} />
+            ) : (
+              <>
+                <Ionicons name="logo-google" size={18} color="#4285F4" />
+                <Text style={styles.googleButtonText}>Continue with Google</Text>
+              </>
             )}
           </Pressable>
         </View>

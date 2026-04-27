@@ -19,7 +19,7 @@ interface Props {
 }
 
 export function LoginScreen({ onNavigateToSignup }: Props) {
-  const { signIn } = useAuth();
+  const { signIn, signInWithGoogle } = useAuth();
   const { colors } = useTheme();
   const styles = createStyles(colors);
 
@@ -27,6 +27,7 @@ export function LoginScreen({ onNavigateToSignup }: Props) {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
 
   async function handleLogin(): Promise<void> {
     if (!email.trim() || !password.trim()) {
@@ -38,6 +39,15 @@ export function LoginScreen({ onNavigateToSignup }: Props) {
     setLoading(false);
     if (error) {
       Alert.alert('Login Failed', error);
+    }
+  }
+
+  async function handleGoogleSignIn(): Promise<void> {
+    setGoogleLoading(true);
+    const { error } = await signInWithGoogle();
+    setGoogleLoading(false);
+    if (error) {
+      Alert.alert('Google Sign-In Failed', error);
     }
   }
 
@@ -102,6 +112,29 @@ export function LoginScreen({ onNavigateToSignup }: Props) {
               <ActivityIndicator color="#fff" />
             ) : (
               <Text style={styles.buttonText}>Sign In</Text>
+            )}
+          </Pressable>
+
+          {/* Divider */}
+          <View style={styles.dividerRow}>
+            <View style={styles.dividerLine} />
+            <Text style={styles.dividerText}>or</Text>
+            <View style={styles.dividerLine} />
+          </View>
+
+          {/* Google Sign-In */}
+          <Pressable
+            style={[styles.googleButton, googleLoading && styles.buttonDisabled]}
+            onPress={handleGoogleSignIn}
+            disabled={googleLoading}
+          >
+            {googleLoading ? (
+              <ActivityIndicator color={colors.textPrimary} />
+            ) : (
+              <>
+                <Ionicons name="logo-google" size={18} color="#4285F4" />
+                <Text style={styles.googleButtonText}>Continue with Google</Text>
+              </>
             )}
           </Pressable>
         </View>

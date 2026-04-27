@@ -100,6 +100,38 @@ export function createStyles(colors: Colors) {
       fontSize: 15,
       fontFamily: 'Manrope_500Medium',
     },
+    dividerRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginTop: 16,
+      gap: 10,
+    },
+    dividerLine: {
+      flex: 1,
+      height: 1,
+      backgroundColor: colors.border,
+    },
+    dividerText: {
+      fontSize: 12,
+      color: colors.textMuted,
+    },
+    googleButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 10,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 10,
+      paddingVertical: 13,
+      marginTop: 12,
+      backgroundColor: colors.surface,
+    },
+    googleButtonText: {
+      fontSize: 15,
+      fontFamily: 'Manrope_500Medium',
+      color: colors.textPrimary,
+    },
     helperHint: {
       flexDirection: 'row',
       alignItems: 'center',
