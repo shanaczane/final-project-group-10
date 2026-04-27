@@ -36,7 +36,6 @@ export function createStyles(colors: Colors) {
       paddingHorizontal: 14,
       paddingVertical: 10,
       gap: 8,
-      marginBottom: 12,
     },
     searchInput: {
       flex: 1,
