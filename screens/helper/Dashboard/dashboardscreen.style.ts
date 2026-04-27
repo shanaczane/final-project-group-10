@@ -152,9 +152,9 @@ export function createStyles(colors: Colors) {
       borderBottomColor: colors.border,
     },
     activityIconWrap: {
-      width: 32,
-      height: 32,
-      borderRadius: 16,
+      width: 36,
+      height: 36,
+      borderRadius: 10,
       alignItems: 'center',
       justifyContent: 'center',
     },
