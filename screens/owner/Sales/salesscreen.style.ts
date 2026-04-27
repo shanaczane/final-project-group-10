@@ -36,7 +36,7 @@ export function createStyles(colors: Colors) {
       flexDirection: 'row',
       alignItems: 'center',
       backgroundColor: colors.inputBackground,
-      borderRadius: 999,
+      borderRadius: 30,
       marginHorizontal: 20,
       paddingHorizontal: 14,
       paddingVertical: 10,
@@ -46,6 +46,7 @@ export function createStyles(colors: Colors) {
     searchInput: {
       flex: 1,
       fontSize: 14,
+      fontFamily: 'Manrope_400Regular',
       color: colors.textPrimary,
     },
 
