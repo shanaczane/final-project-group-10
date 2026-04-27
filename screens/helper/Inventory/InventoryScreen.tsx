@@ -64,12 +64,10 @@ export const HelperInventoryScreen = observer(function HelperInventoryScreen() {
           onChangeText={setSearch}
           autoCorrect={false}
         />
-        {search.length > 0 ? (
+        {search.length > 0 && (
           <Pressable onPress={() => setSearch('')}>
             <Ionicons name="close-circle" size={18} color={colors.textMuted} />
           </Pressable>
-        ) : (
-          <Ionicons name="options-outline" size={18} color={colors.textMuted} />
         )}
       </View>
 

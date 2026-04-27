@@ -334,17 +334,11 @@ export const InventoryScreen = observer(function InventoryScreen() {
           onChangeText={setSearch}
           autoCorrect={false}
         />
-        {search.length > 0
-          ? (
-            <Pressable onPress={() => setSearch('')}>
-              <Ionicons name="close-circle" size={18} color={colors.textMuted} />
-            </Pressable>
-          ) : (
-            <>
-              <View style={styles.searchDivider} />
-              <Ionicons name="options-outline" size={18} color={colors.textMuted} />
-            </>
-          )}
+        {search.length > 0 && (
+          <Pressable onPress={() => setSearch('')}>
+            <Ionicons name="close-circle" size={18} color={colors.textMuted} />
+          </Pressable>
+        )}
       </View>
 
       {/* Filter chips */}
