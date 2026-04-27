@@ -112,72 +112,53 @@ export function ActivityModal({ visible, movements, onClose }: Props) {
           </Pressable>
         </View>
 
-        {/* Stats row — sits on page background */}
+        {/* Stats card */}
         <View style={{
+          marginHorizontal: 20,
+          marginTop: 16,
+          marginBottom: 16,
+          borderRadius: 14,
+          borderWidth: 1,
+          borderColor: colors.border,
+          backgroundColor: colors.surface,
           flexDirection: 'row',
-          paddingHorizontal: 20,
-          paddingTop: 16,
-          paddingBottom: 16,
-          borderBottomWidth: 1,
-          borderBottomColor: colors.border,
+          overflow: 'hidden',
         }}>
-          <View style={{ flex: 1.2 }}>
-            <Text style={{
-              fontSize: 10,
-              fontFamily: 'Manrope_600SemiBold',
-              color: colors.textMuted,
-              letterSpacing: 0.7,
-              marginBottom: 4,
-            }}>
-              REVENUE
-            </Text>
-            <Text style={{
-              fontSize: 20,
-              fontFamily: 'Manrope_800ExtraBold',
-              color: colors.textPrimary,
-              letterSpacing: -0.3,
-            }}>
-              {peso(totalRevenue)}
-            </Text>
-          </View>
-          <View style={{ flex: 0.8, alignItems: 'center' }}>
-            <Text style={{
-              fontSize: 10,
-              fontFamily: 'Manrope_600SemiBold',
-              color: colors.textMuted,
-              letterSpacing: 0.7,
-              marginBottom: 4,
-            }}>
-              SALES
-            </Text>
-            <Text style={{
-              fontSize: 20,
-              fontFamily: 'Manrope_800ExtraBold',
-              color: colors.success,
-              letterSpacing: -0.3,
-            }}>
-              {salesCount}
-            </Text>
-          </View>
-          <View style={{ flex: 1, alignItems: 'flex-end' }}>
-            <Text style={{
-              fontSize: 10,
-              fontFamily: 'Manrope_600SemiBold',
-              color: colors.textMuted,
-              letterSpacing: 0.7,
-              marginBottom: 4,
-            }}>
-              RESTOCKED
-            </Text>
-            <Text style={{
-              fontSize: 20,
-              fontFamily: 'Manrope_800ExtraBold',
-              color: colors.success,
-              letterSpacing: -0.3,
-            }}>
-              +{restockedQty}
-            </Text>
-          </View>
+          {[
+            { label: 'REVENUE', value: peso(totalRevenue), color: colors.textPrimary },
+            { label: 'SALES', value: String(salesCount), color: colors.success },
+            { label: 'RESTOCKED', value: `+${restockedQty}`, color: colors.success },
+          ].map((stat, i, arr) => (
+            <React.Fragment key={stat.label}>
+              <View style={{ flex: 1, alignItems: 'center', paddingVertical: 14, paddingHorizontal: 6 }}>
+                <Text style={{
+                  fontSize: 10,
+                  fontFamily: 'Manrope_600SemiBold',
+                  color: colors.textMuted,
+                  letterSpacing: 0.7,
+                  marginBottom: 4,
+                  textAlign: 'center',
+                }}>
+                  {stat.label}
+                </Text>
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    fontSize: 14,
+                    fontFamily: 'Manrope_800ExtraBold',
+                    color: stat.color,
+                    letterSpacing: -0.3,
+                    textAlign: 'center',
+                  }}
+                >
+                  {stat.value}
+                </Text>
+              </View>
+              {i < arr.length - 1 && (
+                <View style={{ width: 1, backgroundColor: colors.border }} />
+              )}
+            </React.Fragment>
+          ))}
         </View>
 
         {/* Filter chips — inventory style */}
@@ -199,33 +180,24 @@ export function ActivityModal({ visible, movements, onClose }: Props) {
                 key={chip.key}
                 onPress={() => setFilter(chip.key)}
                 style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  gap: 6,
                   paddingHorizontal: 16,
                   height: 34,
                   borderRadius: 999,
                   backgroundColor: active ? colors.primary : colors.surface,
                   borderWidth: 1,
                   borderColor: active ? colors.primary : colors.border,
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
                 <Text style={{
                   fontSize: 13,
+                  lineHeight: 18,
                   fontFamily: 'Manrope_500Medium',
                   color: active ? '#ffffff' : colors.textSecondary,
                 }}>
                   {chip.label}
                 </Text>
-                {chip.key !== 'all' && (
-                  <Text style={{
-                    fontSize: 12,
-                    fontFamily: 'Manrope_600SemiBold',
-                    color: active ? 'rgba(255,255,255,0.8)' : colors.textMuted,
-                  }}>
-                    {chip.count}
-                  </Text>
-                )}
               </Pressable>
             );
           })}
