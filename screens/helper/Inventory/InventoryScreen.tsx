@@ -84,7 +84,7 @@ export const HelperInventoryScreen = observer(function HelperInventoryScreen() {
           style={[styles.filterChip, filterCat === 'all' && styles.filterChipActive]}
           onPress={() => setFilterCat('all')}
         >
-          <Text style={[styles.filterChipText, filterCat === 'all' && styles.filterChipTextActive]}>
+          <Text numberOfLines={1} style={[styles.filterChipText, filterCat === 'all' && styles.filterChipTextActive]}>
             All
           </Text>
         </Pressable>
@@ -94,7 +94,7 @@ export const HelperInventoryScreen = observer(function HelperInventoryScreen() {
             style={[styles.filterChip, filterCat === c.id && styles.filterChipActive]}
             onPress={() => setFilterCat(c.id)}
           >
-            <Text style={[styles.filterChipText, filterCat === c.id && styles.filterChipTextActive]}>
+            <Text numberOfLines={1} style={[styles.filterChipText, filterCat === c.id && styles.filterChipTextActive]}>
               {c.name}
             </Text>
           </Pressable>
@@ -103,6 +103,7 @@ export const HelperInventoryScreen = observer(function HelperInventoryScreen() {
 
       {/* Product list — read-only */}
       <FlatList
+        style={{ flex: 1 }}
         data={filtered}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}

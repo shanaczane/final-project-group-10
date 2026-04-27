@@ -47,9 +47,10 @@ export function createStyles(colors: Colors) {
 
     // Filter chips
     chipsScroll: {
+      marginTop: 12,
       height: 42,
+      flexShrink: 0,
       flexGrow: 0,
-      marginBottom: 8,
     },
     chipsContent: {
       paddingHorizontal: 20,
@@ -66,6 +67,7 @@ export function createStyles(colors: Colors) {
       minWidth: 64,
       alignItems: 'center',
       justifyContent: 'center',
+      elevation: 0,
     },
     filterChipActive: {
       backgroundColor: colors.primary,

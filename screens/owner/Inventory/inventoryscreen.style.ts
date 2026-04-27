@@ -32,6 +32,7 @@ export function createStyles(colors: Colors) {
     chipsScroll: {
       marginTop: 12,
       height: 42,
+      flexShrink: 0,
       flexGrow: 0,
     },
     chipsContent: {
@@ -230,14 +231,15 @@ export function createStyles(colors: Colors) {
     },
     chip: {
       paddingHorizontal: 16,
-      paddingVertical: 6,
-      borderRadius: 20,
+      height: 34,
+      borderRadius: 999,
       backgroundColor: colors.surface,
       borderWidth: 1,
       borderColor: colors.border,
       marginRight: 8,
       minWidth: 56,
       alignItems: 'center',
+      justifyContent: 'center',
     },
     chipActive: {
       backgroundColor: colors.primary,
@@ -245,11 +247,12 @@ export function createStyles(colors: Colors) {
     },
     chipText: {
       fontSize: 13,
+      lineHeight: 18,
+      fontFamily: 'Manrope_500Medium',
       color: colors.textSecondary,
     },
     chipTextActive: {
       color: '#ffffff',
-      fontFamily: 'Manrope_500Medium',
     },
   });
 }
