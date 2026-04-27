@@ -135,6 +135,7 @@ export function createStyles(colors: Colors) {
       borderRadius: 14,
       padding: 14,
       gap: 12,
+      marginTop: 20,
     },
     selectedName: {
       fontSize: 16,
