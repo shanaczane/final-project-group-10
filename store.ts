@@ -225,7 +225,7 @@ export function getWeeklySales(
   movements: StockMovement[],
   weekOffset = 0,
 ): { day: string; qty: number; amount: number }[] {
-  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const days = ['Su', 'M', 'Tu', 'W', 'Th', 'F', 'Sa'];
   const now = new Date();
   return Array.from({ length: 7 }, (_, i) => {
     const d = new Date(now);

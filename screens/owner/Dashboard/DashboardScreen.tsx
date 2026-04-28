@@ -85,7 +85,7 @@ export const DashboardScreen = observer(function DashboardScreen() {
             return (
               <View key={i} style={styles.barCol}>
                 <View style={[styles.bar, { height: h, backgroundColor: isToday ? '#fff' : 'rgba(255,255,255,0.4)' }]} />
-                <Text style={styles.barLabel}>{d.day[0]}</Text>
+                <Text style={styles.barLabel}>{d.day}</Text>
               </View>
             );
           })}
