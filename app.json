@@ -31,6 +31,12 @@
     "plugins": [
       "expo-font",
       "expo-web-browser"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "843fc03f-4606-47ce-bafa-51781627fd70"
+      }
+    },
+    "owner": "shanaczane"
   }
 }
