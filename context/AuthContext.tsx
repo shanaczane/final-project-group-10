@@ -23,6 +23,7 @@ interface AuthContextType {
   ) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
   signInWithGoogle: () => Promise<{ error: string | null }>;
+  updateStoreName: (name: string) => Promise<{ error: string | null }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -44,6 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
       setSession(session);
       if (session) {
+        setLoading(true);
         fetchUser(session.user.id);
       } else {
         setUser(null);
@@ -106,6 +108,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: null };
   }
 
+  async function updateStoreName(name: string): Promise<{ error: string | null }> {
+    if (!session) return { error: 'Not authenticated' };
+    const { error } = await supabase
+      .from('users')
+      .update({ store_name: name })
+      .eq('id', session.user.id);
+    if (error) return { error: error.message };
+    await fetchUser(session.user.id);
+    return { error: null };
+  }
+
   async function signOut(): Promise<void> {
     await supabase.auth.signOut();
   }
@@ -139,7 +152,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ session, user, loading, signIn, signUp, signOut, signInWithGoogle }}
+      value={{ session, user, loading, signIn, signUp, signOut, signInWithGoogle, updateStoreName }}
     >
       {children}
     </AuthContext.Provider>

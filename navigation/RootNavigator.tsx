@@ -5,6 +5,7 @@ import { LoginScreen } from '../screens/auth/Login/LoginScreen';
 import { SignupScreen } from '../screens/auth/Signup/SignupScreen';
 import { OwnerNavigator } from './OwnerNavigator';
 import { HelperNavigator } from './HelperNavigator';
+import { CompleteSetupScreen } from '../screens/auth/CompleteSetup/CompleteSetupScreen';
 
 export function RootNavigator() {
   const { session, user, loading } = useAuth();
@@ -27,6 +28,10 @@ export function RootNavigator() {
 
   if (user?.role === 'helper') {
     return <HelperNavigator />;
+  }
+
+  if (!user?.store_name) {
+    return <CompleteSetupScreen />;
   }
 
   return <OwnerNavigator />;
