@@ -6,6 +6,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 import type { StockMovement } from '../types';
@@ -44,6 +45,7 @@ function peso(n: number): string {
 
 export function ActivityModal({ visible, movements, onClose }: Props) {
   const { colors } = useTheme();
+  const insets = useSafeAreaInsets();
   const [filter, setFilter] = useState<FilterType>('all');
 
   const salesCount = movements.filter(m => m.movement_type === 'sale').length;
@@ -95,7 +97,7 @@ export function ActivityModal({ visible, movements, onClose }: Props) {
           justifyContent: 'space-between',
           alignItems: 'center',
           paddingHorizontal: 20,
-          paddingTop: 20,
+          paddingTop: insets.top + 20,
           paddingBottom: 16,
           borderBottomWidth: 1,
           borderBottomColor: colors.border,
@@ -206,7 +208,7 @@ export function ActivityModal({ visible, movements, onClose }: Props) {
         {/* Date-grouped list — items share one card per section */}
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 40 }}
+          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 40 + insets.bottom }}
         >
           {filtered.length === 0 ? (
             <Text style={{
