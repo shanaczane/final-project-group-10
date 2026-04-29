@@ -90,26 +90,30 @@ export function SignupScreen({ onNavigateToLogin }: Props) {
 
         <View style={styles.form}>
           <Text style={styles.label}>Store Name</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="My Store"
-            placeholderTextColor={colors.textMuted}
-            value={storeName}
-            onChangeText={setStoreName}
-            autoCapitalize="words"
-          />
+          <View style={styles.inputWrapper}>
+            <TextInput
+              style={styles.input}
+              placeholder="My Store"
+              placeholderTextColor={colors.textMuted}
+              value={storeName}
+              onChangeText={setStoreName}
+              autoCapitalize="words"
+            />
+          </View>
 
           <Text style={styles.label}>Email</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="you@example.com"
-            placeholderTextColor={colors.textMuted}
-            value={email}
-            onChangeText={setEmail}
-            autoCapitalize="none"
-            keyboardType="email-address"
-            autoComplete="email"
-          />
+          <View style={styles.inputWrapper}>
+            <TextInput
+              style={styles.input}
+              placeholder="you@example.com"
+              placeholderTextColor={colors.textMuted}
+              value={email}
+              onChangeText={setEmail}
+              autoCapitalize="none"
+              keyboardType="email-address"
+              autoComplete="email"
+            />
+          </View>
 
           <Text style={styles.label}>Password</Text>
           <View style={styles.inputWrapper}>
