@@ -78,9 +78,9 @@ export const HelperDashboardScreen = observer(function HelperDashboardScreen() {
           <Text style={styles.welcomeText}>Welcome back</Text>
           <Text style={styles.helloText}>Hello, Helper</Text>
         </View>
-        <View style={styles.avatarBadge}>
+        <Pressable onPress={() => navigation.navigate('Profile')} style={styles.avatarBadge}>
           <Text style={styles.avatarBadgeText}>{initials}</Text>
-        </View>
+        </Pressable>
       </View>
 
       {/* Sales Today */}
