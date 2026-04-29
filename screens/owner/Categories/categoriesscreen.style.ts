@@ -1,4 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
+
+const CARD_WIDTH = (Dimensions.get('window').width - 32 - 12) / 2;
 import type { Colors } from '../../../context/ThemeContext';
 
 export function createStyles(colors: Colors) {
@@ -53,7 +55,7 @@ export function createStyles(colors: Colors) {
       marginBottom: 12,
     },
     gridCard: {
-      flex: 1,
+      width: CARD_WIDTH,
       backgroundColor: colors.surface,
       borderRadius: 16,
       padding: 16,
