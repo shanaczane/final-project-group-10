@@ -3,6 +3,7 @@ import { ActivityIndicator, Pressable, RefreshControl, ScrollView, Text, View } 
 import { Ionicons } from '@expo/vector-icons';
 import { observer } from '@legendapp/state/react';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../../../context/AuthContext';
 import { useTheme } from '../../../context/ThemeContext';
 import {
@@ -20,6 +21,7 @@ export const DashboardScreen = observer(function DashboardScreen() {
   const { colors } = useTheme();
   const styles = createStyles(colors);
   const tabBarHeight = useBottomTabBarHeight();
+  const navigation = useNavigation<any>();
 
   const loading = store$.loading.get();
   const products = store$.products.get();
@@ -64,9 +66,9 @@ export const DashboardScreen = observer(function DashboardScreen() {
           <Text style={styles.dateLabel}>{dateLabel}</Text>
           <Text style={styles.storeName}>{storeName}</Text>
         </View>
-        <View style={styles.avatar}>
+        <Pressable onPress={() => navigation.navigate('Settings')} style={styles.avatar}>
           <Text style={styles.avatarText}>{initials}</Text>
-        </View>
+        </Pressable>
       </View>
 
       <View style={styles.heroCard}>
