@@ -61,7 +61,7 @@ export function LoginScreen({ onNavigateToSignup }: Props) {
           <View style={styles.logoMark}>
             <Ionicons name="cube" size={36} color={colors.primary} />
           </View>
-          <Text style={styles.appTitle}>Imbentaryo</Text>
+          <Text style={styles.appTitle}>Tally</Text>
           <Text style={styles.tagline}>Store Inventory Manager</Text>
         </View>
 

@@ -85,7 +85,7 @@ export function SignupScreen({ onNavigateToLogin }: Props) {
         contentContainerStyle={styles.inner}
         keyboardShouldPersistTaps="handled"
       >
-        <Text style={styles.appTitle}>Imbentaryo</Text>
+        <Text style={styles.appTitle}>Tally</Text>
         <Text style={styles.subtitle}>Create your owner account</Text>
 
         <View style={styles.form}>

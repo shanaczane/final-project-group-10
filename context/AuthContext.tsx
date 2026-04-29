@@ -111,7 +111,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function signInWithGoogle(): Promise<{ error: string | null }> {
-    const redirectUrl = makeRedirectUri({ scheme: 'imbentaryo' });
+    const redirectUrl = makeRedirectUri({ scheme: 'tally' });
 
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
