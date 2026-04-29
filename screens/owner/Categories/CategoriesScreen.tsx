@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
+  BackHandler,
   FlatList,
   KeyboardAvoidingView,
   Modal,
@@ -48,6 +49,15 @@ export const CategoriesScreen = observer(function CategoriesScreen() {
   useEffect(() => {
     if (categories.length === 0) loadAllData();
   }, []);
+
+  useEffect(() => {
+    if (!selectedCategory) return;
+    const sub = BackHandler.addEventListener('hardwareBackPress', () => {
+      setSelectedCategory(null);
+      return true;
+    });
+    return () => sub.remove();
+  }, [selectedCategory]);
 
   function getCategoryProducts(catId: string): Product[] {
     return products.filter((p) => p.category_id === catId);
@@ -194,7 +204,7 @@ export const CategoriesScreen = observer(function CategoriesScreen() {
         </ScrollView>
 
         {/* Restock modal */}
-        <Modal visible={restockProduct !== null} transparent animationType="fade">
+        <Modal visible={restockProduct !== null} transparent animationType="fade" onRequestClose={() => setRestockProduct(null)}>
           <KeyboardAvoidingView
             style={styles.modalOverlay}
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -231,7 +241,7 @@ export const CategoriesScreen = observer(function CategoriesScreen() {
         </Modal>
 
         {/* Category rename/add modal */}
-        <Modal visible={catModalVisible} transparent animationType="fade">
+        <Modal visible={catModalVisible} transparent animationType="fade" onRequestClose={() => setCatModalVisible(false)}>
           <KeyboardAvoidingView
             style={styles.modalOverlay}
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -307,7 +317,7 @@ export const CategoriesScreen = observer(function CategoriesScreen() {
       />
 
       {/* Add / Edit modal */}
-      <Modal visible={catModalVisible} transparent animationType="fade">
+      <Modal visible={catModalVisible} transparent animationType="fade" onRequestClose={() => setCatModalVisible(false)}>
         <KeyboardAvoidingView
           style={styles.modalOverlay}
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
+  BackHandler,
   FlatList,
   Pressable,
   ScrollView,
@@ -33,6 +34,15 @@ export const HelperSalesScreen = observer(function HelperSalesScreen() {
   useEffect(() => {
     if (products.length === 0) loadAllData();
   }, []);
+
+  useEffect(() => {
+    if (!selected) return;
+    const sub = BackHandler.addEventListener('hardwareBackPress', () => {
+      clearSelection();
+      return true;
+    });
+    return () => sub.remove();
+  }, [selected]);
 
   const weekly = getWeeklySales(movements);
   const todayRow = weekly[weekly.length - 1] ?? { qty: 0, amount: 0 };

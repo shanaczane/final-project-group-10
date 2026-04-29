@@ -88,7 +88,7 @@ export function ActivityModal({ visible, movements, onClose }: Props) {
   ];
 
   return (
-    <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
+    <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
       <View style={{ flex: 1, backgroundColor: colors.background }}>
 
         {/* Header */}
