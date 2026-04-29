@@ -1,5 +1,6 @@
 import { observable } from '@legendapp/state';
 import { supabase } from './lib/supabase';
+import { sendLowStockNotification } from './lib/notifications';
 import type { Product, Category, StockMovement } from './types';
 
 // Global reactive store
@@ -178,6 +179,10 @@ export async function recordSale(
 
   // Reload to get fresh state
   await loadAllData();
+
+  if (newQty <= product.min_threshold) {
+    await sendLowStockNotification(product.name, newQty);
+  }
 
   return { error: null };
 }

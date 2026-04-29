@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ActivityIndicator, LogBox, View } from 'react-native';
+import { requestNotificationPermissions } from './lib/notifications';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -19,6 +20,11 @@ LogBox.ignoreLogs(['AuthApiError: Invalid Refresh Token']);
 
 function AppContent() {
   const { isDark } = useTheme();
+
+  useEffect(() => {
+    requestNotificationPermissions();
+  }, []);
+
   return (
     <NavigationContainer>
       <RootNavigator />
