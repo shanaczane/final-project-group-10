@@ -109,12 +109,12 @@ export async function deleteProduct(id: string): Promise<{ error: string | null 
 
 // ─── Category mutations ───────────────────────────────────────────────────────
 
-export async function addCategory(name: string): Promise<{ error: string | null }> {
+export async function addCategory(name: string, icon?: string): Promise<{ error: string | null }> {
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) return { error: 'Not authenticated' };
   const { data, error } = await supabase
     .from('categories')
-    .insert({ name, owner_id: session.user.id })
+    .insert({ name, icon: icon ?? null, owner_id: session.user.id })
     .select('*')
     .single();
   if (error) return { error: error.message };
@@ -125,10 +125,11 @@ export async function addCategory(name: string): Promise<{ error: string | null 
 export async function updateCategory(
   id: string,
   name: string,
+  icon?: string,
 ): Promise<{ error: string | null }> {
   const { data, error } = await supabase
     .from('categories')
-    .update({ name })
+    .update({ name, icon: icon ?? null })
     .eq('id', id)
     .select('*')
     .single();

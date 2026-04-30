@@ -28,6 +28,17 @@ import {
 import type { Category, Product } from '../../../types';
 import { createStyles } from './categoriesscreen.style';
 
+const CATEGORY_ICONS = [
+  'pricetag-outline', 'shirt-outline', 'fast-food-outline', 'cafe-outline',
+  'beer-outline', 'basket-outline', 'phone-portrait-outline', 'laptop-outline',
+  'car-outline', 'medkit-outline', 'home-outline', 'fitness-outline',
+  'book-outline', 'musical-notes-outline', 'game-controller-outline',
+  'flower-outline', 'leaf-outline', 'paw-outline', 'construct-outline',
+  'cut-outline', 'brush-outline', 'gift-outline', 'pizza-outline',
+  'ice-cream-outline', 'water-outline', 'wine-outline', 'bag-handle-outline',
+  'cube-outline', 'diamond-outline', 'sparkles-outline',
+] as const;
+
 export const CategoriesScreen = observer(function CategoriesScreen() {
   const { colors } = useTheme();
   const styles = createStyles(colors);
@@ -40,6 +51,7 @@ export const CategoriesScreen = observer(function CategoriesScreen() {
   const [catModalVisible, setCatModalVisible] = useState(false);
   const [editing, setEditing] = useState<Category | null>(null);
   const [inputName, setInputName] = useState('');
+  const [selectedIcon, setSelectedIcon] = useState<string>('pricetag-outline');
   const [saving, setSaving] = useState(false);
 
   const [restockProduct, setRestockProduct] = useState<Product | null>(null);
@@ -76,12 +88,14 @@ export const CategoriesScreen = observer(function CategoriesScreen() {
   function openAdd(): void {
     setEditing(null);
     setInputName('');
+    setSelectedIcon('pricetag-outline');
     setCatModalVisible(true);
   }
 
   function openEdit(cat: Category): void {
     setEditing(cat);
     setInputName(cat.name);
+    setSelectedIcon(cat.icon ?? 'pricetag-outline');
     setCatModalVisible(true);
   }
 
@@ -90,8 +104,8 @@ export const CategoriesScreen = observer(function CategoriesScreen() {
     if (!name) { Alert.alert('Error', 'Category name cannot be empty.'); return; }
     setSaving(true);
     const { error } = editing
-      ? await updateCategory(editing.id, name)
-      : await addCategory(name);
+      ? await updateCategory(editing.id, name, selectedIcon)
+      : await addCategory(name, selectedIcon);
     setSaving(false);
     if (error) { Alert.alert('Error', error); return; }
     setCatModalVisible(false);
@@ -247,7 +261,37 @@ export const CategoriesScreen = observer(function CategoriesScreen() {
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           >
             <View style={styles.modalCard}>
-              <Text style={styles.modalTitle}>{editing ? 'Rename Category' : 'New Category'}</Text>
+              <Text style={styles.modalTitle}>{editing ? 'Edit Category' : 'New Category'}</Text>
+              <Text style={styles.modalLabel}>Icon</Text>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={{ marginBottom: 16 }}
+                contentContainerStyle={{ gap: 8, paddingVertical: 2 }}
+              >
+                {CATEGORY_ICONS.map(iconName => {
+                  const active = selectedIcon === iconName;
+                  return (
+                    <Pressable
+                      key={iconName}
+                      onPress={() => setSelectedIcon(iconName)}
+                      style={{
+                        width: 44,
+                        height: 44,
+                        borderRadius: 12,
+                        backgroundColor: active ? colors.primary : colors.inputBackground,
+                        borderWidth: 1,
+                        borderColor: active ? colors.primary : colors.border,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <Ionicons name={iconName as any} size={20} color={active ? '#fff' : colors.textSecondary} />
+                    </Pressable>
+                  );
+                })}
+              </ScrollView>
+              <Text style={styles.modalLabel}>Name</Text>
               <TextInput
                 style={styles.modalInput}
                 value={inputName}
@@ -307,7 +351,7 @@ export const CategoriesScreen = observer(function CategoriesScreen() {
           return (
             <Pressable style={styles.gridCard} onPress={() => setSelectedCategory(item)}>
               <View style={styles.gridCardIcon}>
-                <Ionicons name="pricetag-outline" size={20} color={colors.primary} />
+                <Ionicons name={(item.icon ?? 'pricetag-outline') as any} size={20} color={colors.primary} />
               </View>
               <Text style={styles.gridCardName}>{item.name}</Text>
               <Text style={styles.gridCardCount}>{count} product{count !== 1 ? 's' : ''}</Text>

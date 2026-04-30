@@ -13,6 +13,7 @@ export interface AppUser {
 export interface Category {
   id: string;
   name: string;
+  icon: string | null;
   owner_id: string;
   created_at: string;
 }
