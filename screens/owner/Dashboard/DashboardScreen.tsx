@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, RefreshControl, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, KeyboardAvoidingView, Modal, Platform, Pressable, RefreshControl, ScrollView, Text, TextInput, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { observer } from '@legendapp/state/react';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
@@ -8,7 +8,9 @@ import { useAuth } from '../../../context/AuthContext';
 import { useTheme } from '../../../context/ThemeContext';
 import {
   store$, loadAllData, getLowStockItems, getTotalInventoryValue, getWeeklySales,
+  recordRestock, updateProduct,
 } from '../../../store';
+import type { Product } from '../../../types';
 import { ActivityModal } from '../../../components/ActivityModal';
 import { createStyles } from './dashboardscreen.style';
 
@@ -29,6 +31,25 @@ export const DashboardScreen = observer(function DashboardScreen() {
   const categories = store$.categories.get();
 
   const [activityVisible, setActivityVisible] = useState(false);
+  const [restockProduct, setRestockProduct] = useState<Product | null>(null);
+  const [restockQty, setRestockQty] = useState('');
+  const [restocking, setRestocking] = useState(false);
+
+  async function handleRestock(): Promise<void> {
+    if (!restockProduct) return;
+    const qty = parseInt(restockQty, 10);
+    if (!restockQty || isNaN(qty) || qty < 1) {
+      Alert.alert('Error', 'Enter a valid quantity to add.');
+      return;
+    }
+    setRestocking(true);
+    const newQty = restockProduct.quantity + qty;
+    await recordRestock(restockProduct.id, qty);
+    await updateProduct(restockProduct.id, { quantity: newQty });
+    setRestocking(false);
+    setRestockProduct(null);
+    setRestockQty('');
+  }
 
   useEffect(() => { loadAllData(); }, []);
 
@@ -55,6 +76,7 @@ export const DashboardScreen = observer(function DashboardScreen() {
   }
 
   return (
+    <View style={{ flex: 1 }}>
     <ScrollView
       style={styles.container}
       contentContainerStyle={[styles.content, { paddingBottom: tabBarHeight + 16 }]}
@@ -133,6 +155,9 @@ export const DashboardScreen = observer(function DashboardScreen() {
                 <Text style={styles.lowName}>{p.name}</Text>
                 <Text style={styles.lowSub}>Only {p.quantity} left</Text>
               </View>
+              <Pressable style={styles.restockBtn} onPress={() => { setRestockProduct(p); setRestockQty(''); }}>
+                <Text style={styles.restockBtnText}>Restock</Text>
+              </Pressable>
             </View>
           ))}
         </View>
@@ -175,5 +200,35 @@ export const DashboardScreen = observer(function DashboardScreen() {
         onClose={() => setActivityVisible(false)}
       />
     </ScrollView>
+
+    <Modal visible={restockProduct !== null} transparent animationType="fade" onRequestClose={() => setRestockProduct(null)}>
+      <KeyboardAvoidingView style={styles.modalOverlay} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <View style={styles.modalCard}>
+          <Text style={styles.modalTitle}>Restock</Text>
+          <Text style={styles.modalSubtitle}>{restockProduct?.name}</Text>
+          <Text style={styles.modalLabel}>Quantity to add</Text>
+          <TextInput
+            style={styles.modalInput}
+            value={restockQty}
+            onChangeText={(v) => setRestockQty(v.replace(/[^0-9]/g, ''))}
+            placeholder="e.g. 10"
+            placeholderTextColor={colors.textMuted}
+            keyboardType="number-pad"
+            autoFocus
+          />
+          <View style={styles.modalActions}>
+            <Pressable style={styles.cancelBtn} onPress={() => setRestockProduct(null)}>
+              <Text style={styles.cancelBtnText}>Cancel</Text>
+            </Pressable>
+            <Pressable style={[styles.confirmBtn, restocking && { opacity: 0.6 }]} onPress={handleRestock} disabled={restocking}>
+              {restocking
+                ? <ActivityIndicator color="#fff" size="small" />
+                : <Text style={styles.confirmBtnText}>Add Stock</Text>}
+            </Pressable>
+          </View>
+        </View>
+      </KeyboardAvoidingView>
+    </Modal>
+    </View>
   );
 });
