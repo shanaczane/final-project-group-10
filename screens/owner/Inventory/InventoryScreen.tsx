@@ -407,6 +407,13 @@ export const InventoryScreen = observer(function InventoryScreen() {
                 ]}>
                   {item.quantity}
                 </Text>
+                <Text style={[
+                  styles.qtyLabel,
+                  stockStatus(item) === 'red' && styles.qtyLabelDanger,
+                  stockStatus(item) === 'amber' && styles.qtyLabelWarning,
+                ]}>
+                  stock
+                </Text>
               </View>
             </View>
           </Pressable>

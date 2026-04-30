@@ -116,13 +116,13 @@ export function createStyles(colors: Colors) {
       alignItems: 'center',
     },
     qtyBadge: {
-      minWidth: 40,
-      height: 40,
+      minWidth: 48,
       borderRadius: 10,
       backgroundColor: colors.successBackground,
       alignItems: 'center',
       justifyContent: 'center',
-      paddingHorizontal: 6,
+      paddingHorizontal: 8,
+      paddingVertical: 7,
     },
     qtyBadgeDanger: {
       backgroundColor: colors.dangerBackground,
@@ -141,6 +141,15 @@ export function createStyles(colors: Colors) {
     qtyTextWarning: {
       color: colors.warning,
     },
+    qtyLabel: {
+      fontSize: 9,
+      fontFamily: 'Manrope_600SemiBold',
+      color: colors.success,
+      letterSpacing: 0.4,
+      marginTop: 1,
+    },
+    qtyLabelDanger: { color: colors.danger },
+    qtyLabelWarning: { color: colors.warning },
 
     emptyContainer: {
       alignItems: 'center',
