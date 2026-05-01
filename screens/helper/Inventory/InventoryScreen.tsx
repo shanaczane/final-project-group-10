@@ -41,7 +41,7 @@ export const HelperInventoryScreen = observer(function HelperInventoryScreen() {
 
   const filtered = products.filter((p) => {
     const matchSearch = p.name.toLowerCase().includes(search.toLowerCase());
-    const matchCat = filterCat === 'all' || p.category_id === filterCat;
+    const matchCat = filterCat === 'all' || (filterCat === 'uncategorized' ? p.category_id === null : p.category_id === filterCat);
     return matchSearch && matchCat;
   });
 
@@ -97,6 +97,16 @@ export const HelperInventoryScreen = observer(function HelperInventoryScreen() {
             </Text>
           </Pressable>
         ))}
+        {products.some(p => p.category_id === null) && (
+          <Pressable
+            style={[styles.filterChip, filterCat === 'uncategorized' && styles.filterChipActive]}
+            onPress={() => setFilterCat('uncategorized')}
+          >
+            <Text numberOfLines={1} style={[styles.filterChipText, filterCat === 'uncategorized' && styles.filterChipTextActive]}>
+              Uncategorized
+            </Text>
+          </Pressable>
+        )}
       </ScrollView>
 
       {/* Product list — read-only */}
