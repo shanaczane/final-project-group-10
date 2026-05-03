@@ -1,6 +1,6 @@
 # Tally — Store Inventory Manager
 
-A cross-platform mobile app for small retail stores to manage inventory, record sales, and track stock levels.
+An android mobile app for small retail stores to manage inventory, record sales, and track stock levels.
 
 ---
 
